@@ -1,0 +1,89 @@
+Shader "Raymarching/<%Name%>"
+{
+
+Properties
+{
+	[Header(PBS)]
+	_Color("Color", Color) = (1.0, 1.0, 1.0, 1.0)
+	_Metallic("Metallic", Range(0.0, 1.0)) = 0.5
+	_Glossiness("Smoothness", Range(0.0, 1.0)) = 0.5
+
+	[Header(Raymarching Settings)]
+	_Loop("Loop", Range(1, 100)) = 30
+	_MinDistance("Minimum Distance", Range(0.001, 0.1)) = 0.01
+	_ShadowLoop("Shadow Loop", Range(1, 100)) = 10
+	_ShadowMinDistance("Shadow Minimum Distance", Range(0.001, 0.1)) = 0.01
+}
+
+SubShader
+{
+
+Tags
+{
+	"RenderType" = "Opaque"
+	"DisableBatching" = "True"
+}
+
+CGINCLUDE
+
+// #define OBJECT_SCALE
+// #define DO_NOT_OUTPUT_DEPTH
+#define DISTANCE_FUNCTION DistanceFunction
+#define POST_EFFECT PostEffect
+
+#include "<%RaymarchingShaderDirectory%>/Common.cginc"
+
+float DistanceFunction(float3 pos)
+{
+<%DistanceFunction%>
+}
+
+void PostEffect(RaymarchOutput r, inout SurfaceOutputStandard o)
+{
+<%PostEffect%>
+}
+
+#include "<%RaymarchingShaderDirectory%>/Raymarching.cginc"
+
+ENDCG
+
+Pass
+{
+	Tags { "LightMode" = "Deferred" }
+
+	Stencil
+	{
+		Comp Always
+		Pass Replace
+		Ref 128
+	}
+
+	CGPROGRAM
+	#include "<%RaymarchingShaderDirectory%>/VertFragPbs.cginc"
+	#pragma target 3.0
+	#pragma vertex Vert
+	#pragma fragment Frag
+	#pragma multi_compile_prepassfinal
+	#pragma exclude_renderers nomrt
+	ENDCG
+}
+
+Pass
+{
+	Tags { "LightMode" = "ShadowCaster" }
+
+	CGPROGRAM
+	#include "<%RaymarchingShaderDirectory%>/VertFragShadow.cginc"
+	#pragma target 3.0
+	#pragma vertex Vert
+	#pragma fragment Frag
+	#pragma multi_compile_shadowcaster
+	#pragma fragmentoption ARB_precision_hint_fastest
+	ENDCG
+}
+
+}
+
+Fallback Off
+
+}
