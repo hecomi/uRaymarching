@@ -59,6 +59,8 @@ public class CodeEditor
             cachedHighlightedCode = highlighter(code);
         }
 
+        GUI.backgroundColor = Color.clear;
+
         var foreStyle = new GUIStyle(style);
         foreStyle.richText = true;
         foreStyle.normal.textColor = textColor;
