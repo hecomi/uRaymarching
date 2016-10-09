@@ -15,7 +15,7 @@ struct VertScreenOutput
 struct VertObjectInput
 {
     float4 vertex : POSITION;
-	float3 normal : NORMAL;
+    float3 normal : NORMAL;
 };
 
 struct VertPbsObjectOutput
@@ -63,15 +63,15 @@ struct GBufferOut
 
 struct RaymarchInfo
 {
-	// Input
+    // Input
     float3 startPos;
     float3 rayDir;
-	float3 polyNormal;
+    float3 polyNormal;
     float minDistance;
     float maxDistance;
     int loop;
 
-	// Output
+    // Output
     float3 endPos;
     float lastDistance;
     float totalLength;

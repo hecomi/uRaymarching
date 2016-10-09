@@ -20,7 +20,7 @@ public class RaymarchingRenderer : MonoBehaviour
             new Vector3(-1.0f ,-1.0f,  0.0f),
             new Vector3( 1.0f ,-1.0f,  0.0f),
         };
-        mesh.triangles = new int[6] { 0, 1, 2, 2, 3, 0 };
+        mesh.triangles = new int[6] { 0, 2, 1, 2, 0, 3 };
         return mesh;
     }
 

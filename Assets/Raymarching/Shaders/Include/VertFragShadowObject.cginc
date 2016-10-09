@@ -24,51 +24,51 @@ VertShadowOutput Vert(VertShadowInput v)
 float4 Frag(VertShadowOutput i) : SV_Target
 {
     RaymarchInfo ray;
-	UNITY_INITIALIZE_OUTPUT(RaymarchInfo, ray);
+    UNITY_INITIALIZE_OUTPUT(RaymarchInfo, ray);
     ray.rayDir = GetCameraDirectionForShadow(i.screenPos);
-	ray.startPos = i.worldPos;
-	ray.minDistance = _ShadowMinDistance;
+    ray.startPos = i.worldPos;
+    ray.minDistance = _ShadowMinDistance;
     ray.maxDistance = GetCameraMaxDistance();
-	ray.loop = _ShadowLoop;
+    ray.loop = _ShadowLoop;
 
-	if (!_Raymarch(ray)) discard;
+    if (!_Raymarch(ray)) discard;
 
-	i.vec = ray.endPos - _LightPositionRange.xyz;
-	SHADOW_CASTER_FRAGMENT(i);
+    i.vec = ray.endPos - _LightPositionRange.xyz;
+    SHADOW_CASTER_FRAGMENT(i);
 }
 
 #else
 
 void Frag(
-	VertShadowOutput i, 
-	out float4 outColor : SV_Target, 
-	out float  outDepth : SV_Depth)
+    VertShadowOutput i, 
+    out float4 outColor : SV_Target, 
+    out float  outDepth : SV_Depth)
 {
     RaymarchInfo ray;
-	UNITY_INITIALIZE_OUTPUT(RaymarchInfo, ray);
-	ray.startPos = i.worldPos;
-	ray.minDistance = _ShadowMinDistance;
+    UNITY_INITIALIZE_OUTPUT(RaymarchInfo, ray);
+    ray.startPos = i.worldPos;
+    ray.minDistance = _ShadowMinDistance;
     ray.maxDistance = GetCameraMaxDistance();
-	ray.loop = _ShadowLoop;
+    ray.loop = _ShadowLoop;
 
-	// light direction of spot light
-	if ((UNITY_MATRIX_P[3].x != 0.0) || 
-		(UNITY_MATRIX_P[3].y != 0.0) || 
-		(UNITY_MATRIX_P[3].z != 0.0)) {
-		ray.rayDir = GetCameraDirectionForShadow(i.screenPos);
-	}
-	// light direction of directional light 
-	else {
-		ray.rayDir = -UNITY_MATRIX_V[2].xyz;
-	}
+    // light direction of spot light
+    if ((UNITY_MATRIX_P[3].x != 0.0) || 
+        (UNITY_MATRIX_P[3].y != 0.0) || 
+        (UNITY_MATRIX_P[3].z != 0.0)) {
+        ray.rayDir = GetCameraDirectionForShadow(i.screenPos);
+    }
+    // light direction of directional light 
+    else {
+        ray.rayDir = -UNITY_MATRIX_V[2].xyz;
+    }
 
-	if (!_Raymarch(ray)) discard;
+    if (!_Raymarch(ray)) discard;
 
-	float4 opos = mul(unity_WorldToObject, float4(ray.endPos, 1.0));
-	opos = UnityClipSpaceShadowCasterPos(opos, i.normal);
-	opos = UnityApplyLinearShadowBias(opos);
+    float4 opos = mul(unity_WorldToObject, float4(ray.endPos, 1.0));
+    opos = UnityClipSpaceShadowCasterPos(opos, i.normal);
+    opos = UnityApplyLinearShadowBias(opos);
 
-	outColor = outDepth = opos.z / opos.w;
+    outColor = outDepth = opos.z / opos.w;
 }
 
 #endif

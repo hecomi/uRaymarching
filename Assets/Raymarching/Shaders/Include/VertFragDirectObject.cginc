@@ -17,7 +17,7 @@ VertObjectOutput Vert(VertObjectInput i)
     VertObjectOutput o;
     o.vertex = mul(UNITY_MATRIX_MVP, i.vertex);
     o.screenPos = o.vertex;
-	o.worldPos = mul(unity_ObjectToWorld, i.vertex);
+    o.worldPos = mul(unity_ObjectToWorld, i.vertex);
     o.worldNormal = mul(unity_ObjectToWorld, i.normal);
     return o;
 }
@@ -25,27 +25,27 @@ VertObjectOutput Vert(VertObjectInput i)
 GBufferOut Frag(VertObjectOutput i)
 {
     RaymarchInfo ray;
-	UNITY_INITIALIZE_OUTPUT(RaymarchInfo, ray);
+    UNITY_INITIALIZE_OUTPUT(RaymarchInfo, ray);
     ray.rayDir = GetCameraDirection(i.screenPos);
-	ray.startPos = i.worldPos;
-	ray.polyNormal = i.worldNormal;
-	ray.minDistance = _MinDistance;
+    ray.startPos = i.worldPos;
+    ray.polyNormal = i.worldNormal;
+    ray.minDistance = _MinDistance;
     ray.maxDistance = GetCameraMaxDistance();
-	ray.loop = _Loop;
+    ray.loop = _Loop;
 
-	Raymarch(ray);
+    Raymarch(ray);
 
     GBufferOut o;
-	o.diffuse  = _Diffuse;
-	o.specular = _Specular;
-	o.emission = _Emission;
-	o.normal   = float4(ray.normal, 1.0);
+    o.diffuse  = _Diffuse;
+    o.specular = _Specular;
+    o.emission = _Emission;
+    o.normal   = float4(ray.normal, 1.0);
 #ifndef DO_NOT_OUTPUT_DEPTH
     o.depth    = ray.depth;
 #endif
 
 #ifdef POST_EFFECT
-	POST_EFFECT(ray, o);
+    POST_EFFECT(ray, o);
 #endif
 
 #ifndef UNITY_HDR_ON

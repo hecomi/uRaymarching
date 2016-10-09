@@ -10,12 +10,10 @@ inline float  GetCameraMaxDistance() { return _ProjectionParams.z - _ProjectionP
 
 inline float3 _GetCameraDirection(float2 sp)
 {
-    float3 camPos      = GetCameraPosition();
     float3 camDir      = GetCameraForward();
     float3 camUp       = GetCameraUp();
     float3 camSide     = GetCameraRight();
     float  focalLen    = GetCameraFocalLength();
-    float  maxDistance = GetCameraMaxDistance();
 
     return normalize((camSide * sp.x) + (camUp * sp.y) + (camDir * focalLen));
 }
@@ -26,9 +24,9 @@ inline float3 GetCameraDirection(float4 screenPos)
     screenPos.y *= -1.0;
 #endif
     screenPos.x *= _ScreenParams.x / _ScreenParams.y;
-	screenPos.xy /= screenPos.w;
+    screenPos.xy /= screenPos.w;
 
-	return _GetCameraDirection(screenPos.xy);
+    return _GetCameraDirection(screenPos.xy);
 }
 
 inline float3 GetCameraDirectionForShadow(float4 screenPos)
@@ -38,7 +36,7 @@ inline float3 GetCameraDirectionForShadow(float4 screenPos)
 #endif
     screenPos.xy /= screenPos.w;
 
-	return _GetCameraDirection(screenPos.xy);
+    return _GetCameraDirection(screenPos.xy);
 }
 
 #endif

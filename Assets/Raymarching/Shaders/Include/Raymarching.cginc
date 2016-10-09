@@ -7,7 +7,7 @@
 #ifndef DISTANCE_FUNCTION
 inline float _DefaultDistanceFunction(float3 pos)
 {
-	return Box(pos, 1.0);
+    return Box(pos, 1.0);
 }
 #define DISTANCE_FUNCTION _DefaultDistanceFunction
 #endif
@@ -15,13 +15,13 @@ inline float _DefaultDistanceFunction(float3 pos)
 inline float _DistanceFunction(float3 pos)
 {
 #ifdef WORLD_SPACE
-	return DISTANCE_FUNCTION(pos);
+    return DISTANCE_FUNCTION(pos);
 #else
-	#ifdef OBJECT_SCALE
-	return DISTANCE_FUNCTION(ToLocal(pos));
-	#else
-	return DISTANCE_FUNCTION(ToLocal(pos) * abs(_Scale));
-	#endif
+    #ifdef OBJECT_SCALE
+    return DISTANCE_FUNCTION(ToLocal(pos));
+    #else
+    return DISTANCE_FUNCTION(ToLocal(pos) * abs(_Scale));
+    #endif
 #endif
 }
 
@@ -36,9 +36,9 @@ inline float3 GetDistanceFunctiontionNormal(float3 pos)
 
 inline bool _Raymarch(inout RaymarchInfo ray)
 {
-	ray.endPos = ray.startPos;
-	ray.lastDistance = 0.0;
-	ray.totalLength = 0.0;
+    ray.endPos = ray.startPos;
+    ray.lastDistance = 0.0;
+    ray.totalLength = 0.0;
 
     for (int n = 0; n < ray.loop; ++n) {
         ray.lastDistance = _DistanceFunction(ray.endPos);
@@ -47,11 +47,11 @@ inline bool _Raymarch(inout RaymarchInfo ray)
 #ifdef WORLD_SPACE
         if (ray.lastDistance < ray.minDistance || ray.totalLength > ray.maxDistance) break;
 #else
-	#ifdef OBJECT_SCALE
+    #ifdef OBJECT_SCALE
         if (ray.lastDistance < ray.minDistance || !IsInnerObject(ray.endPos, 1.0)) break;
-	#else
+    #else
         if (ray.lastDistance < ray.minDistance || !IsInnerObject(ray.endPos, abs(_Scale))) break;
-	#endif
+    #endif
 #endif
     }
 
@@ -60,19 +60,19 @@ inline bool _Raymarch(inout RaymarchInfo ray)
 
 void Raymarch(inout RaymarchInfo ray)
 {
-	if (!_Raymarch(ray)) discard;
+    if (!_Raymarch(ray)) discard;
 
 #ifdef WORLD_SPACE
     ray.normal = GetDistanceFunctiontionNormal(ray.endPos);
-	ray.depth = GetDepth(ray.endPos);
+    ray.depth = GetDepth(ray.endPos);
 #else
     if (ray.totalLength < 0.01) {
-		ray.normal = ray.polyNormal * 0.5 + 0.5;
-		ray.depth = GetDepth(ray.startPos);
-	} else {
-		ray.normal = GetDistanceFunctiontionNormal(ray.endPos);
-		ray.depth = GetDepth(ray.endPos);
-	}
+        ray.normal = ray.polyNormal * 0.5 + 0.5;
+        ray.depth = GetDepth(ray.startPos);
+    } else {
+        ray.normal = GetDistanceFunctiontionNormal(ray.endPos);
+        ray.depth = GetDepth(ray.endPos);
+    }
 #endif
 }
 

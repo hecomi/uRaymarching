@@ -29,9 +29,9 @@ inline bool IsInnerBox(float3 pos, float3 scale)
 inline bool IsInnerObject(float3 pos, float3 scale)
 {
 #ifdef OBJECT_SCALE
-	return IsInnerBox(ToLocal(pos), scale);
+    return IsInnerBox(ToLocal(pos), scale);
 #else
-	return IsInnerBox(ToLocal(pos) * scale, scale);
+    return IsInnerBox(ToLocal(pos) * scale, scale);
 #endif
 }
 

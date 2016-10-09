@@ -21,26 +21,26 @@ VertScreenOutput Vert(VertScreenInput i)
 GBufferOut Frag(VertScreenOutput i)
 {
     RaymarchInfo ray;
-	UNITY_INITIALIZE_OUTPUT(RaymarchInfo, ray);
+    UNITY_INITIALIZE_OUTPUT(RaymarchInfo, ray);
     ray.rayDir = GetCameraDirection(i.screenPos);
     ray.startPos = GetCameraPosition() + _ProjectionParams.y * ray.rayDir;
-	ray.minDistance = _MinDistance;
+    ray.minDistance = _MinDistance;
     ray.maxDistance = GetCameraMaxDistance();
-	ray.loop = _Loop;
+    ray.loop = _Loop;
 
     Raymarch(ray);
 
     GBufferOut o;
-	o.diffuse  = _Diffuse;
-	o.specular = _Specular;
-	o.emission = _Emission;
+    o.diffuse  = _Diffuse;
+    o.specular = _Specular;
+    o.emission = _Emission;
     o.normal   = float4(ray.normal, 1.0);
 #ifndef DO_NOT_OUTPUT_DEPTH
     o.depth    = ray.depth;
 #endif
 
 #ifdef POST_EFFECT
-	POST_EFFECT(ray, o);
+    POST_EFFECT(ray, o);
 #endif
 
 #ifndef UNITY_HDR_ON

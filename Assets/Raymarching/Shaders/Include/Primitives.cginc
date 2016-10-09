@@ -37,36 +37,36 @@ inline float HexagonalPrismX(float3 pos, float2 h)
 {
     float3 p = abs(pos);
     return max(
-		p.x - h.y, 
-		max(
-			(p.z * 0.866025 + p.y * 0.5),
-			p.y
-		) - h.x
-	);
+        p.x - h.y, 
+        max(
+            (p.z * 0.866025 + p.y * 0.5),
+            p.y
+        ) - h.x
+    );
 }
 
 inline float HexagonalPrismY(float3 pos, float2 h)
 {
     float3 p = abs(pos);
     return max(
-		p.y - h.y, 
-		max(
-			(p.z * 0.866025 + p.x * 0.5),
-			p.x
-		) - h.x
-	);
+        p.y - h.y, 
+        max(
+            (p.z * 0.866025 + p.x * 0.5),
+            p.x
+        ) - h.x
+    );
 }
 
 inline float HexagonalPrismZ(float3 pos, float2 h)
 {
     float3 p = abs(pos);
     return max(
-		p.z - h.y, 
-		max(
-			(p.x * 0.866025 + p.y * 0.5),
-			p.y
-		) - h.x
-	);
+        p.z - h.y, 
+        max(
+            (p.x * 0.866025 + p.y * 0.5),
+            p.y
+        ) - h.x
+    );
 }
 
 #endif
