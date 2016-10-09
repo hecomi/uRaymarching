@@ -18,13 +18,20 @@ struct VertObjectInput
     float3 normal : NORMAL;
 };
 
-struct VertPbsObjectOutput
+struct VertStandardObjectOutput
 {
     float4 pos         : SV_POSITION;
     float4 screenPos   : TEXCOORD0;
     float4 worldPos    : TEXCOORD1;
     float3 worldNormal : TEXCOORD2;
     float4 lmap        : TEXCOORD3;
+#ifndef SPHERICAL_HARMONICS_PER_PIXEL
+    #ifdef LIGHTMAP_OFF
+        #if UNITY_SHOULD_SAMPLE_SH
+    half3 sh           : TEXCOORD4;
+        #endif
+    #endif
+#endif
 };
 
 struct VertObjectOutput

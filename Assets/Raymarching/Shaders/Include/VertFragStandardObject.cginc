@@ -18,9 +18,9 @@ fixed4 _Color;
 float _Glossiness;
 float _Metallic;
 
-VertPbsObjectOutput Vert(appdata_full v)
+VertStandardObjectOutput Vert(appdata_full v)
 {
-    VertPbsObjectOutput o;
+    VertStandardObjectOutput o;
     o.pos = UnityObjectToClipPos(v.vertex);
     o.screenPos = o.pos;
     o.worldPos = mul(unity_ObjectToWorld, v.vertex);
@@ -36,12 +36,18 @@ VertPbsObjectOutput Vert(appdata_full v)
     o.lmap.xy = v.texcoord1.xy * unity_LightmapST.xy + unity_LightmapST.zw;
 #else
     o.lmap.xy = 0;
+    #ifndef SPHERICAL_HARMONICS_PER_PIXEL
+        #if UNITY_SHOULD_SAMPLE_SH
+    o.sh = 0;
+    o.sh = ShadeSHPerVertex(o.worldNormal, o.sh);
+        #endif
+    #endif
 #endif
 
     return o;
 }
 
-GBufferOut Frag(VertPbsObjectOutput i, GBufferOut o)
+GBufferOut Frag(VertStandardObjectOutput i, GBufferOut o)
 {
     RaymarchInfo ray;
 	UNITY_INITIALIZE_OUTPUT(RaymarchInfo, ray);
@@ -98,7 +104,11 @@ GBufferOut Frag(VertPbsObjectOutput i, GBufferOut o)
 #endif
 
 #if UNITY_SHOULD_SAMPLE_SH
+    #ifdef SPHERICAL_HARMONICS_PER_PIXEL
     giInput.ambient = ShadeSHPerPixel(worldNormal, 0.0, worldPos);
+    #else
+    giInput.ambient.rgb = i.sh;
+    #endif
 #else
     giInput.ambient.rgb = 0.0;
 #endif

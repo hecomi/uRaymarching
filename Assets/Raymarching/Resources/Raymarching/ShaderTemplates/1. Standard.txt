@@ -38,6 +38,9 @@ CGINCLUDE
 @if DoNotOutputDepth
 #define DO_NOT_OUTPUT_DEPTH
 @endif
+@if SphericalHarmonicsPerPixel
+#define SPHERICAL_HARMONICS_PER_PIXEL
+@endif
 
 #define DISTANCE_FUNCTION DistanceFunction
 #define POST_EFFECT PostEffect
