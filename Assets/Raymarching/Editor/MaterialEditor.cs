@@ -16,7 +16,7 @@ public class MaterialEditor : ShaderGUI
         if (!cachedEditor_) {
             var material = materialEditor.target as Material;
             var shader = material.shader;
-            var generators = Resources.FindObjectsOfTypeAll<Generator>();
+            var generators = Utils.FindAllAssets<Generator>();
             Generator targetGenerator = null;
             foreach (var generator in generators) {
                 if (generator.shaderReference == shader) {

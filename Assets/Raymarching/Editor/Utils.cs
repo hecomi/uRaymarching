@@ -80,6 +80,18 @@ public static class Utils
         }
         return materials;
     }
+
+    public static List<T> FindAllAssets<T>() where T : Object
+    {
+        var list = new List<T>();
+        var guids = AssetDatabase.FindAssets("t:" + typeof(T));
+        foreach (var guid in guids) {
+            var path = AssetDatabase.GUIDToAssetPath(guid);
+            var obj = AssetDatabase.LoadAssetAtPath<T>(path);
+            if (obj) list.Add(obj);
+        }
+        return list;
+    }
 }
 
 }
