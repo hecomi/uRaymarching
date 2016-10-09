@@ -15,12 +15,19 @@ public class RaymarchingRenderer : MonoBehaviour
     {
         var mesh = new Mesh();
         mesh.vertices = new Vector3[4] {
-            new Vector3( 1.0f , 1.0f,  0.0f),
-            new Vector3(-1.0f , 1.0f,  0.0f),
-            new Vector3(-1.0f ,-1.0f,  0.0f),
-            new Vector3( 1.0f ,-1.0f,  0.0f),
+            new Vector3( 1.0f,  1.0f,  0.0f),
+            new Vector3(-1.0f,  1.0f,  0.0f),
+            new Vector3(-1.0f, -1.0f,  0.0f),
+            new Vector3( 1.0f, -1.0f,  0.0f),
         };
+        #if UNITY_EDITOR_WIN || UNITY_STANDALONE_WIN
+        mesh.triangles = new int[6] { 0, 1, 2, 2, 3, 0 };
+        #else
         mesh.triangles = new int[6] { 0, 2, 1, 2, 0, 3 };
+        #endif
+        mesh.RecalculateNormals();
+        mesh.RecalculateBounds();
+        mesh.Optimize();
         return mesh;
     }
 
