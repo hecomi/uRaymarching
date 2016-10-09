@@ -20,7 +20,7 @@ inline float _DistanceFunction(float3 pos)
     #ifdef OBJECT_SCALE
     return DISTANCE_FUNCTION(ToLocal(pos));
     #else
-    return DISTANCE_FUNCTION(ToLocal(pos) * abs(_Scale));
+    return DISTANCE_FUNCTION(ToLocal(pos) * _Scale);
     #endif
 #endif
 }
@@ -44,13 +44,14 @@ inline bool _Raymarch(inout RaymarchInfo ray)
         ray.lastDistance = _DistanceFunction(ray.endPos);
         ray.totalLength += ray.lastDistance;
         ray.endPos += ray.rayDir * ray.lastDistance;
+        if (ray.lastDistance < ray.minDistance) break;
 #ifdef WORLD_SPACE
-        if (ray.lastDistance < ray.minDistance || ray.totalLength > ray.maxDistance) break;
+        if (ray.totalLength > ray.maxDistance) break;
 #else
     #ifdef OBJECT_SCALE
-        if (ray.lastDistance < ray.minDistance || !IsInnerObject(ray.endPos, 1.0)) break;
+        if (!IsInnerObject(ray.endPos, 1.0)) break;
     #else
-        if (ray.lastDistance < ray.minDistance || !IsInnerObject(ray.endPos, abs(_Scale))) break;
+        if (!IsInnerObject(ray.endPos, _Scale)) break;
     #endif
 #endif
     }
