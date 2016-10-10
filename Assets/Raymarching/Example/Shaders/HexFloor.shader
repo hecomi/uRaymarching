@@ -35,7 +35,7 @@ CGINCLUDE
 
 
 
-#define SPHERICAL_HARMONICS_PER_PIXEL
+
 
 #define DISTANCE_FUNCTION DistanceFunction
 #define POST_EFFECT PostEffect
@@ -130,6 +130,7 @@ Pass
     #pragma vertex Vert
     #pragma fragment Frag
     #pragma multi_compile_prepassfinal
+    #pragma multi_compile OBJECT_SHAPE_CUBE OBJECT_SHAPE_SPHERE ___
     #pragma exclude_renderers nomrt
     ENDCG
 }
@@ -144,6 +145,7 @@ Pass
     #pragma vertex Vert
     #pragma fragment Frag
     #pragma multi_compile_shadowcaster
+    #pragma multi_compile OBJECT_SHAPE_CUBE OBJECT_SHAPE_SPHERE ___
     #pragma fragmentoption ARB_precision_hint_fastest
     ENDCG
 }

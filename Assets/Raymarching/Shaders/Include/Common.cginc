@@ -2,7 +2,7 @@
 #define COMMON_H
 
 #ifndef WORLD_SPACE
-float4 _Scale;
+float4 _Scale = float4(1, 1, 1, 1);
 #endif
 
 #define UNITY_PASS_DEFERRED
