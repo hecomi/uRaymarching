@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using UnityEditor;
+using System;
 using System.Collections.Generic;
 using System.IO;
 
@@ -30,6 +31,8 @@ public class GeneratorEditor : Editor
     FileWatcher watcher_ = new FileWatcher();
 
     string errorMessage_;
+
+    Dictionary<string, Func<string, string>> toConstFuncs_;
     bool constVarsFolded_ = false;
 
     bool hasShaderReference
@@ -97,7 +100,6 @@ public class GeneratorEditor : Editor
                 return prop;
             }
         }
-
         return null;
     }
 
@@ -287,35 +289,26 @@ public class GeneratorEditor : Editor
         templateParser_ = new ShaderTemplateParser(template_.text);
 
         foreach (var kv in templateParser_.conditions) {
-            if (FindProperty(conditions_, kv.Key) == null) {
-                var prop = AddProperty(conditions_, kv.Key);
-                var key = prop.FindPropertyRelative("key");
-                var value = prop.FindPropertyRelative("value");
-                key.stringValue = kv.Key;
-                value.boolValue = kv.Value;
-            }
+            if (FindProperty(conditions_, kv.Key) != null) continue;
+            var prop = AddProperty(conditions_, kv.Key);
+            prop.FindPropertyRelative("key").stringValue = kv.Key;
+            prop.FindPropertyRelative("value").boolValue = kv.Value;
         }
 
         foreach (var kv in templateParser_.blocks) {
-            if (FindProperty(blocks_, kv.Key) == null) {
-                var prop = AddProperty(blocks_, kv.Key);
-                var key = prop.FindPropertyRelative("key");
-                var value = prop.FindPropertyRelative("value");
-                var folded = prop.FindPropertyRelative("folded");
-                key.stringValue = kv.Key;
-                value.stringValue = kv.Value;
-                folded.boolValue = false;
-            }
+            if (FindProperty(blocks_, kv.Key) != null) continue;
+            var prop = AddProperty(blocks_, kv.Key);
+            prop.FindPropertyRelative("key").stringValue = kv.Key;
+            prop.FindPropertyRelative("value").stringValue = kv.Value;
+            prop.FindPropertyRelative("folded").boolValue = false;
         }
 
         foreach (var kv in templateParser_.variables) {
-            if (FindProperty(variables_, kv.Key) == null) {
-                var prop = AddProperty(variables_, kv.Key);
-                var key = prop.FindPropertyRelative("key");
-                var value = prop.FindPropertyRelative("value");
-                key.stringValue = kv.Key;
-                value.stringValue = (kv.Value.Count >= 1) ? kv.Value[0] : "";
-            }
+            if (FindProperty(variables_, kv.Key) != null) continue;
+            var prop = AddProperty(variables_, kv.Key);
+            var hasDefaultValue = (kv.Value.Count >= 1);
+            prop.FindPropertyRelative("key").stringValue = kv.Key;
+            prop.FindPropertyRelative("value").stringValue = hasDefaultValue ? kv.Value[0] : "";
         }
     }
 
@@ -404,16 +397,16 @@ public class GeneratorEditor : Editor
 
     void ReconvertAll()
     {
-        Debug.LogFormat("Reconvert started.\n------------------------------"); 
+        Debug.LogFormat("<color=blue>Reconvert started.\n------------------------------</color>"); 
         var generators = Utils.FindAllAssets<Generator>();
         foreach (var generator in generators) {
             var editor = Editor.CreateEditor(generator) as GeneratorEditor;
-            Debug.Log(editor.GetShaderName()); 
+            Debug.LogFormat("<color=green>{0}</color>", editor.GetShaderPath());
             editor.CheckShaderUpdate();
             editor.OnTemplateChanged();
             editor.GenerateShader();
         }
-        Debug.LogFormat("------------------------------\nReconvert finished."); 
+        Debug.LogFormat("<color=blue>------------------------------\nReconvert finished.</color>"); 
     }
 
     void CheckShaderUpdate()
