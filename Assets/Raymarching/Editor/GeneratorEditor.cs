@@ -235,11 +235,18 @@ public class GeneratorEditor : Editor
                 }
             }
 
-            style = new GUIStyle(EditorStyles.miniButtonRight);
+            style = new GUIStyle(EditorStyles.miniButtonMid);
             style.fontSize = buttonFontSize;
             style.padding = buttonPadding;
             if (GUILayout.Button("Update Template", style)) {
                 OnTemplateChanged();
+            }
+
+            style = new GUIStyle(EditorStyles.miniButtonRight);
+            style.fontSize = buttonFontSize;
+            style.padding = buttonPadding;
+            if (GUILayout.Button("Reconvert All", style)) {
+                ReconvertAll();
             }
         }
         EditorGUILayout.EndHorizontal();
@@ -377,6 +384,20 @@ public class GeneratorEditor : Editor
         if (hasShaderReference) {
             watcher_.Start(GetShaderPath());
         }
+    }
+
+    void ReconvertAll()
+    {
+        Debug.LogFormat("Reconvert started.\n------------------------------"); 
+        var generators = Utils.FindAllAssets<Generator>();
+        foreach (var generator in generators) {
+            var editor = Editor.CreateEditor(generator) as GeneratorEditor;
+            Debug.Log(editor.GetShaderName()); 
+            editor.CheckShaderUpdate();
+            editor.OnTemplateChanged();
+            editor.GenerateShader();
+        }
+        Debug.LogFormat("------------------------------\nReconvert finished."); 
     }
 
     void CheckShaderUpdate()
