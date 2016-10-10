@@ -21,6 +21,11 @@ inline float GetDepth(float3 pos)
 #endif 
 }
 
+inline float EncodeNormal(float3 normal)
+{
+	return normal * 0.5 + 0.5;
+}
+
 inline bool IsInnerBox(float3 pos, float3 scale)
 {
     return all(max(scale * 0.5 - abs(pos), 0.0));

@@ -28,10 +28,10 @@ inline float _DistanceFunction(float3 pos)
 inline float3 GetDistanceFunctiontionNormal(float3 pos)
 {
     float d = 0.001;
-    return 0.5 + 0.5 * normalize(float3(
+    return EncodeNormal(normalize(float3(
         _DistanceFunction(pos + float3(  d, 0.0, 0.0)) - _DistanceFunction(pos),
         _DistanceFunction(pos + float3(0.0,   d, 0.0)) - _DistanceFunction(pos),
-        _DistanceFunction(pos + float3(0.0, 0.0,   d)) - _DistanceFunction(pos)));
+        _DistanceFunction(pos + float3(0.0, 0.0,   d)) - _DistanceFunction(pos))));
 }
 
 inline bool _Raymarch(inout RaymarchInfo ray)
@@ -68,7 +68,7 @@ void Raymarch(inout RaymarchInfo ray)
     ray.depth = GetDepth(ray.endPos);
 #else
     if (ray.totalLength < ray.minDistance) {
-        ray.normal = ray.polyNormal * 0.5 + 0.5;
+        ray.normal = EncodeNormal(ray.polyNormal);
         ray.depth = GetDepth(ray.startPos);
     } else {
         ray.normal = GetDistanceFunctiontionNormal(ray.endPos);
