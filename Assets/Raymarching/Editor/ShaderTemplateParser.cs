@@ -15,9 +15,9 @@ public class ShaderTemplateParser
 {
     static readonly string conditionPattern = 
         @"@if\s*(?<Cond>[^:\s\n]+)(?:\s*:\s*)?(?<Init>[^\s\n]+)?\s*\n" + 
-        @"(?<TrueValue>[\s\S]*?)" + 
+        @"(?<TrueValue>[^@]*?)" + 
         @"((\s*@else\s*)\n" +
-        @"(?<FalseValue>[\s\S]*?))?" + 
+        @"(?<FalseValue>[^@]*?))?" + 
         @"\n\s*@endif";
     static readonly string blockPattern = 
         @"@block\s*(?<Block>[^\s\n]+)\s*\n" +
@@ -86,6 +86,12 @@ public class ShaderTemplateParser
             }
             return (info.conditions[cond]) ? trueValue : falseValue;
         });
+        var preCode = code;
+        code = regex.Replace(code, evaluator);
+        while (code != preCode) {
+            preCode = code;
+            code = regex.Replace(code, evaluator);
+        }
         return regex.Replace(code, evaluator);
     }
 
