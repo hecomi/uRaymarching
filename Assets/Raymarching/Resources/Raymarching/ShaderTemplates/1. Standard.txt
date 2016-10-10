@@ -30,6 +30,8 @@ Tags
     "DisableBatching" = "True"
 }
 
+Cull <Culling=Back|Front|Off>
+
 CGINCLUDE
 
 @if FollowObjectScale : false

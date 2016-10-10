@@ -7,7 +7,6 @@ Properties
     _Color("Color", Color) = (1.0, 1.0, 1.0, 1.0)
     _Metallic("Metallic", Range(0.0, 1.0)) = 0.5
     _Glossiness("Smoothness", Range(0.0, 1.0)) = 0.5
-    _Glossiness2("2Smoothness", Range(0.0, 1.0)) = 0.5
 
     [Header(Raymarching Settings)]
     _Loop("Loop", Range(1, 100)) = 30
@@ -28,6 +27,8 @@ Tags
     "RenderType" = "Opaque"
     "DisableBatching" = "True"
 }
+
+Cull Off
 
 CGINCLUDE
 
