@@ -1,9 +1,7 @@
 ﻿#ifndef COMMON_H
 #define COMMON_H
 
-#ifndef WORLD_SPACE
-float4 _Scale = float4(1, 1, 1, 1);
-#endif
+float3 _Scale = float3(1, 1, 1);
 
 #define UNITY_PASS_DEFERRED
 #include "UnityCG.cginc"

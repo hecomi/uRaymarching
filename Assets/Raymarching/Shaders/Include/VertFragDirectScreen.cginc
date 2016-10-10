@@ -23,10 +23,10 @@ GBufferOut Frag(VertScreenOutput i)
     RaymarchInfo ray;
     UNITY_INITIALIZE_OUTPUT(RaymarchInfo, ray);
     ray.rayDir = GetCameraDirection(i.screenPos);
-    ray.startPos = GetCameraPosition() + _ProjectionParams.y * ray.rayDir;
+    ray.startPos = GetCameraPosition() + GetCameraNearClip() * ray.rayDir;
     ray.minDistance = _MinDistance;
     ray.maxDistance = GetCameraMaxDistance();
-    ray.loop = _Loop;
+    ray.maxLoop = _Loop;
 
     Raymarch(ray);
 

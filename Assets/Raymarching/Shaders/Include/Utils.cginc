@@ -31,28 +31,37 @@ inline bool IsInnerCube(float3 pos, float3 scale)
     return all(max(scale * 0.5 - abs(pos), 0.0));
 }
 
-inline bool IsInnerSphere(float3 pos, float radius)
+inline bool IsInnerSphere(float3 pos, float3 scale)
 {
-	return length(pos) < radius;
+	return length(pos) <= length(scale) * 0.28867513459;
 }
 
-inline bool _IsInnerObject(float3 pos, float3 scale)
+inline bool __IsInnerObject(float3 pos, float3 scale)
 {
 #ifdef OBJECT_SHAPE_CUBE
     return IsInnerCube(pos, scale);
 #elif OBJECT_SHAPE_SPHERE
-    return IsInnerSphere(pos, abs(scale) * 0.5);
+    return IsInnerSphere(pos, scale);
 #else
     return true;
 #endif	
 }
 
-inline bool IsInnerObject(float3 pos, float3 scale)
+inline bool _IsInnerObject(float3 pos, float3 scale)
 {
 #ifdef OBJECT_SCALE
-    return _IsInnerObject(ToLocal(pos), scale);
+    return __IsInnerObject(pos, scale);
 #else
-    return _IsInnerObject(ToLocal(pos) * scale, scale);
+    return __IsInnerObject(pos * scale, scale);
+#endif
+}
+
+inline bool IsInnerObject(float3 pos)
+{
+#ifdef OBJECT_SCALE
+    return _IsInnerObject(ToLocal(pos), 1.0);
+#else
+    return _IsInnerObject(ToLocal(pos), abs(_Scale));
 #endif
 }
 

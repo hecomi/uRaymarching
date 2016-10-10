@@ -11,7 +11,7 @@ public class RaymarchingObject : MonoBehaviour
     }
 
     [SerializeField] Shape shape = Shape.Cube;
-    [SerializeField] Color gizmoColor = new Color(1f, 1f, 1f, 0.2f);
+    [SerializeField] Color gizmoColor = new Color(1f, 1f, 1f, 0.1f);
     [SerializeField] Color gizmoSelectedColor = new Color(1f, 0f, 0f, 1f);
 
     private int scaleId_;

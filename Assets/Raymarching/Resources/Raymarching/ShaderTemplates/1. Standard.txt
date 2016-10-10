@@ -37,11 +37,14 @@ CGINCLUDE
 @if FollowObjectScale : false
 #define OBJECT_SCALE
 @endif
-@if DoNotOutputDepth
+@if DoNotOutputDepth : false
 #define DO_NOT_OUTPUT_DEPTH
 @endif
-@if SphericalHarmonicsPerPixel
+@if SphericalHarmonicsPerPixel : true
 #define SPHERICAL_HARMONICS_PER_PIXEL
+@endif
+@if CameraInsideObject : false
+#define CAMERA_INSIDE_OBJECT
 @endif
 
 #define DISTANCE_FUNCTION DistanceFunction

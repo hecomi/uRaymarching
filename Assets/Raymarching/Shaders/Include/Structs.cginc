@@ -76,6 +76,7 @@ struct RaymarchInfo
     float3 polyNormal;
     float minDistance;
     float maxDistance;
+    int maxLoop;
     int loop;
 
     // Output

@@ -41,6 +41,9 @@ CGINCLUDE
 @if DoNotOutputDepth
 #define DO_NOT_OUTPUT_DEPTH
 @endif
+@if CameraInsideObject : false
+#define CAMERA_INSIDE_OBJECT
+@endif
 
 #define DISTANCE_FUNCTION DistanceFunction
 #define POST_EFFECT PostEffect

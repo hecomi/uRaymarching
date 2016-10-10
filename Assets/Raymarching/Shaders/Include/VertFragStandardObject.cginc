@@ -53,10 +53,17 @@ GBufferOut Frag(VertStandardObjectOutput i, GBufferOut o)
 	UNITY_INITIALIZE_OUTPUT(RaymarchInfo, ray);
     ray.rayDir = GetCameraDirection(i.screenPos);
     ray.startPos = i.worldPos;
+
+#ifdef CAMERA_INSIDE_OBJECT
+	if (IsInnerObject(GetCameraPosition())) {
+		ray.startPos = GetCameraPosition();
+	}
+#endif
+
     ray.polyNormal = i.worldNormal;
     ray.minDistance = _MinDistance;
     ray.maxDistance = GetCameraMaxDistance();
-    ray.loop = _Loop;
+    ray.maxLoop = _Loop;
 
     Raymarch(ray);
 

@@ -27,11 +27,24 @@ inline float _DistanceFunction(float3 pos)
 
 inline float3 GetDistanceFunctiontionNormal(float3 pos)
 {
-    float d = 0.001;
+    float d = 0.00001;
     return EncodeNormal(normalize(float3(
         _DistanceFunction(pos + float3(  d, 0.0, 0.0)) - _DistanceFunction(pos),
         _DistanceFunction(pos + float3(0.0,   d, 0.0)) - _DistanceFunction(pos),
         _DistanceFunction(pos + float3(0.0, 0.0,   d)) - _DistanceFunction(pos))));
+}
+
+inline bool _ShouldRaymarchFinish(RaymarchInfo ray)
+{
+	if (ray.lastDistance < ray.minDistance) return true;
+
+#ifdef WORLD_SPACE
+	if (ray.totalLength > ray.maxDistance) return true;
+#else
+	if (!IsInnerObject(ray.endPos)) return true;
+#endif
+
+	return false;
 }
 
 inline bool _Raymarch(inout RaymarchInfo ray)
@@ -40,23 +53,14 @@ inline bool _Raymarch(inout RaymarchInfo ray)
     ray.lastDistance = 0.0;
     ray.totalLength = 0.0;
 
-    for (int n = 0; n < ray.loop; ++n) {
+    for (ray.loop = 0; ray.loop < ray.maxLoop; ++ray.loop) {
         ray.lastDistance = _DistanceFunction(ray.endPos);
         ray.totalLength += ray.lastDistance;
         ray.endPos += ray.rayDir * ray.lastDistance;
-        if (ray.lastDistance < ray.minDistance) break;
-#ifdef WORLD_SPACE
-        if (ray.totalLength > ray.maxDistance) break;
-#else
-    #ifdef OBJECT_SCALE
-        if (!IsInnerObject(ray.endPos, 1.0)) break;
-    #else
-        if (!IsInnerObject(ray.endPos, _Scale)) break;
-    #endif
-#endif
+		if (_ShouldRaymarchFinish(ray)) break;
     }
 
-    return ray.lastDistance - ray.minDistance < 0;
+    return ray.lastDistance < ray.minDistance;
 }
 
 void Raymarch(inout RaymarchInfo ray)
@@ -67,6 +71,15 @@ void Raymarch(inout RaymarchInfo ray)
     ray.normal = GetDistanceFunctiontionNormal(ray.endPos);
     ray.depth = GetDepth(ray.endPos);
 #else
+
+	#ifdef CAMERA_INSIDE_OBJECT
+	if (IsInnerObject(GetCameraPosition()) && ray.totalLength < GetCameraNearClip()) {
+		ray.normal = EncodeNormal(-ray.rayDir);
+		ray.depth = 0;
+		return;
+	}
+	#endif
+
     if (ray.totalLength < ray.minDistance) {
         ray.normal = EncodeNormal(ray.polyNormal);
         ray.depth = GetDepth(ray.startPos);

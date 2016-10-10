@@ -29,7 +29,7 @@ float4 Frag(VertShadowOutput i) : SV_Target
     ray.startPos = i.worldPos;
     ray.minDistance = _ShadowMinDistance;
     ray.maxDistance = GetCameraMaxDistance();
-    ray.loop = _ShadowLoop;
+    ray.maxLoop = _ShadowLoop;
 
     if (!_Raymarch(ray)) discard;
 
@@ -49,7 +49,7 @@ void Frag(
     ray.startPos = i.worldPos;
     ray.minDistance = _ShadowMinDistance;
     ray.maxDistance = GetCameraMaxDistance();
-    ray.loop = _ShadowLoop;
+    ray.maxLoop = _ShadowLoop;
 
     // light direction of spot light
     if ((UNITY_MATRIX_P[3].x != 0.0) || 

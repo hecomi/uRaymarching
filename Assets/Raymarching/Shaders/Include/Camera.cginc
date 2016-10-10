@@ -6,7 +6,9 @@ inline float3 GetCameraForward()     { return -UNITY_MATRIX_V[2].xyz;    }
 inline float3 GetCameraUp()          { return UNITY_MATRIX_V[1].xyz;     }
 inline float3 GetCameraRight()       { return UNITY_MATRIX_V[0].xyz;     }
 inline float  GetCameraFocalLength() { return abs(UNITY_MATRIX_P[1][1]); }
-inline float  GetCameraMaxDistance() { return _ProjectionParams.z - _ProjectionParams.y; }
+inline float  GetCameraNearClip()    { return _ProjectionParams.y;       }
+inline float  GetCameraFarClip()     { return _ProjectionParams.z;       }
+inline float  GetCameraMaxDistance() { return GetCameraFarClip() - GetCameraNearClip(); }
 
 inline float3 _GetCameraDirection(float2 sp)
 {

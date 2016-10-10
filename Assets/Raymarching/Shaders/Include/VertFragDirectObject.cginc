@@ -31,7 +31,7 @@ GBufferOut Frag(VertObjectOutput i)
     ray.polyNormal = i.worldNormal;
     ray.minDistance = _MinDistance;
     ray.maxDistance = GetCameraMaxDistance();
-    ray.loop = _Loop;
+    ray.maxLoop = _Loop;
 
     Raymarch(ray);
 
