@@ -400,11 +400,17 @@ public class GeneratorEditor : Editor
         Debug.LogFormat("<color=blue>Reconvert started.\n------------------------------</color>"); 
         var generators = Utils.FindAllAssets<Generator>();
         foreach (var generator in generators) {
-            var editor = Editor.CreateEditor(generator) as GeneratorEditor;
-            Debug.LogFormat("<color=green>{0}</color>", editor.GetShaderPath());
-            editor.CheckShaderUpdate();
-            editor.OnTemplateChanged();
-            editor.GenerateShader();
+            if (target == generator) {
+                Debug.LogFormat("<color=green>{0}</color>", GetShaderPath());
+                OnTemplateChanged();
+                GenerateShader();
+            } else {
+                var editor = Editor.CreateEditor(generator) as GeneratorEditor;
+                Debug.LogFormat("<color=green>{0}</color>", editor.GetShaderPath());
+                editor.CheckShaderUpdate();
+                editor.OnTemplateChanged();
+                editor.GenerateShader();
+            }
         }
         Debug.LogFormat("<color=blue>------------------------------\nReconvert finished.</color>"); 
     }
