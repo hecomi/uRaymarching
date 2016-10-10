@@ -67,7 +67,7 @@ void Raymarch(inout RaymarchInfo ray)
     ray.normal = GetDistanceFunctiontionNormal(ray.endPos);
     ray.depth = GetDepth(ray.endPos);
 #else
-    if (ray.totalLength < 0.01) {
+    if (ray.totalLength < ray.minDistance) {
         ray.normal = ray.polyNormal * 0.5 + 0.5;
         ray.depth = GetDepth(ray.startPos);
     } else {
