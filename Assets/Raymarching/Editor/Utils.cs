@@ -69,28 +69,33 @@ public static class Utils
         EditorGUILayout.EndHorizontal();
     }
 
-    public static List<Material> FindMaterialsUsingShader(Shader shader)
-    {
-        var materials = new List<Material>();
-        var allMaterials = Resources.FindObjectsOfTypeAll<Material>();
-        foreach (var material in allMaterials) {
-            if (material.shader == shader) {
-                materials.Add(material);
-            }
-        }
-        return materials;
-    }
-
-    public static List<T> FindAllAssets<T>() where T : Object
+    public static List<T> FindAllAssets<T>(string query) where T : Object
     {
         var list = new List<T>();
-        var guids = AssetDatabase.FindAssets("t:" + typeof(T));
+        var guids = AssetDatabase.FindAssets(query);
         foreach (var guid in guids) {
             var path = AssetDatabase.GUIDToAssetPath(guid);
             var obj = AssetDatabase.LoadAssetAtPath<T>(path);
             if (obj) list.Add(obj);
         }
         return list;
+    }
+
+    public static List<T> FindAllAssets<T>() where T : Object
+    {
+        return FindAllAssets<T>("t:" + typeof(T));
+    }
+
+    public static List<Material> FindMaterialsUsingShader(Shader shader)
+    {
+        var materials = new List<Material>();
+        var allMaterials = FindAllAssets<Material>("t:Material");
+        foreach (var material in allMaterials) {
+            if (material.shader == shader) {
+                materials.Add(material);
+            }
+        }
+        return materials;
     }
 }
 

@@ -88,16 +88,7 @@ public class GeneratorEditor : Editor
         DrawConditions();
         DrawBlocks();
         DrawVariables();
-
-        materialsFolded_.boolValue = Utils.Foldout("Material References", materialsFolded_.boolValue);
-        if (materialsFolded_.boolValue) {
-            ++EditorGUI.indentLevel;
-            var materials = Utils.FindMaterialsUsingShader(shader_.objectReferenceValue as Shader);
-            foreach (var material in materials) {
-                EditorGUILayout.ObjectField(material, typeof(Material), false);
-            }
-            --EditorGUI.indentLevel;
-        }
+        DrawMaterialReferences();
 
         EditorGUILayout.BeginHorizontal();
         {
@@ -233,6 +224,19 @@ public class GeneratorEditor : Editor
         }
 
         --EditorGUI.indentLevel;
+    }
+
+    void DrawMaterialReferences()
+    {
+        materialsFolded_.boolValue = Utils.Foldout("Material References", materialsFolded_.boolValue);
+        if (materialsFolded_.boolValue) {
+            ++EditorGUI.indentLevel;
+            var materials = Utils.FindMaterialsUsingShader(shader_.objectReferenceValue as Shader);
+            foreach (var material in materials) {
+                EditorGUILayout.ObjectField(material, typeof(Material), false);
+            }
+            --EditorGUI.indentLevel;
+        }
     }
 
     string ToConstVariable(string name)
