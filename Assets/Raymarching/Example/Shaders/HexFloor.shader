@@ -35,7 +35,7 @@ CGINCLUDE
 
 
 
-
+#define SPHERICAL_HARMONICS_PER_PIXEL
 
 #define DISTANCE_FUNCTION DistanceFunction
 #define POST_EFFECT PostEffect
