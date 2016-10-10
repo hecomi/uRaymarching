@@ -27,7 +27,7 @@ inline float _DistanceFunction(float3 pos)
 
 inline float3 GetDistanceFunctiontionNormal(float3 pos)
 {
-    float d = 0.00001;
+    float d = 0.0001;
     return EncodeNormal(normalize(float3(
         _DistanceFunction(pos + float3(  d, 0.0, 0.0)) - _DistanceFunction(pos),
         _DistanceFunction(pos + float3(0.0,   d, 0.0)) - _DistanceFunction(pos),
