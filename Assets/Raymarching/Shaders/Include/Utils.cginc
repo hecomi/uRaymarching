@@ -21,7 +21,7 @@ inline float GetDepth(float3 pos)
 #endif 
 }
 
-inline float EncodeNormal(float3 normal)
+inline float3 EncodeNormal(float3 normal)
 {
 	return normal * 0.5 + 0.5;
 }

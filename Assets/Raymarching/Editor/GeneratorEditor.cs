@@ -2,7 +2,6 @@
 using UnityEditor;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 
 namespace Raymarching
 {
@@ -182,21 +181,22 @@ public class GeneratorEditor : Editor
 
             var name = Utils.ToSpacedCamel(kv.Key);
             var constValue = ToConstVariable(kv.Key);
+            string changedValue;
 
             if (constValue != null) {
+                changedValue = constValue;
                 constVars.Add(name, constValue);
-                continue;
+            } else {
+                if (kv.Value.Count <= 1) {
+                    changedValue = EditorGUILayout.TextField(name, value.stringValue);
+                } else {
+                    var index = kv.Value.IndexOf(value.stringValue);
+                    if (index == -1) index = 0;
+                    index = EditorGUILayout.Popup(name, index, kv.Value.ToArray());
+                    changedValue = kv.Value[index];
+                }
             }
 
-            string changedValue;
-            if (kv.Value.Count <= 1) {
-                changedValue = EditorGUILayout.TextField(name, value.stringValue);
-            } else {
-                var index = kv.Value.IndexOf(value.stringValue);
-                if (index == -1) index = 0;
-                index = EditorGUILayout.Popup(name, index, kv.Value.ToArray());
-                changedValue = kv.Value[index];
-            }
             if (value.stringValue != changedValue) {
                 value.stringValue = changedValue;
             }
@@ -314,7 +314,7 @@ public class GeneratorEditor : Editor
                 var key = prop.FindPropertyRelative("key");
                 var value = prop.FindPropertyRelative("value");
                 key.stringValue = kv.Key;
-                value.stringValue = kv.Value.Count >= 1 ? kv.Value[0] : "";
+                value.stringValue = (kv.Value.Count >= 1) ? kv.Value[0] : "";
             }
         }
     }
@@ -365,6 +365,10 @@ public class GeneratorEditor : Editor
         foreach (var kv in templateParser_.variables) {
             var prop = FindProperty(variables_, kv.Key);
             var value = prop.FindPropertyRelative("value");
+            var constValue = ToConstVariable(kv.Key);
+            if (constValue != null) {
+                value.stringValue = constValue;
+            }
             info.variables.Add(kv.Key, value.stringValue);
         }
 
