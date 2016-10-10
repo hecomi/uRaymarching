@@ -25,7 +25,7 @@ public static class Color
 public static class Editor
 {
     public static string font = "Raymarching/Font/NotoMono-regular";
-    public static int fontSize = 14;
+    public static int fontSize = 12;
     public static bool wordWrap = false;
     public static int minHeight = 200;
 }
