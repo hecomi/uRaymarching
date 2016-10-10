@@ -31,6 +31,7 @@ public class GeneratorEditor : Editor
     FileWatcher watcher_ = new FileWatcher();
 
     string errorMessage_;
+    bool constVarsFolded_ = false;
 
     bool hasShaderReference
     {
@@ -79,8 +80,8 @@ public class GeneratorEditor : Editor
 
         DrawBasics();
         DrawConditions();
-        DrawBlocks();
         DrawVariables();
+        DrawBlocks();
         DrawMaterialReferences();
         DrawButtons();
         DrawMessages();
@@ -172,6 +173,8 @@ public class GeneratorEditor : Editor
 
         ++EditorGUI.indentLevel;
 
+        var constVars = new Dictionary<string, string>();
+
         foreach (var kv in templateParser_.variables) {
             var prop = FindProperty(variables_, kv.Key);
             if (prop == null) continue;
@@ -180,23 +183,32 @@ public class GeneratorEditor : Editor
             var name = Utils.ToSpacedCamel(kv.Key);
             var constValue = ToConstVariable(kv.Key);
 
-            if (constValue == null) {
-                string changedValue;
-                if (kv.Value.Count <= 1) {
-                    changedValue = EditorGUILayout.TextField(name, value.stringValue);
-                } else {
-                    var index = kv.Value.IndexOf(value.stringValue);
-                    if (index == -1) index = 0;
-                    index = EditorGUILayout.Popup(name, index, kv.Value.ToArray());
-                    changedValue = kv.Value[index];
-                }
-                if (value.stringValue != changedValue) {
-                    value.stringValue = changedValue;
-                }
-            } else {
-                value.stringValue = constValue;
-                Utils.ReadOnlyTextField("(Const) " + name, constValue);
+            if (constValue != null) {
+                constVars.Add(name, constValue);
+                continue;
             }
+
+            string changedValue;
+            if (kv.Value.Count <= 1) {
+                changedValue = EditorGUILayout.TextField(name, value.stringValue);
+            } else {
+                var index = kv.Value.IndexOf(value.stringValue);
+                if (index == -1) index = 0;
+                index = EditorGUILayout.Popup(name, index, kv.Value.ToArray());
+                changedValue = kv.Value[index];
+            }
+            if (value.stringValue != changedValue) {
+                value.stringValue = changedValue;
+            }
+        }
+
+        constVarsFolded_ = EditorGUILayout.Foldout(constVarsFolded_, "(Constants controlled by uRaymarching)");
+        if (constVarsFolded_) {
+            ++EditorGUI.indentLevel;
+            foreach (var kv in constVars) {
+                Utils.ReadOnlyTextField(kv.Key, kv.Value);
+            }
+            --EditorGUI.indentLevel;
         }
 
         --EditorGUI.indentLevel;
