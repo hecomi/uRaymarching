@@ -11,7 +11,8 @@ Properties
     [Header(Raymarching Settings)]
     _Loop("Loop", Range(1, 100)) = 30
     _MinDistance("Minimum Distance", Range(0.001, 0.1)) = 0.01
-
+    _ShadowLoop("Shadow Loop", Range(1, 100)) = 10
+    _ShadowMinDistance("Shadow Minimum Distance", Range(0.001, 0.1)) = 0.01
 
 // @block Properties
 // _Color("Color", Color) = (1.0, 1.0, 1.0, 1.0)
@@ -27,14 +28,14 @@ Tags
     "DisableBatching" = "True"
 }
 
-Cull Off
+Cull Back
 
 CGINCLUDE
 
 
 
+#define SPHERICAL_HARMONICS_PER_PIXEL
 
-#define CAMERA_INSIDE_OBJECT
 
 #define DISTANCE_FUNCTION DistanceFunction
 #define POST_EFFECT PostEffect
@@ -45,7 +46,6 @@ CGINCLUDE
 // @block DistanceFunction
 inline float DistanceFunction(float3 pos)
 {
-/*
     float t = _Time.x;
     float a = 6 * PI * t;
     float s = pow(sin(a), 2.0);
@@ -54,8 +54,7 @@ inline float DistanceFunction(float3 pos)
         Repeat(pos, 0.2),
         0.1 - 0.1 * s,
         0.1 / length(pos * 2.0));
-    return lerp(d1, d2, s);*/
-return Box(Repeat(pos, 0.5), 0.1);
+    return lerp(d1, d2, s);
 }
 // @endblock
 
@@ -91,7 +90,20 @@ Pass
     ENDCG
 }
 
+Pass
+{
+    Tags { "LightMode" = "ShadowCaster" }
 
+    CGPROGRAM
+    #include "Assets/Raymarching/Shaders/Include/VertFragShadowObject.cginc"
+    #pragma target 3.0
+    #pragma vertex Vert
+    #pragma fragment Frag
+    #pragma multi_compile_shadowcaster
+    #pragma multi_compile OBJECT_SHAPE_CUBE OBJECT_SHAPE_SPHERE ___
+    #pragma fragmentoption ARB_precision_hint_fastest
+    ENDCG
+}
 
 }
 
