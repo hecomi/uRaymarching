@@ -27,7 +27,7 @@ inline float _DistanceFunction(float3 pos)
 
 inline float3 GetDistanceFunctiontionNormal(float3 pos)
 {
-    float d = 0.0001;
+    const float d = 0.0001;
     return EncodeNormal(normalize(float3(
         _DistanceFunction(pos + float3(  d, 0.0, 0.0)) - _DistanceFunction(pos),
         _DistanceFunction(pos + float3(0.0,   d, 0.0)) - _DistanceFunction(pos),
@@ -36,15 +36,15 @@ inline float3 GetDistanceFunctiontionNormal(float3 pos)
 
 inline bool _ShouldRaymarchFinish(RaymarchInfo ray)
 {
-	if (ray.lastDistance < ray.minDistance) return true;
+    if (ray.lastDistance < ray.minDistance) return true;
 
 #ifdef WORLD_SPACE
-	if (ray.totalLength > ray.maxDistance) return true;
+    if (ray.totalLength > ray.maxDistance) return true;
 #else
-	if (!IsInnerObject(ray.endPos)) return true;
+    if (!IsInnerObject(ray.endPos)) return true;
 #endif
 
-	return false;
+    return false;
 }
 
 inline bool _Raymarch(inout RaymarchInfo ray)
@@ -57,7 +57,7 @@ inline bool _Raymarch(inout RaymarchInfo ray)
         ray.lastDistance = _DistanceFunction(ray.endPos);
         ray.totalLength += ray.lastDistance;
         ray.endPos += ray.rayDir * ray.lastDistance;
-		if (_ShouldRaymarchFinish(ray)) break;
+        if (_ShouldRaymarchFinish(ray)) break;
     }
 
     return ray.lastDistance < ray.minDistance;
@@ -72,13 +72,13 @@ void Raymarch(inout RaymarchInfo ray)
     ray.depth = GetDepth(ray.endPos);
 #else
 
-	#ifdef CAMERA_INSIDE_OBJECT
-	if (IsInnerObject(GetCameraPosition()) && ray.totalLength < GetCameraNearClip()) {
-		ray.normal = EncodeNormal(-ray.rayDir);
-		ray.depth = 0;
-		return;
-	}
-	#endif
+    #ifdef CAMERA_INSIDE_OBJECT
+    if (IsInnerObject(GetCameraPosition()) && ray.totalLength < GetCameraNearClip()) {
+        ray.normal = EncodeNormal(-ray.rayDir);
+        ray.depth = 0;
+        return;
+    }
+    #endif
 
     if (ray.totalLength < ray.minDistance) {
         ray.normal = EncodeNormal(ray.polyNormal);

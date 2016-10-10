@@ -23,7 +23,7 @@ inline float GetDepth(float3 pos)
 
 inline float3 EncodeNormal(float3 normal)
 {
-	return normal * 0.5 + 0.5;
+    return normal * 0.5 + 0.5;
 }
 
 inline bool IsInnerCube(float3 pos, float3 scale)
@@ -33,7 +33,7 @@ inline bool IsInnerCube(float3 pos, float3 scale)
 
 inline bool IsInnerSphere(float3 pos, float3 scale)
 {
-	return length(pos) <= length(scale) * 0.28867513459;
+    return length(pos) <= length(scale) * 0.28867513459;
 }
 
 inline bool __IsInnerObject(float3 pos, float3 scale)
@@ -44,7 +44,7 @@ inline bool __IsInnerObject(float3 pos, float3 scale)
     return IsInnerSphere(pos, scale);
 #else
     return true;
-#endif	
+#endif    
 }
 
 inline bool _IsInnerObject(float3 pos, float3 scale)

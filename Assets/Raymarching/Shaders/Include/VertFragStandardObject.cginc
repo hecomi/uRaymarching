@@ -50,14 +50,14 @@ VertStandardObjectOutput Vert(appdata_full v)
 GBufferOut Frag(VertStandardObjectOutput i, GBufferOut o)
 {
     RaymarchInfo ray;
-	UNITY_INITIALIZE_OUTPUT(RaymarchInfo, ray);
+    UNITY_INITIALIZE_OUTPUT(RaymarchInfo, ray);
     ray.rayDir = GetCameraDirection(i.screenPos);
     ray.startPos = i.worldPos;
 
 #ifdef CAMERA_INSIDE_OBJECT
-	if (IsInnerObject(GetCameraPosition())) {
-		ray.startPos = GetCameraPosition();
-	}
+    if (IsInnerObject(GetCameraPosition())) {
+        ray.startPos = GetCameraPosition();
+    }
 #endif
 
     ray.polyNormal = i.worldNormal;
@@ -86,7 +86,7 @@ GBufferOut Frag(VertStandardObjectOutput i, GBufferOut o)
     so.Normal = worldNormal;
 
 #ifdef POST_EFFECT
-	POST_EFFECT(ray, so);
+    POST_EFFECT(ray, so);
 #endif
 
     UnityGI gi;
@@ -144,7 +144,7 @@ GBufferOut Frag(VertStandardObjectOutput i, GBufferOut o)
 
     UNITY_OPAQUE_ALPHA(o.diffuse.a);
 
-	return o;
+    return o;
 }
 
 #endif

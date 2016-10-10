@@ -13,7 +13,7 @@ inline float RoundBox(float3 pos, float3 size, float round)
 
 inline float Box(float3 pos, float3 size)
 {
-	// complete box (round = 0.0) cannot provide high-precision normals.
+    // complete box (round = 0.0) cannot provide high-precision normals.
     return RoundBox(pos, size, 0.0001);
 }
 
