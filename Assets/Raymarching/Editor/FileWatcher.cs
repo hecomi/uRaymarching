@@ -32,7 +32,9 @@ public class FileWatcher
 
     public void Stop()
     {
-        watcher_.EnableRaisingEvents = false;
+        if (watcher_ != null) {
+            watcher_.EnableRaisingEvents = false;
+        }
     }
 
     public void Update()

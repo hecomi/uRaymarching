@@ -63,6 +63,7 @@ public class GeneratorEditor : Editor
     void OnDisable()
     {
         template_.onChange -= OnTemplateChanged;
+        watcher_.Stop();
     }
 
     public override void OnInspectorGUI()
@@ -76,50 +77,13 @@ public class GeneratorEditor : Editor
             OnTemplateChanged();
         }
 
-        basicFolded_.boolValue = Utils.Foldout("Basic", basicFolded_.boolValue);
-        if (basicFolded_.boolValue) {
-            ++EditorGUI.indentLevel;
-            EditorGUILayout.PropertyField(name_);
-            EditorGUILayout.PropertyField(shader_);
-            template_.Draw();
-            --EditorGUI.indentLevel;
-        }
-
+        DrawBasics();
         DrawConditions();
         DrawBlocks();
         DrawVariables();
         DrawMaterialReferences();
-
-        EditorGUILayout.BeginHorizontal();
-        {
-            var buttonFontSize = GUI.skin.label.fontSize;
-            var buttonPadding = new RectOffset(24, 24, 6, 6);
-
-            GUILayout.FlexibleSpace();
-            var style = new GUIStyle(EditorStyles.miniButtonLeft);
-            style.fontSize = buttonFontSize;
-            style.padding = buttonPadding;
-            if (GUILayout.Button("Export (Ctrl+R)", style)) {
-                ClearError();
-                try {
-                    GenerateShader();
-                } catch (System.Exception e) {
-                    AddError(e.Message);
-                }
-            }
-
-            style = new GUIStyle(EditorStyles.miniButtonRight);
-            style.fontSize = buttonFontSize;
-            style.padding = buttonPadding;
-            if (GUILayout.Button("Update Template", style)) {
-                OnTemplateChanged();
-            }
-        }
-        EditorGUILayout.EndHorizontal();
-
-        if (!string.IsNullOrEmpty(errorMessage_)) {
-            EditorGUILayout.HelpBox(errorMessage_, MessageType.Error, true);
-        }
+        DrawButtons();
+        DrawMessages();
 
         serializedObject.ApplyModifiedProperties();
     }
@@ -145,6 +109,18 @@ public class GeneratorEditor : Editor
         var index = array.arraySize;
         array.InsertArrayElementAtIndex(index);
         return array.GetArrayElementAtIndex(index);
+    }
+
+    void DrawBasics()
+    {
+        basicFolded_.boolValue = Utils.Foldout("Basic", basicFolded_.boolValue);
+        if (basicFolded_.boolValue) {
+            ++EditorGUI.indentLevel;
+            EditorGUILayout.PropertyField(name_);
+            EditorGUILayout.PropertyField(shader_);
+            template_.Draw();
+            --EditorGUI.indentLevel;
+        }
     }
 
     void DrawConditions()
@@ -239,6 +215,43 @@ public class GeneratorEditor : Editor
         }
     }
 
+    void DrawButtons()
+    {
+        EditorGUILayout.BeginHorizontal();
+        {
+            var buttonFontSize = GUI.skin.label.fontSize;
+            var buttonPadding = new RectOffset(24, 24, 6, 6);
+
+            GUILayout.FlexibleSpace();
+            var style = new GUIStyle(EditorStyles.miniButtonLeft);
+            style.fontSize = buttonFontSize;
+            style.padding = buttonPadding;
+            if (GUILayout.Button("Export (Ctrl+R)", style)) {
+                ClearError();
+                try {
+                    GenerateShader();
+                } catch (System.Exception e) {
+                    AddError(e.Message);
+                }
+            }
+
+            style = new GUIStyle(EditorStyles.miniButtonRight);
+            style.fontSize = buttonFontSize;
+            style.padding = buttonPadding;
+            if (GUILayout.Button("Update Template", style)) {
+                OnTemplateChanged();
+            }
+        }
+        EditorGUILayout.EndHorizontal();
+    }
+
+    void DrawMessages()
+    {
+        if (!string.IsNullOrEmpty(errorMessage_)) {
+            EditorGUILayout.HelpBox(errorMessage_, MessageType.Error, true);
+        }
+    }
+
     string ToConstVariable(string name)
     {
         switch (name) {
@@ -272,7 +285,7 @@ public class GeneratorEditor : Editor
                 var folded = prop.FindPropertyRelative("folded");
                 key.stringValue = kv.Key;
                 value.stringValue = kv.Value;
-                folded.boolValue = true;
+                folded.boolValue = false;
             }
         }
 

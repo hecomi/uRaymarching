@@ -38,9 +38,9 @@ public class Generator : ScriptableObject
     public List<ShaderBlock> blocks = new List<ShaderBlock>();
 
     public bool basicFolded = true;
-    public bool conditionsFolded = true;
-    public bool variablesFolded = true;
-    public bool materialsFolded = true;
+    public bool conditionsFolded = false;
+    public bool variablesFolded = false;
+    public bool materialsFolded = false;
 
     public string distanceFunction = "";
     public string postEffect = "";
