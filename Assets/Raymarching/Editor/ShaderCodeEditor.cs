@@ -40,16 +40,23 @@ public class ShaderCodeEditor
 
     public void Draw()
     {
-        GUI.SetNextControlName(name + "_fold");
+        var preFolded = folded.boolValue;
         folded.boolValue = Utils.Foldout(name, folded.boolValue);
+
         if (!folded.boolValue) {
-            if (editor_.isFocused) {
-                GUI.FocusControl(name + "_fold");
+            if (preFolded) {
+                GUI.FocusControl("");
             }
             return;
         }
 
-        scrollPos_ = EditorGUILayout.BeginScrollView(scrollPos_, GUILayout.MinHeight(Common.Editor.minHeight), GUILayout.MaxHeight(Screen.height));
+        if (!preFolded) {
+            GUI.FocusControl(name);
+        }
+
+        var minHeight = GUILayout.MinHeight(Common.Editor.minHeight);
+        var maxHeight = GUILayout.MaxHeight(Screen.height);
+        scrollPos_ = EditorGUILayout.BeginScrollView(scrollPos_, minHeight, maxHeight);
         {
             var style = new GUIStyle(GUI.skin.textArea);
             style.padding = new RectOffset(6, 6, 6, 6);
@@ -58,7 +65,6 @@ public class ShaderCodeEditor
             style.wordWrap = Common.Editor.wordWrap;
 
             var editedCode = editor_.Draw(code, style, GUILayout.ExpandHeight(true));
-
             if (editedCode != code) {
                 code = editedCode;
             }
