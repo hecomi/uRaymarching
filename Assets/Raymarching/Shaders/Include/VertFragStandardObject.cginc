@@ -55,8 +55,9 @@ GBufferOut Frag(VertStandardObjectOutput i, GBufferOut o)
     ray.startPos = i.worldPos;
 
 #ifdef CAMERA_INSIDE_OBJECT
-    if (IsInnerObject(GetCameraPosition())) {
-        ray.startPos = GetCameraPosition();
+    float3 startPos = GetCameraPosition() + (GetCameraNearClip() + 0.01) * ray.rayDir;
+    if (IsInnerObject(startPos)) {
+        ray.startPos = startPos;
     }
 #endif
 

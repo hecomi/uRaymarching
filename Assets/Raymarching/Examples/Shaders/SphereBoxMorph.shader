@@ -28,14 +28,14 @@ Tags
     "DisableBatching" = "True"
 }
 
-Cull Back
+Cull Off
 
 CGINCLUDE
 
 
 
 #define SPHERICAL_HARMONICS_PER_PIXEL
-
+#define CAMERA_INSIDE_OBJECT
 
 #define DISTANCE_FUNCTION DistanceFunction
 #define POST_EFFECT PostEffect

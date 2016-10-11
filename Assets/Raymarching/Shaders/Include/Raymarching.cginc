@@ -75,7 +75,7 @@ void Raymarch(inout RaymarchInfo ray)
     #ifdef CAMERA_INSIDE_OBJECT
     if (IsInnerObject(GetCameraPosition()) && ray.totalLength < GetCameraNearClip()) {
         ray.normal = EncodeNormal(-ray.rayDir);
-        ray.depth = 0;
+        ray.depth = GetDepth(ray.startPos);
         return;
     }
     #endif
