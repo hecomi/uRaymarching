@@ -243,10 +243,17 @@ public class GeneratorEditor : Editor
             if (GUILayout.Button("Export (Ctrl+R)", style)) {
                 ClearError();
                 try {
-                    GenerateShader();
+                    ExportShader();
                 } catch (System.Exception e) {
                     AddError(e.Message);
                 }
+            }
+
+            style = new GUIStyle(EditorStyles.miniButtonMid);
+            style.fontSize = buttonFontSize;
+            style.padding = buttonPadding;
+            if (GUILayout.Button("Create Material", style)) {
+                CreateMaterial();
             }
 
             style = new GUIStyle(EditorStyles.miniButtonMid);
@@ -341,7 +348,7 @@ public class GeneratorEditor : Editor
         shader_.objectReferenceValue = AssetDatabase.LoadAssetAtPath<Shader>(outputPath);
     }
 
-    void GenerateShader()
+    void ExportShader()
     {
         ShaderTemplateConvertInfo info = new ShaderTemplateConvertInfo();
 
@@ -403,13 +410,13 @@ public class GeneratorEditor : Editor
             if (target == generator) {
                 Debug.LogFormat("<color=green>{0}</color>", GetShaderPath());
                 OnTemplateChanged();
-                GenerateShader();
+                ExportShader();
             } else {
                 var editor = Editor.CreateEditor(generator) as GeneratorEditor;
                 Debug.LogFormat("<color=green>{0}</color>", editor.GetShaderPath());
                 editor.CheckShaderUpdate();
                 editor.OnTemplateChanged();
-                editor.GenerateShader();
+                editor.ExportShader();
             }
         }
         Debug.LogFormat("<color=blue>------------------------------\nReconvert finished.</color>"); 
@@ -438,12 +445,19 @@ public class GeneratorEditor : Editor
         }
     }
 
+    void CreateMaterial()
+    {
+        var material = new Material(shader_.objectReferenceValue as Shader);
+        var path = string.Format("{0}/{1}.mat", GetOutputDirPath(), GetShaderName());
+        ProjectWindowUtil.CreateAsset(material, path);
+    }
+
     void HandleKeyEvents()
     {
         var e = Event.current;
         var isKeyPressing = e.type == EventType.Layout; // not KeyDown
         if (isKeyPressing && e.control && e.keyCode == KeyCode.R) {
-            GenerateShader();
+            ExportShader();
         }
     }
 
