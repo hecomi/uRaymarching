@@ -49,7 +49,7 @@ inline float DistanceFunction(float3 pos)
 {
     // combine even hex tiles and odd hex tiles
 
-    float radius = 0.3;
+    float radius = 0.2;
     float space = 0.1;
     float wave = 0.1;
     float height = abs(_Scale.y) * 0.5 - wave;
@@ -98,6 +98,7 @@ inline float DistanceFunction(float3 pos)
     // combine
     return min(d1, d2);
 }
+
 // @endblock
 
 // @block PostEffect
