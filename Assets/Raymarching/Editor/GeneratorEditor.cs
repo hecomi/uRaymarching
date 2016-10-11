@@ -65,8 +65,12 @@ public class GeneratorEditor : Editor
 
     void OnDisable()
     {
-        template_.onChange -= OnTemplateChanged;
-        watcher_.Stop();
+        if (template_ != null) {
+            template_.onChange -= OnTemplateChanged;
+        }
+        if (watcher_ != null) {
+            watcher_.Stop();
+        }
     }
 
     public override void OnInspectorGUI()
