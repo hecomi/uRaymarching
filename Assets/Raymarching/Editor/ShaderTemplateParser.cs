@@ -54,6 +54,7 @@ public class ShaderTemplateParser
         code = WriteConditions(code, info);
         code = WriteBlocks(code, info);
         code = WriteVariables(code, info);
+        code = code.Replace("\r\n", "\n");
         return code;
     }
 
@@ -86,13 +87,15 @@ public class ShaderTemplateParser
             }
             return (info.conditions[cond]) ? trueValue : falseValue;
         });
+
         var preCode = code;
         code = regex.Replace(code, evaluator);
         while (code != preCode) {
             preCode = code;
             code = regex.Replace(code, evaluator);
         }
-        return regex.Replace(code, evaluator);
+
+        return code;
     }
 
     void ParseBlocks()

@@ -377,7 +377,6 @@ public class GeneratorEditor : Editor
         }
 
         var code = templateParser_.Convert(info);
-        code = code.Replace("\r\n", "\n");
 
         // rename if generator has a shader reference.
         if (hasShaderReference) {
