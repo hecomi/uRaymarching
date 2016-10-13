@@ -1,6 +1,8 @@
 uRaymarching
 ============
-**uRaymarching** is a tool to create raymarching shaders easily in Unity.
+**uRaymarching** is a tool to create raymarching shaders easily in Unity. Please watch the following movie to learn how to use this asset:
+
+- [https://www.youtube.com/watch?v=AppyVflAagc](https://www.youtube.com/watch?v=AppyVflAagc)
 
 License
 -------
