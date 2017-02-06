@@ -64,6 +64,14 @@ inline float3 Rotate(float3 p, float angle, float3 axis)
     return mul(m, p);
 }
 
+//inline float2 RotTwo(float2 pos, float angle)
+//{
+// float c = cos(angle);
+// float s = sin(angle);
+// return float2(c,s,-s,c) * pos;
+//}
+
+
 inline float3 TwistY(float3 p, float power)
 {
     float s = sin(power * p.y);
