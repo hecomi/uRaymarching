@@ -3,6 +3,7 @@
 
 namespace ColorScheme
 {
+    // http://ethanschoonover.com/solarized
     public static class Solarized
     {
         public static string base03  = "#002b36";
