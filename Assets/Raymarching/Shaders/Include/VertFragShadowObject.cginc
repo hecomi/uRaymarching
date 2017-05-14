@@ -8,11 +8,20 @@
 
 float _ShadowMinDistance;
 int _ShadowLoop;
+float _ShadowExtraBias;
+
+float4 ApplyLinearShadowBias(float4 clipPos)
+{
+    clipPos.z += saturate((unity_LightShadowBias.x + _ShadowExtraBias) / clipPos.w);
+    float clamped = max(clipPos.z, clipPos.w * UNITY_NEAR_CLIP_VALUE);
+    clipPos.z = lerp(clipPos.z, clamped, unity_LightShadowBias.y);
+    return clipPos;
+}
 
 VertShadowOutput Vert(VertShadowInput v)
 {
     VertShadowOutput o;
-    TRANSFER_SHADOW_CASTER_NORMALOFFSET(o);
+    o.pos = UnityObjectToClipPos(v.vertex);
     o.screenPos = o.pos;
     o.worldPos = mul(unity_ObjectToWorld, v.vertex);
     o.normal = v.normal;
@@ -65,8 +74,9 @@ void Frag(
     if (!_Raymarch(ray)) discard;
 
     float4 opos = mul(unity_WorldToObject, float4(ray.endPos, 1.0));
-    opos = UnityClipSpaceShadowCasterPos(opos, i.normal);
-    opos = UnityApplyLinearShadowBias(opos);
+    float3 worldNormal = 2.0 * ray.normal - 1.0;
+    opos = UnityClipSpaceShadowCasterPos(opos, worldNormal);
+    opos = ApplyLinearShadowBias(opos);
 
 #if defined(SHADER_API_D3D9) || defined(SHADER_API_D3D11)
     outColor = outDepth = opos.z / opos.w;
