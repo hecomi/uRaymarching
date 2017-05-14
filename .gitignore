@@ -19,7 +19,6 @@ ExportedObj/
 *.booproj
 *.svd
 
-
 # Unity3D generated meta files
 *.pidb.meta
 
@@ -29,6 +28,9 @@ sysinfo.txt
 # Builds
 *.apk
 *.unitypackage
+
+# OS
+.DS_Store
 
 # For This Project
 Assets/3rd\ Parties/
