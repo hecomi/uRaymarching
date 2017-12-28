@@ -82,9 +82,10 @@ Pass
     #pragma target 3.0
     #pragma vertex Vert
     #pragma fragment Frag
-    #pragma multi_compile_prepassfinal
-    #pragma multi_compile OBJECT_SHAPE_CUBE OBJECT_SHAPE_SPHERE ___
     #pragma exclude_renderers nomrt
+    #pragma multi_compile_prepassfinal
+    #pragma multi_compile ___ UNITY_HDR_ON
+    #pragma multi_compile OBJECT_SHAPE_CUBE OBJECT_SHAPE_SPHERE ___
     ENDCG
 }
 
