@@ -27,7 +27,6 @@ public class RaymarchingRenderer : MonoBehaviour
         #endif
         mesh.RecalculateNormals();
         mesh.RecalculateBounds();
-        mesh.Optimize();
         return mesh;
     }
 

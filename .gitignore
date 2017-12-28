@@ -32,6 +32,9 @@ sysinfo.txt
 # OS
 .DS_Store
 
+# VSCode
+.vscode
+
 # For This Project
 Assets/3rd\ Parties/
 Wiki

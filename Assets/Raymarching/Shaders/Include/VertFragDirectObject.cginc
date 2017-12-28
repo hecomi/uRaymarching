@@ -1,4 +1,6 @@
-﻿#ifndef VERT_FRAG_OBJECT_H
+﻿// Upgrade NOTE: replaced 'mul(UNITY_MATRIX_MVP,*)' with 'UnityObjectToClipPos(*)'
+
+#ifndef VERT_FRAG_OBJECT_H
 #define VERT_FRAG_OBJECT_H
 
 #include "UnityCG.cginc"
@@ -15,7 +17,7 @@ float4 _Emission;
 VertObjectOutput Vert(VertObjectInput i)
 {
     VertObjectOutput o;
-    o.vertex = mul(UNITY_MATRIX_MVP, i.vertex);
+    o.vertex = UnityObjectToClipPos(i.vertex);
     o.screenPos = o.vertex;
     o.worldPos = mul(unity_ObjectToWorld, i.vertex);
     o.worldNormal = mul(unity_ObjectToWorld, i.normal);
