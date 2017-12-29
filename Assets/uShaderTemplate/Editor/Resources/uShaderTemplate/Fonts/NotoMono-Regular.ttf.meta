@@ -1,0 +1,24 @@
+fileFormatVersion: 2
+guid: 278ecf23a382e4292b4a907449fd15f0
+timeCreated: 1475660344
+licenseType: Pro
+TrueTypeFontImporter:
+  externalObjects: {}
+  serializedVersion: 4
+  fontSize: 16
+  forceTextureCase: -2
+  characterSpacing: 0
+  characterPadding: 1
+  includeFontData: 1
+  fontName: Noto Mono
+  fontNames:
+  - Noto Mono
+  fallbackFontReferences:
+  - {fileID: 12800000, guid: 9c8d17aeaa1c7bf47805458f830d46cb, type: 3}
+  customCharacters: 
+  fontRenderingMode: 0
+  ascentCalculationMode: 1
+  useLegacyBoundsCalculation: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

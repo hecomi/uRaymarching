@@ -1,23 +1,25 @@
-Shader "Raymarching/SphereBoxMorph"
+Shader "Raymarching/<Name>"
 {
 
 Properties
 {
-    [Header(PBS)]
-    _Color("Color", Color) = (1.0, 1.0, 1.0, 1.0)
-    _Metallic("Metallic", Range(0.0, 1.0)) = 0.5
-    _Glossiness("Smoothness", Range(0.0, 1.0)) = 0.5
+    [Header(GBuffer)]
+    _Diffuse("Diffuse", Color) = (1.0, 1.0, 1.0, 1.0)
+    _Specular("Specular", Color) = (0.0, 0.0, 0.0, 0.0)
+    _Emission("Emission", Color) = (0.0, 0.0, 0.0, 0.0)
 
     [Header(Raymarching Settings)]
     _Loop("Loop", Range(1, 100)) = 30
     _MinDistance("Minimum Distance", Range(0.001, 0.1)) = 0.01
+@if ShadowCaster : true
     _ShadowLoop("Shadow Loop", Range(1, 100)) = 10
     _ShadowMinDistance("Shadow Minimum Distance", Range(0.001, 0.1)) = 0.01
     _ShadowExtraBias("Shadow Extra Bias", Range(0.0, 1.0)) = 0.02
+@endif
 
-// @block Properties
-// _Color("Color", Color) = (1.0, 1.0, 1.0, 1.0)
-// @endblock
+@block Properties
+// _Color2("Color2", Color) = (1.0, 1.0, 1.0, 1.0)
+@endblock
 }
 
 SubShader
@@ -29,43 +31,41 @@ Tags
     "DisableBatching" = "True"
 }
 
-Cull Off
-
 CGINCLUDE
 
-
-
-#define SPHERICAL_HARMONICS_PER_PIXEL
+@if WorldSpace : false
+#define WORLD_SPACE
+@endif
+@if FollowObjectScale : false
+#define OBJECT_SCALE
+@endif
+@if DoNotOutputDepth
+#define DO_NOT_OUTPUT_DEPTH
+@endif
+@if CameraInsideObject : false
 #define CAMERA_INSIDE_OBJECT
+@endif
 
 #define DISTANCE_FUNCTION DistanceFunction
 #define POST_EFFECT PostEffect
-#define PostEffectOutput SurfaceOutputStandard
+#define PostEffectOutput GBufferOut
 
-#include "Assets/Raymarching/Shaders/Include/Common.cginc"
+#include "<RaymarchingShaderDirectory>/Common.cginc"
 
-// @block DistanceFunction
+@block DistanceFunction
 inline float DistanceFunction(float3 pos)
 {
-    float t = _Time.x;
-    float a = 6 * PI * t;
-    float s = pow(sin(a), 2.0);
-    float d1 = Sphere(pos, 0.75);
-    float d2 = RoundBox(
-        Repeat(pos, 0.2),
-        0.1 - 0.1 * s,
-        0.1 / length(pos * 2.0));
-    return lerp(d1, d2, s);
+    return Sphere(pos, 0.5);
 }
-// @endblock
+@endblock
 
-// @block PostEffect
+@block PostEffect
 inline void PostEffect(RaymarchInfo ray, inout PostEffectOutput o)
 {
 }
-// @endblock
+@endblock
 
-#include "Assets/Raymarching/Shaders/Include/Raymarching.cginc"
+#include "<RaymarchingShaderDirectory>/Raymarching.cginc"
 
 ENDCG
 
@@ -81,7 +81,11 @@ Pass
     }
 
     CGPROGRAM
-    #include "Assets/Raymarching/Shaders/Include/VertFragStandardObject.cginc"
+@if WorldSpace
+    #include "<RaymarchingShaderDirectory>/VertFragDirectScreen.cginc"
+@else
+    #include "<RaymarchingShaderDirectory>/VertFragDirectObject.cginc"
+@endif
     #pragma target 3.0
     #pragma vertex Vert
     #pragma fragment Frag
@@ -92,12 +96,13 @@ Pass
     ENDCG
 }
 
+@if ShadowCaster
 Pass
 {
     Tags { "LightMode" = "ShadowCaster" }
 
     CGPROGRAM
-    #include "Assets/Raymarching/Shaders/Include/VertFragShadowObject.cginc"
+    #include "<RaymarchingShaderDirectory>/VertFragShadowObject.cginc"
     #pragma target 3.0
     #pragma vertex Vert
     #pragma fragment Frag
@@ -106,10 +111,15 @@ Pass
     #pragma multi_compile OBJECT_SHAPE_CUBE OBJECT_SHAPE_SPHERE ___
     ENDCG
 }
+@endif
 
 }
 
-Fallback "Raymarching/Fallbacks/StandardSurfaceShader"
+@if FallbackToDiffuse : true
+Fallback "Diffuse"
+@else
+Fallback Off
+@endif
 
 CustomEditor "uShaderTemplate.MaterialEditor"
 

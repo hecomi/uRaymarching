@@ -95,6 +95,6 @@ Pass
 
 Fallback Off
 
-CustomEditor "Raymarching.MaterialEditor"
+CustomEditor "uShaderTemplate.MaterialEditor"
 
 }
