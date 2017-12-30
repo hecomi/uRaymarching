@@ -34,16 +34,11 @@ Cull Back
 
 CGINCLUDE
 
-
-
-
-
-
 #define DISTANCE_FUNCTION DistanceFunction
 #define POST_EFFECT PostEffect
 #define PostEffectOutput SurfaceOutputStandard
 
-#include "Assets/Raymarching/Shaders/Include/Common.cginc"
+#include "Assets/uRaymarching/Shaders/Include/Common.cginc"
 
 // @block DistanceFunction
 inline float DistanceFunction(float3 pos)
@@ -112,7 +107,7 @@ inline void PostEffect(RaymarchInfo ray, inout PostEffectOutput o)
 }
 // @endblock
 
-#include "Assets/Raymarching/Shaders/Include/Raymarching.cginc"
+#include "Assets/uRaymarching/Shaders/Include/Raymarching.cginc"
 
 ENDCG
 
@@ -128,7 +123,7 @@ Pass
     }
 
     CGPROGRAM
-    #include "Assets/Raymarching/Shaders/Include/VertFragStandardObject.cginc"
+    #include "Assets/uRaymarching/Shaders/Include/VertFragStandardObject.cginc"
     #pragma target 3.0
     #pragma vertex Vert
     #pragma fragment Frag
@@ -144,7 +139,7 @@ Pass
     Tags { "LightMode" = "ShadowCaster" }
 
     CGPROGRAM
-    #include "Assets/Raymarching/Shaders/Include/VertFragShadowObject.cginc"
+    #include "Assets/uRaymarching/Shaders/Include/VertFragShadowObject.cginc"
     #pragma target 3.0
     #pragma vertex Vert
     #pragma fragment Frag

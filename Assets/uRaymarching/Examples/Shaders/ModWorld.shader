@@ -12,7 +12,6 @@ Properties
     _Loop("Loop", Range(1, 100)) = 30
     _MinDistance("Minimum Distance", Range(0.001, 0.1)) = 0.01
 
-
 // @block Properties
 [Header(Additional Parameters)]
 _Grid("Grid", 2D) = "" {}
@@ -32,14 +31,11 @@ CGINCLUDE
 
 #define WORLD_SPACE
 
-
-
-
 #define DISTANCE_FUNCTION DistanceFunction
 #define POST_EFFECT PostEffect
 #define PostEffectOutput GBufferOut
 
-#include "Assets/Raymarching/Shaders/Include/Common.cginc"
+#include "Assets/uRaymarching/Shaders/Include/Common.cginc"
 
 // @block DistanceFunction
 inline float DistanceFunction(float3 pos)
@@ -62,7 +58,7 @@ inline void PostEffect(RaymarchInfo ray, inout PostEffectOutput o)
 }
 // @endblock
 
-#include "Assets/Raymarching/Shaders/Include/Raymarching.cginc"
+#include "Assets/uRaymarching/Shaders/Include/Raymarching.cginc"
 
 ENDCG
 
@@ -78,7 +74,7 @@ Pass
     }
 
     CGPROGRAM
-    #include "Assets/Raymarching/Shaders/Include/VertFragDirectScreen.cginc"
+    #include "Assets/uRaymarching/Shaders/Include/VertFragDirectScreen.cginc"
     #pragma target 3.0
     #pragma vertex Vert
     #pragma fragment Frag
@@ -88,8 +84,6 @@ Pass
     #pragma multi_compile OBJECT_SHAPE_CUBE OBJECT_SHAPE_SPHERE ___
     ENDCG
 }
-
-
 
 }
 
