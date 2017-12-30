@@ -248,7 +248,18 @@ public class GeneratorEditor : Editor
         if (!constantsFolded_.boolValue) return;
 
         ++EditorGUI.indentLevel;
-        EditorGUILayout.PropertyField(constants_);
+        EditorGUILayout.BeginHorizontal(); 
+        {
+            EditorGUILayout.PropertyField(constants_);
+            if (templateParser_ != null && templateParser_.constants) {
+                var style = new GUIStyle(EditorStyles.miniButtonLeft);
+                style.fixedWidth = 64;
+                if (GUILayout.Button("Use Default", style)) {
+                    constants_.objectReferenceValue = templateParser_.constants;
+                }
+            }
+        } 
+        EditorGUILayout.EndHorizontal();
         --EditorGUI.indentLevel;
     }
 
@@ -339,6 +350,10 @@ public class GeneratorEditor : Editor
     {
         templateParser_ = new ShaderTemplateParser(template_.text);
 
+        constants_.objectReferenceValue = 
+            templateParser_.constants ??
+            Resources.Load<Constants>(Common.Setting.defaultConstants);
+
         foreach (var kv in templateParser_.conditions) {
             if (FindProperty(conditions_, kv.Key) != null) continue;
             var prop = AddProperty(conditions_, kv.Key);
@@ -367,7 +382,7 @@ public class GeneratorEditor : Editor
     {
         var name = name_.stringValue;
         if (string.IsNullOrEmpty(name)) {
-            throw new System.Exception("Shader name is empty.");
+            throw new System.Exception(string.Format("Shader name of \"{0}\" is empty.", target.name));
         }
         return name_.stringValue;
     }
@@ -394,18 +409,20 @@ public class GeneratorEditor : Editor
 
     void ExportShader()
     {
-        ShaderTemplateConvertInfo info = new ShaderTemplateConvertInfo();
+        var info = new ShaderTemplateConvertInfo();
 
         foreach (var kv in templateParser_.conditions) {
             var prop = FindProperty(conditions_, kv.Key);
             var value = prop.FindPropertyRelative("value");
             info.conditions.Add(kv.Key, value.boolValue);
         }
+
         foreach (var kv in templateParser_.blocks) {
             var prop = FindProperty(blocks_, kv.Key);
             var value = prop.FindPropertyRelative("value");
             info.blocks.Add(kv.Key, value.stringValue);
         }
+
         foreach (var kv in templateParser_.variables) {
             var prop = FindProperty(variables_, kv.Key);
             var value = prop.FindPropertyRelative("value");
@@ -448,11 +465,17 @@ public class GeneratorEditor : Editor
     void ExportShaderWithErrorCheck()
     {
         ClearError();
+
+        var generator = target as Generator;
+        generator.OnBeforeConvert();
+
         try {
             ExportShader();
         } catch (System.Exception e) {
             AddError(e.Message);
         }
+
+        generator.OnAfterConvert();
     }
 
     void ResetToDefault()
@@ -468,16 +491,20 @@ public class GeneratorEditor : Editor
         Debug.LogFormat("<color=blue>Reconvert started.\n------------------------------</color>"); 
         var generators = Utils.FindAllAssets<Generator>();
         foreach (var generator in generators) {
-            if (target == generator) {
-                Debug.LogFormat("<color=green>{0}</color>", GetShaderPath());
-                OnTemplateChanged();
-                ExportShaderWithErrorCheck();
-            } else {
-                var editor = Editor.CreateEditor(generator) as GeneratorEditor;
-                Debug.LogFormat("<color=green>{0}</color>", editor.GetShaderPath());
-                editor.CheckShaderUpdate();
-                editor.OnTemplateChanged();
-                editor.ExportShaderWithErrorCheck();
+            try {
+                if (target == generator) {
+                    Debug.LogFormat("<color=green>{0}</color>", GetShaderPath());
+                    OnTemplateChanged();
+                    ExportShaderWithErrorCheck();
+                } else {
+                    var editor = Editor.CreateEditor(generator) as GeneratorEditor;
+                    Debug.LogFormat("<color=green>{0}</color>", editor.GetShaderPath());
+                    editor.CheckShaderUpdate();
+                    editor.OnTemplateChanged();
+                    editor.ExportShaderWithErrorCheck();
+                }
+            } catch (System.Exception e) {
+                Debug.LogFormat("<color=red>Error: " + e.Message + "</color>"); 
             }
         }
         Debug.LogFormat("<color=blue>------------------------------\nReconvert finished.</color>"); 

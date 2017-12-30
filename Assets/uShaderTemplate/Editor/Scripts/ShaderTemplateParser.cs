@@ -25,12 +25,15 @@ public class ShaderTemplateParser
         @"\n\s*(:?//\s*)*?@endblock";
     static readonly string variablePattern = 
         @"<(?<Name>[^=\s\n]+)(?:\s*=\s*(?<Value>[^\s\n|>]+)(\s*\|\s*(?<Value>[^\s\n|>]+))*)?\s*>";
+    static readonly string constantsPattern =
+        @"@constants\s*(?<Path>[^\n]+)";
 
     public string code { get; set; }
 
     public Dictionary<string, bool> conditions { get; private set; }
     public Dictionary<string, string> blocks { get; private set; }
     public Dictionary<string, List<string>> variables { get; private set; }
+    public Constants constants { get; private set; }
 
     public ShaderTemplateParser(string code)
     {
@@ -43,6 +46,7 @@ public class ShaderTemplateParser
 
     void Parse()
     {
+        ParseConstants();
         ParseConditions();
         ParseBlocks();
         ParseVariables();
@@ -50,12 +54,41 @@ public class ShaderTemplateParser
 
     public string Convert(ShaderTemplateConvertInfo info)
     {
+        if (constants != null) {
+            constants.OnBeforeConvert();
+        }
+
         var code = this.code;
+        code = WriteConstants(code);
         code = WriteConditions(code, info);
         code = WriteBlocks(code, info);
         code = WriteVariables(code, info);
         code = code.Replace("\r\n", "\n");
+        var regex = new Regex(@"\n\n\n+");
+        code = regex.Replace(code, "\n\n");
+
+        if (constants != null) {
+            constants.OnAfterConvert();
+        }
+
         return code;
+    }
+
+    void ParseConstants()
+    {
+        var regex = new Regex(constantsPattern);
+        var matches = regex.Matches(code);
+        if (matches.Count > 0) {
+            var path = matches[0].Groups["Path"].Value;
+            constants = UnityEngine.Resources.Load<Constants>(path);
+        }
+    }
+
+    string WriteConstants(string code)
+    {
+        var regex = new Regex(constantsPattern);
+        var evaluator = new MatchEvaluator(match => "");
+        return regex.Replace(code, evaluator);
     }
 
     void ParseConditions()

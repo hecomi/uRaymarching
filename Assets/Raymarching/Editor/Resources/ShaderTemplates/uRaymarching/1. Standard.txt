@@ -1,6 +1,8 @@
 Shader "Raymarching/<Name>"
 {
 
+@constants uRaymarching/Constants/uRaymarching Default Constants
+
 Properties
 {
     [Header(PBS)]

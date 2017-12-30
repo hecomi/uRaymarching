@@ -46,12 +46,8 @@ public class Generator : ScriptableObject
     public bool materialsFolded = false;
     public bool constantsFolded = false;
 
-    void OnEnable()
-    {
-        if (constants == null) {
-            constants = Resources.Load<Constants>(Common.Setting.defaultConstants);
-        }
-    }
+    public virtual void OnBeforeConvert() {}
+    public virtual void OnAfterConvert() {}
 }
 
 }

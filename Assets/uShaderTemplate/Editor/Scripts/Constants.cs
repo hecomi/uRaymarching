@@ -16,6 +16,8 @@ public struct Constant
 public class Constants : ScriptableObject
 {
     public Constant[] values;
+    public virtual void OnBeforeConvert() {}
+    public virtual void OnAfterConvert() {}
 }
 
 }
