@@ -13,6 +13,7 @@ Properties
     _MinDistance("Minimum Distance", Range(0.001, 0.1)) = 0.01
     _ShadowLoop("Shadow Loop", Range(1, 100)) = 10
     _ShadowMinDistance("Shadow Minimum Distance", Range(0.001, 0.1)) = 0.01
+    _ShadowExtraBias("Shadow Extra Bias", Range(0.0, 1.0)) = 0.01
 
 // @block Properties
 [Header(Additional Properties)]
@@ -93,6 +94,7 @@ inline float DistanceFunction(float3 pos)
     // combine
     return min(d1, d2);
 }
+
 // @endblock
 
 // @block PostEffect
