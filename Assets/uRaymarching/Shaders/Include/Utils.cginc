@@ -14,10 +14,14 @@ inline float3 ToWorld(float3 pos)
 inline float GetDepth(float3 pos)
 {
     float4 vpPos = mul(UNITY_MATRIX_VP, float4(pos, 1.0));
-#if defined(SHADER_API_D3D9) || defined(SHADER_API_D3D11)
-    return vpPos.z / vpPos.w;
+    float z = vpPos.z / vpPos.w;
+#if defined(SHADER_API_GLCORE) || \
+    defined(SHADER_API_OPENGL) || \
+    defined(SHADER_API_GLES) || \
+    defined(SHADER_API_GLES3)
+    return z * 0.5 + 0.5;
 #else 
-    return (vpPos.z / vpPos.w) * 0.5 + 0.5;
+    return z;
 #endif 
 }
 
