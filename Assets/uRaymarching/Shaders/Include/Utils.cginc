@@ -11,10 +11,9 @@ inline float3 ToWorld(float3 pos)
     return mul(unity_ObjectToWorld, float4(pos, 1.0)).xyz;
 }
 
-inline float GetDepth(float3 pos)
+inline float EncodeDepth(float4 pos)
 {
-    float4 vpPos = mul(UNITY_MATRIX_VP, float4(pos, 1.0));
-    float z = vpPos.z / vpPos.w;
+    float z = pos.z / pos.w;
 #if defined(SHADER_API_GLCORE) || \
     defined(SHADER_API_OPENGL) || \
     defined(SHADER_API_GLES) || \
@@ -23,6 +22,12 @@ inline float GetDepth(float3 pos)
 #else 
     return z;
 #endif 
+}
+
+inline float GetCameraDepth(float3 pos)
+{
+    float4 vpPos = mul(UNITY_MATRIX_VP, float4(pos, 1.0));
+    return EncodeDepth(vpPos);
 }
 
 inline float3 EncodeNormal(float3 normal)

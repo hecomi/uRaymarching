@@ -69,23 +69,23 @@ void Raymarch(inout RaymarchInfo ray)
 
 #ifdef WORLD_SPACE
     ray.normal = GetDistanceFunctiontionNormal(ray.endPos);
-    ray.depth = GetDepth(ray.endPos);
+    ray.depth = GetCameraDepth(ray.endPos);
 #else
 
     #ifdef CAMERA_INSIDE_OBJECT
     if (IsInnerObject(GetCameraPosition()) && ray.totalLength < GetCameraNearClip()) {
         ray.normal = EncodeNormal(-ray.rayDir);
-        ray.depth = GetDepth(ray.startPos);
+        ray.depth = GetCameraDepth(ray.startPos);
         return;
     }
     #endif
 
     if (ray.totalLength < ray.minDistance) {
         ray.normal = EncodeNormal(ray.polyNormal);
-        ray.depth = GetDepth(ray.startPos);
+        ray.depth = GetCameraDepth(ray.startPos);
     } else {
         ray.normal = GetDistanceFunctiontionNormal(ray.endPos);
-        ray.depth = GetDepth(ray.endPos);
+        ray.depth = GetCameraDepth(ray.endPos);
     }
 #endif
 }
