@@ -6,8 +6,22 @@
 #include "./Raymarching.cginc"
 #include "./Utils.cginc"
 
+float _ShadowExtraBias;
 float _ShadowMinDistance;
 int _ShadowLoop;
+
+float4 ApplyLinearShadowBias(float4 clipPos)
+{
+#if defined(UNITY_REVERSED_Z)
+    clipPos.z += max(-1.0, min((unity_LightShadowBias.x - _ShadowExtraBias) / clipPos.w, 0.0));
+    float clamped = min(clipPos.z, clipPos.w * UNITY_NEAR_CLIP_VALUE);
+#else
+    clipPos.z += saturate((unity_LightShadowBias.x + _ShadowExtraBias) / clipPos.w);
+    float clamped = max(clipPos.z, clipPos.w * UNITY_NEAR_CLIP_VALUE);
+#endif
+    clipPos.z = lerp(clipPos.z, clamped, unity_LightShadowBias.y);
+    return clipPos;
+}
 
 VertShadowOutput Vert(VertShadowInput v)
 {
@@ -67,7 +81,7 @@ void Frag(
     float4 opos = mul(unity_WorldToObject, float4(ray.endPos, 1.0));
     float3 worldNormal = DecodeNormal(ray.normal);
     opos = UnityClipSpaceShadowCasterPos(opos, worldNormal);
-    opos = UnityApplyLinearShadowBias(opos);
+    opos = ApplyLinearShadowBias(opos);
     outColor = outDepth = EncodeDepth(opos);
 }
 
