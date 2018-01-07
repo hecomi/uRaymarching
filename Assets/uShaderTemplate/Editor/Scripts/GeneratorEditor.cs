@@ -45,6 +45,8 @@ public class GeneratorEditor : Editor
 
     void OnEnable()
     {
+        if (target == null) return;
+
         name_ = serializedObject.FindProperty("shaderName");
         shader_ = serializedObject.FindProperty("shaderReference");
         variables_ = serializedObject.FindProperty("variables");
