@@ -77,12 +77,7 @@ void Frag(
     float3 worldNormal = 2.0 * ray.normal - 1.0;
     opos = UnityClipSpaceShadowCasterPos(opos, worldNormal);
     opos = ApplyLinearShadowBias(opos);
-
-#if defined(SHADER_API_D3D9) || defined(SHADER_API_D3D11)
-    outColor = outDepth = opos.z / opos.w;
-#else 
-    outColor = outDepth = opos.z / opos.w * 0.5 + 0.5;
-#endif 
+    outColor = outDepth = EncodeDepth(opos);
 }
 
 #endif

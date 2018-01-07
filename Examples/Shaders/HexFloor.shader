@@ -94,6 +94,7 @@ inline float DistanceFunction(float3 pos)
     // combine
     return min(d1, d2);
 }
+
 // @endblock
 
 // @block PostEffect
