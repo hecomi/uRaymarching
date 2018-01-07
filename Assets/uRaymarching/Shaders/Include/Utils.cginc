@@ -35,6 +35,11 @@ inline float3 EncodeNormal(float3 normal)
     return normal * 0.5 + 0.5;
 }
 
+inline float3 DecodeNormal(float3 normal)
+{
+    return 2.0 * normal - 1.0;
+}
+
 inline bool IsInnerCube(float3 pos, float3 scale)
 {
     return all(max(scale * 0.5 - abs(pos), 0.0));
