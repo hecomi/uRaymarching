@@ -27,6 +27,8 @@ Tags
     "DisableBatching" = "True"
 }
 
+Cull Off
+
 CGINCLUDE
 
 #define WORLD_SPACE
