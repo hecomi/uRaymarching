@@ -33,6 +33,8 @@ Tags
     "DisableBatching" = "True"
 }
 
+Cull <Culling=Off|Back|Front>
+
 CGINCLUDE
 
 @if WorldSpace : false
