@@ -27,11 +27,13 @@ Tags
     "DisableBatching" = "True"
 }
 
-Cull Off
+Cull Back
 
 CGINCLUDE
 
 #define WORLD_SPACE
+
+#define USE_RAYMARCHING_DEPTH
 
 #define DISTANCE_FUNCTION DistanceFunction
 #define POST_EFFECT PostEffect
@@ -83,7 +85,7 @@ Pass
     #pragma exclude_renderers nomrt
     #pragma multi_compile_prepassfinal
     #pragma multi_compile ___ UNITY_HDR_ON
-    #pragma multi_compile OBJECT_SHAPE_CUBE OBJECT_SHAPE_SPHERE ___
+    #pragma shader_feature OBJECT_SHAPE_CUBE
     ENDCG
 }
 

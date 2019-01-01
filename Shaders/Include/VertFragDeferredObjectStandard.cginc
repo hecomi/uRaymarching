@@ -67,7 +67,7 @@ GBufferOut Frag(VertStandardObjectOutput i, GBufferOut o)
 
     Raymarch(ray);
 
-#ifndef DO_NOT_OUTPUT_DEPTH
+#ifdef USE_RAYMARCHING_DEPTH
     o.depth = ray.depth;
 #endif
 

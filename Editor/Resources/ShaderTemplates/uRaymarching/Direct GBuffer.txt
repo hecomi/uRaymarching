@@ -43,8 +43,8 @@ CGINCLUDE
 @if FollowObjectScale : false
 #define OBJECT_SCALE
 @endif
-@if DoNotOutputDepth
-#define DO_NOT_OUTPUT_DEPTH
+@if UseRaymarchingDepth : true
+#define USE_RAYMARCHING_DEPTH
 @endif
 @if CameraInsideObject : false
 #define CAMERA_INSIDE_OBJECT

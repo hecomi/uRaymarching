@@ -61,7 +61,7 @@ struct GBufferOut
     half4 specular : SV_Target1; // rgb: specular, a: smoothness
     half4 normal   : SV_Target2; // rgb: normal,   a: unused
     half4 emission : SV_Target3; // rgb: emission, a: unused
-#ifndef DO_NOT_OUTPUT_DEPTH
+#ifdef USE_RAYMARCHING_DEPTH
     float depth    : SV_Depth;
 #endif
 };

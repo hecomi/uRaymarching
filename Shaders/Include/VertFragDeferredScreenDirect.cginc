@@ -35,7 +35,7 @@ GBufferOut Frag(VertScreenOutput i)
     o.specular = _Specular;
     o.emission = _Emission;
     o.normal   = float4(ray.normal, 1.0);
-#ifndef DO_NOT_OUTPUT_DEPTH
+#ifdef USE_RAYMARCHING_DEPTH
     o.depth    = ray.depth;
 #endif
 
