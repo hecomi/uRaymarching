@@ -14,16 +14,28 @@ float4 _Diffuse;
 float4 _Specular;
 float4 _Emission;
 
-VertObjectOutput Vert(VertObjectInput i)
+struct appdata
 {
-    VertObjectOutput o;
+    float4 vertex : POSITION;
+    float3 normal : NORMAL;
+};
+
+struct v2f
+{
+    float4 vertex    : SV_POSITION;
+    float4 screenPos : TEXCOORD0;
+};
+
+v2f Vert(appdata i)
+{
+    v2f o;
     o.vertex = UnityObjectToClipPos(i.vertex);
     o.worldPos = mul(unity_ObjectToWorld, i.vertex);
     o.worldNormal = mul(unity_ObjectToWorld, i.normal);
     return o;
 }
 
-GBufferOut Frag(VertObjectOutput i)
+GBufferOut Frag(v2f i)
 {
     RaymarchInfo ray;
     UNITY_INITIALIZE_OUTPUT(RaymarchInfo, ray);

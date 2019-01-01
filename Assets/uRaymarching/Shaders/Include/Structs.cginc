@@ -1,60 +1,6 @@
 ﻿#ifndef STRUCTS_CGINC
 #define STRUCTS_CGINC
 
-struct VertScreenInput
-{
-    float4 vertex : POSITION;
-};
-
-struct VertScreenOutput
-{
-    float4 vertex    : SV_POSITION;
-    float4 screenPos : TEXCOORD0;
-};
-
-struct VertObjectInput
-{
-    float4 vertex : POSITION;
-    float3 normal : NORMAL;
-};
-
-struct VertStandardObjectOutput
-{
-    float4 pos         : SV_POSITION;
-    float4 worldPos    : TEXCOORD0;
-    float3 worldNormal : TEXCOORD1;
-    float4 lmap        : TEXCOORD2;
-#ifndef SPHERICAL_HARMONICS_PER_PIXEL
-    #ifdef LIGHTMAP_OFF
-        #if UNITY_SHOULD_SAMPLE_SH
-    half3 sh           : TEXCOORD3;
-        #endif
-    #endif
-#endif
-};
-
-struct VertObjectOutput
-{
-    float4 vertex      : SV_POSITION;
-    float4 worldPos    : TEXCOORD0;
-    float3 worldNormal : TEXCOORD1;
-};
-
-struct VertShadowInput
-{
-    float4 vertex : POSITION;
-    float3 normal : NORMAL;
-    float2 uv     : TEXCOORD0;
-};
-
-struct VertShadowOutput
-{
-    V2F_SHADOW_CASTER;
-    float4 screenPos : TEXCOORD1;
-    float4 worldPos  : TEXCOORD2;
-    float3 normal    : TEXCOORD3;
-};
-
 struct GBufferOut
 {
     half4 diffuse  : SV_Target0; // rgb: diffuse,  a: occlusion

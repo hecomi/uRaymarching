@@ -1,9 +1,6 @@
 ﻿#ifndef VERT_FRAG_DEFERRED_OBJECT_STANDARD_H
 #define VERT_FRAG_DEFERRED_OBJECT_STANDARD_H
 
-#include "HLSLSupport.cginc"
-#include "UnityShaderVariables.cginc"
-
 #include "UnityCG.cginc"
 #include "Lighting.cginc"
 #include "UnityPBSLighting.cginc"
@@ -18,9 +15,24 @@ fixed4 _Color;
 float _Glossiness;
 float _Metallic;
 
-VertStandardObjectOutput Vert(appdata_full v)
+struct v2f
 {
-    VertStandardObjectOutput o;
+    float4 pos         : SV_POSITION;
+    float4 worldPos    : TEXCOORD0;
+    float3 worldNormal : TEXCOORD1;
+    float4 lmap        : TEXCOORD2;
+#ifndef SPHERICAL_HARMONICS_PER_PIXEL
+    #ifdef LIGHTMAP_OFF
+        #if UNITY_SHOULD_SAMPLE_SH
+    half3 sh           : TEXCOORD3;
+        #endif
+    #endif
+#endif
+};
+
+v2f Vert(appdata_full v)
+{
+    v2f o;
     o.pos = UnityObjectToClipPos(v.vertex);
     o.worldPos = mul(unity_ObjectToWorld, v.vertex);
     o.worldNormal = UnityObjectToWorldNormal(v.normal);
@@ -46,7 +58,7 @@ VertStandardObjectOutput Vert(appdata_full v)
     return o;
 }
 
-GBufferOut Frag(VertStandardObjectOutput i, GBufferOut o)
+GBufferOut Frag(v2f i, GBufferOut o)
 {
     RaymarchInfo ray;
     UNITY_INITIALIZE_OUTPUT(RaymarchInfo, ray);
