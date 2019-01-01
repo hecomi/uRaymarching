@@ -86,7 +86,7 @@ Pass
     #pragma exclude_renderers nomrt
     #pragma multi_compile_prepassfinal
     #pragma multi_compile ___ UNITY_HDR_ON
-    #pragma multi_compile OBJECT_SHAPE_CUBE OBJECT_SHAPE_SPHERE ___
+    #pragma shader_feature OBJECT_SHAPE_CUBE
     ENDCG
 }
 
@@ -101,7 +101,7 @@ Pass
     #pragma fragment Frag
     #pragma fragmentoption ARB_precision_hint_fastest
     #pragma multi_compile_shadowcaster
-    #pragma multi_compile OBJECT_SHAPE_CUBE OBJECT_SHAPE_SPHERE ___
+    #pragma shader_feature OBJECT_SHAPE_CUBE
     ENDCG
 }
 

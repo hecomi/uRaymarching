@@ -192,7 +192,7 @@ public static class ShaderSyntax
         "HexagonalPrismY",
         "HexagonalPrismZ",
         "PI",
-        "_Scale",
+        "GetScale",
     };
 }
 

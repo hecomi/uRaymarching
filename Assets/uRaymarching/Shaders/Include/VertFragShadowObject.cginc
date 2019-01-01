@@ -33,7 +33,7 @@ VertShadowOutput Vert(VertShadowInput v)
     return o;
 }
 
-#ifdef SHADOWS_CUBE
+#if defined(SHADOWS_CUBE) && !defined(SHADOWS_CUBE_IN_DEPTH_TEX)
 
 float4 Frag(VertShadowOutput i) : SV_Target
 {

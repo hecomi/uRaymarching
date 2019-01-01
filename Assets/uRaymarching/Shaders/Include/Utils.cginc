@@ -55,15 +55,13 @@ inline bool IsInnerCube(float3 pos, float3 scale)
 
 inline bool IsInnerSphere(float3 pos, float3 scale)
 {
-    return length(pos) <= length(scale) * 0.28867513459;
+    return length(pos) < length(scale) * 0.28867513459 * 0.1;
 }
 
 inline bool __IsInnerObject(float3 pos, float3 scale)
 {
 #ifdef OBJECT_SHAPE_CUBE
     return IsInnerCube(pos, scale);
-#elif OBJECT_SHAPE_SPHERE
-    return IsInnerSphere(pos, scale);
 #else
     return true;
 #endif    
