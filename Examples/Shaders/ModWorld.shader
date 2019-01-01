@@ -76,7 +76,7 @@ Pass
     }
 
     CGPROGRAM
-    #include "Assets/uRaymarching/Shaders/Include/VertFragDirectScreen.cginc"
+    #include "Assets/uRaymarching/Shaders/Include/VertFragDeferredScreenDirect.cginc"
     #pragma target 3.0
     #pragma vertex Vert
     #pragma fragment Frag
