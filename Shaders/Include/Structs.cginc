@@ -21,14 +21,13 @@ struct VertObjectInput
 struct VertStandardObjectOutput
 {
     float4 pos         : SV_POSITION;
-    float4 screenPos   : TEXCOORD0;
-    float4 worldPos    : TEXCOORD1;
-    float3 worldNormal : TEXCOORD2;
-    float4 lmap        : TEXCOORD3;
+    float4 worldPos    : TEXCOORD0;
+    float3 worldNormal : TEXCOORD1;
+    float4 lmap        : TEXCOORD2;
 #ifndef SPHERICAL_HARMONICS_PER_PIXEL
     #ifdef LIGHTMAP_OFF
         #if UNITY_SHOULD_SAMPLE_SH
-    half3 sh           : TEXCOORD4;
+    half3 sh           : TEXCOORD3;
         #endif
     #endif
 #endif
@@ -37,9 +36,8 @@ struct VertStandardObjectOutput
 struct VertObjectOutput
 {
     float4 vertex      : SV_POSITION;
-    float4 screenPos   : TEXCOORD0;
-    float4 worldPos    : TEXCOORD1;
-    float3 worldNormal : TEXCOORD2;
+    float4 worldPos    : TEXCOORD0;
+    float3 worldNormal : TEXCOORD1;
 };
 
 struct VertShadowInput

@@ -18,7 +18,6 @@ VertObjectOutput Vert(VertObjectInput i)
 {
     VertObjectOutput o;
     o.vertex = UnityObjectToClipPos(i.vertex);
-    o.screenPos = o.vertex;
     o.worldPos = mul(unity_ObjectToWorld, i.vertex);
     o.worldNormal = mul(unity_ObjectToWorld, i.normal);
     return o;
@@ -28,7 +27,7 @@ GBufferOut Frag(VertObjectOutput i)
 {
     RaymarchInfo ray;
     UNITY_INITIALIZE_OUTPUT(RaymarchInfo, ray);
-    ray.rayDir = GetCameraDirection(i.screenPos);
+    ray.rayDir = normalize(i.worldPos - GetCameraPosition());
     ray.startPos = i.worldPos;
     ray.polyNormal = i.worldNormal;
     ray.minDistance = _MinDistance;

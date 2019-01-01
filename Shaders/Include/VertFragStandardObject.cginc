@@ -22,7 +22,6 @@ VertStandardObjectOutput Vert(appdata_full v)
 {
     VertStandardObjectOutput o;
     o.pos = UnityObjectToClipPos(v.vertex);
-    o.screenPos = o.pos;
     o.worldPos = mul(unity_ObjectToWorld, v.vertex);
     o.worldNormal = UnityObjectToWorldNormal(v.normal);
 
@@ -51,7 +50,7 @@ GBufferOut Frag(VertStandardObjectOutput i, GBufferOut o)
 {
     RaymarchInfo ray;
     UNITY_INITIALIZE_OUTPUT(RaymarchInfo, ray);
-    ray.rayDir = GetCameraDirection(i.screenPos);
+    ray.rayDir = normalize(i.worldPos - GetCameraPosition());
     ray.startPos = i.worldPos;
 
 #ifdef CAMERA_INSIDE_OBJECT
