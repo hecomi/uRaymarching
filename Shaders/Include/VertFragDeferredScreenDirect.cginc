@@ -10,15 +10,26 @@ float4 _Diffuse;
 float4 _Specular;
 float4 _Emission;
 
-VertScreenOutput Vert(VertScreenInput i)
+struct appdata
 {
-    VertScreenOutput o;
+    float4 vertex : POSITION;
+};
+
+struct v2f
+{
+    float4 vertex    : SV_POSITION;
+    float4 screenPos : TEXCOORD0;
+};
+
+v2f Vert(appdata i)
+{
+    v2f o;
     o.vertex = i.vertex;
     o.screenPos = i.vertex;
     return o;
 }
 
-GBufferOut Frag(VertScreenOutput i)
+GBufferOut Frag(v2f i)
 {
     RaymarchInfo ray;
     UNITY_INITIALIZE_OUTPUT(RaymarchInfo, ray);

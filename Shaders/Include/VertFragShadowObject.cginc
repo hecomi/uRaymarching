@@ -10,6 +10,21 @@ float _ShadowExtraBias;
 float _ShadowMinDistance;
 int _ShadowLoop;
 
+struct appdata 
+{
+    float4 vertex : POSITION;
+    float3 normal : NORMAL;
+    float2 uv     : TEXCOORD0;
+};
+
+struct v2f
+{
+    V2F_SHADOW_CASTER;
+    float4 screenPos : TEXCOORD1;
+    float4 worldPos  : TEXCOORD2;
+    float3 normal    : TEXCOORD3;
+};
+
 float4 ApplyLinearShadowBias(float4 clipPos)
 {
 #if defined(UNITY_REVERSED_Z)
@@ -23,9 +38,9 @@ float4 ApplyLinearShadowBias(float4 clipPos)
     return clipPos;
 }
 
-VertShadowOutput Vert(VertShadowInput v)
+v2f Vert(appdata v)
 {
-    VertShadowOutput o;
+    v2f o;
     o.pos = UnityObjectToClipPos(v.vertex);
     o.screenPos = o.pos;
     o.worldPos = mul(unity_ObjectToWorld, v.vertex);
@@ -35,7 +50,7 @@ VertShadowOutput Vert(VertShadowInput v)
 
 #if defined(SHADOWS_CUBE) && !defined(SHADOWS_CUBE_IN_DEPTH_TEX)
 
-float4 Frag(VertShadowOutput i) : SV_Target
+float4 Frag(v2f i) : SV_Target
 {
     RaymarchInfo ray;
     UNITY_INITIALIZE_OUTPUT(RaymarchInfo, ray);
@@ -54,7 +69,7 @@ float4 Frag(VertShadowOutput i) : SV_Target
 #else
 
 void Frag(
-    VertShadowOutput i, 
+    v2f i, 
     out float4 outColor : SV_Target, 
     out float  outDepth : SV_Depth)
 {
