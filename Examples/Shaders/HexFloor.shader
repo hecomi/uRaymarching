@@ -49,8 +49,8 @@ inline float DistanceFunction(float3 pos)
     float space = 0.1;
     float wave = 0.1;
     float3 objectScale = GetScale();
-    float height = abs(objectScale.y) * 0.5 - wave;
-    float3 scale = abs(objectScale * 0.5);
+    float height = objectScale.y * 0.5 - wave;
+    float3 scale = objectScale * 0.5;
 
     float pitch = radius * 2 + space;
     float3 offset = float3(pitch * 0.5, 0.0, pitch * 0.866);
@@ -131,7 +131,7 @@ Pass
     #pragma exclude_renderers nomrt
     #pragma multi_compile_prepassfinal
     #pragma multi_compile ___ UNITY_HDR_ON
-    #pragma multi_compile OBJECT_SHAPE_CUBE OBJECT_SHAPE_SPHERE ___
+    #pragma shader_feature OBJECT_SHAPE_CUBE
     ENDCG
 }
 
@@ -146,7 +146,7 @@ Pass
     #pragma fragment Frag
     #pragma fragmentoption ARB_precision_hint_fastest
     #pragma multi_compile_shadowcaster
-    #pragma multi_compile OBJECT_SHAPE_CUBE OBJECT_SHAPE_SPHERE ___
+    #pragma shader_feature OBJECT_SHAPE_CUBE
     ENDCG
 }
 
