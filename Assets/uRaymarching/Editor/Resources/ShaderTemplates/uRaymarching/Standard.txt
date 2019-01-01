@@ -85,7 +85,7 @@ Pass
     }
 
     CGPROGRAM
-    #include "<RaymarchingShaderDirectory>/VertFragStandardObject.cginc"
+    #include "<RaymarchingShaderDirectory>/VertFragDeferredObjectStandard.cginc"
     #pragma target 3.0
     #pragma vertex Vert
     #pragma fragment Frag

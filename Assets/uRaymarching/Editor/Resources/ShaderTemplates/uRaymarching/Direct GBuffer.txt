@@ -86,9 +86,9 @@ Pass
 
     CGPROGRAM
 @if WorldSpace
-    #include "<RaymarchingShaderDirectory>/VertFragDirectScreen.cginc"
+    #include "<RaymarchingShaderDirectory>/VertFragDeferredScreenDirect.cginc"
 @else
-    #include "<RaymarchingShaderDirectory>/VertFragDirectObject.cginc"
+    #include "<RaymarchingShaderDirectory>/VertFragDeferredObjectDirect.cginc"
 @endif
     #pragma target 3.0
     #pragma vertex Vert

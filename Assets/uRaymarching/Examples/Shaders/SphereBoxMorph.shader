@@ -79,7 +79,7 @@ Pass
     }
 
     CGPROGRAM
-    #include "Assets/uRaymarching/Shaders/Include/VertFragStandardObject.cginc"
+    #include "Assets/uRaymarching/Shaders/Include/VertFragDeferredObjectStandard.cginc"
     #pragma target 3.0
     #pragma vertex Vert
     #pragma fragment Frag
