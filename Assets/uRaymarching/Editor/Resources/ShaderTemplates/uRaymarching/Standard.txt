@@ -40,8 +40,8 @@ CGINCLUDE
 @if FollowObjectScale : false
 #define OBJECT_SCALE
 @endif
-@if DoNotOutputDepth : false
-#define DO_NOT_OUTPUT_DEPTH
+@if UseRaymarchingDepth : true
+#define USE_RAYMARCHING_DETPH
 @endif
 @if SphericalHarmonicsPerPixel : true
 #define SPHERICAL_HARMONICS_PER_PIXEL

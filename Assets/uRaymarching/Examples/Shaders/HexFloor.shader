@@ -34,6 +34,8 @@ Cull Back
 
 CGINCLUDE
 
+#define USE_RAYMARCHING_DETPH
+
 #define DISTANCE_FUNCTION DistanceFunction
 #define POST_EFFECT PostEffect
 #define PostEffectOutput SurfaceOutputStandard
@@ -95,7 +97,6 @@ inline float DistanceFunction(float3 pos)
     // combine
     return min(d1, d2);
 }
-
 // @endblock
 
 // @block PostEffect
