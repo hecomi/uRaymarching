@@ -1,5 +1,5 @@
-﻿#ifndef COMMON_H
-#define COMMON_H
+﻿#ifndef COMMON_CGINC
+#define COMMON_CGINC
 
 #include "UnityCG.cginc"
 #include "UnityPBSLighting.cginc"

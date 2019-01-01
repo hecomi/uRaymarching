@@ -1,5 +1,5 @@
-﻿#ifndef UTILS_H
-#define UTILS_H
+﻿#ifndef UTILS_CGINC
+#define UTILS_CGINC
 
 inline float3 GetScale()
 {

@@ -1,5 +1,5 @@
-﻿#ifndef RAYMARCHING_H
-#define RAYMARCHING_H
+﻿#ifndef RAYMARCHING_CGINC
+#define RAYMARCHING_CGINC
 
 #include "UnityCG.cginc"
 #include "./Utils.cginc"

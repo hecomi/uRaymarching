@@ -1,5 +1,5 @@
-﻿#ifndef VERTS_H
-#define VERTS_H
+﻿#ifndef VERT_FRAG_DEFERRED_SCREEN_DIRECT_H
+#define VERT_FRAG_DEFERRED_SCREEN_DIRECT_H
 
 #include "UnityCG.cginc"
 #include "./Structs.cginc"

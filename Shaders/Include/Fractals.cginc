@@ -1,5 +1,5 @@
-﻿#ifndef FRACTALS_H
-#define FRACTALS_H
+﻿#ifndef FRACTALS_CGINC
+#define FRACTALS_CGINC
 
 #include "./Utils.cginc"
 

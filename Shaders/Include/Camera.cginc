@@ -1,5 +1,5 @@
-﻿#ifndef CAMERA_H
-#define CAMERA_H
+﻿#ifndef CAMERA_CGINC
+#define CAMERA_CGINC
 
 inline float3 GetCameraPosition()    { return _WorldSpaceCameraPos;      }
 inline float3 GetCameraForward()     { return -UNITY_MATRIX_V[2].xyz;    }

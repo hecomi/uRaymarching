@@ -1,5 +1,5 @@
-﻿#ifndef FRAGS_SHADOW_H
-#define FRAGS_SHADOW_H
+﻿#ifndef VERT_FRAG_SHADOW_OBJECT_CGINC
+#define VERT_FRAG_SHADOW_OBJECT_CGINC
 
 #include "UnityCG.cginc"
 #include "./Structs.cginc"
