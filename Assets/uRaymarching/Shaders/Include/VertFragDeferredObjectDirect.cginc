@@ -1,7 +1,7 @@
 ﻿// Upgrade NOTE: replaced 'mul(UNITY_MATRIX_MVP,*)' with 'UnityObjectToClipPos(*)'
 
-#ifndef VERT_FRAG_OBJECT_H
-#define VERT_FRAG_OBJECT_H
+#ifndef VERT_FRAG_DEFERRED_OBJECT_DIRECT_H
+#define VERT_FRAG_DEFERRED_OBJECT_DIRECT_H
 
 #include "UnityCG.cginc"
 #include "./Structs.cginc"

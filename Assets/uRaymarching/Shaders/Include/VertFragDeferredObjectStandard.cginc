@@ -1,5 +1,5 @@
-﻿#ifndef FRAGS_PBS_H
-#define FRAGS_PBS_H
+﻿#ifndef VERT_FRAG_DEFERRED_OBJECT_STANDARD_H
+#define VERT_FRAG_DEFERRED_OBJECT_STANDARD_H
 
 #include "HLSLSupport.cginc"
 #include "UnityShaderVariables.cginc"

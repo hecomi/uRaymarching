@@ -1,5 +1,5 @@
-﻿#ifndef PRIMITIVES_H
-#define PRIMITIVES_H
+﻿#ifndef PRIMITIVES_CGINC
+#define PRIMITIVES_CGINC
 
 inline float Sphere(float3 pos, float radius)
 {

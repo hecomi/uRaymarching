@@ -1,5 +1,5 @@
-﻿#ifndef STRUCTS_H
-#define STRUCTS_H
+﻿#ifndef STRUCTS_CGINC
+#define STRUCTS_CGINC
 
 struct VertScreenInput
 {

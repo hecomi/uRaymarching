@@ -1,5 +1,5 @@
-﻿#ifndef MATH_H
-#define MATH_H
+﻿#ifndef MATH_CGINC
+#define MATH_CGINC
 
 #define PI 3.14159265358979
 
