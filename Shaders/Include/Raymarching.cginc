@@ -20,7 +20,7 @@ inline float _DistanceFunction(float3 pos)
     #ifdef OBJECT_SCALE
     return DISTANCE_FUNCTION(ToLocal(pos));
     #else
-    return DISTANCE_FUNCTION(ToLocal(pos) * _Scale);
+    return DISTANCE_FUNCTION(ToLocal(pos) * GetScale());
     #endif
 #endif
 }

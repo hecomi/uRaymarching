@@ -48,8 +48,9 @@ inline float DistanceFunction(float3 pos)
     float radius = 0.2;
     float space = 0.1;
     float wave = 0.1;
-    float height = abs(_Scale.y) * 0.5 - wave;
-    float3 scale = abs(_Scale * 0.5);
+    float3 objectScale = GetScale();
+    float height = abs(objectScale.y) * 0.5 - wave;
+    float3 scale = abs(objectScale * 0.5);
 
     float pitch = radius * 2 + space;
     float3 offset = float3(pitch * 0.5, 0.0, pitch * 0.866);
