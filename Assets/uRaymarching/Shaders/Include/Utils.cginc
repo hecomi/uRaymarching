@@ -1,6 +1,14 @@
 ﻿#ifndef UTILS_H
 #define UTILS_H
 
+inline float3 GetScale()
+{
+    return float3(
+        length(float3(unity_ObjectToWorld[0].x, unity_ObjectToWorld[1].x, unity_ObjectToWorld[2].x)),
+        length(float3(unity_ObjectToWorld[0].y, unity_ObjectToWorld[1].y, unity_ObjectToWorld[2].y)),
+        length(float3(unity_ObjectToWorld[0].z, unity_ObjectToWorld[1].z, unity_ObjectToWorld[2].z)));
+}
+
 inline float3 ToLocal(float3 pos)
 {
     return mul(unity_WorldToObject, float4(pos, 1.0)).xyz;
@@ -75,7 +83,7 @@ inline bool IsInnerObject(float3 pos)
 #ifdef OBJECT_SCALE
     return _IsInnerObject(ToLocal(pos), 1.0);
 #else
-    return _IsInnerObject(ToLocal(pos), abs(_Scale));
+    return _IsInnerObject(ToLocal(pos), GetScale());
 #endif
 }
 

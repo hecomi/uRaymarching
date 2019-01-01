@@ -14,20 +14,10 @@ public class RaymarchingObject : MonoBehaviour
     [SerializeField] Color gizmoColor = new Color(1f, 1f, 1f, 0.1f);
     [SerializeField] Color gizmoSelectedColor = new Color(1f, 0f, 0f, 1f);
 
-    private int scaleId_;
     private Material material_;
-    private Vector3 scale
-    {
-        get 
-        { 
-            var s = transform.localScale;
-            return new Vector3(Mathf.Abs(s.x), Mathf.Abs(s.y), Mathf.Abs(s.z)); 
-        }
-    }
 
     void Awake()
     {
-        scaleId_ = Shader.PropertyToID("_Scale");
         material_ = GetComponent<Renderer>().sharedMaterial;
     }
     
@@ -36,13 +26,7 @@ public class RaymarchingObject : MonoBehaviour
 #if UNITY_EDITOR
         material_ = GetComponent<Renderer>().sharedMaterial;
 #endif
-        UpdateScale();
         UpdateShape();
-    }
-
-    void UpdateScale()
-    {
-        material_.SetVector(scaleId_, scale);
     }
 
     void UpdateShape()
