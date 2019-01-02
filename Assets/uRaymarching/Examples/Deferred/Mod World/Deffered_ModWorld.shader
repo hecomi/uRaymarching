@@ -1,4 +1,4 @@
-Shader "Raymarching/ModWorld"
+Shader "Raymarching/Deffered_ModWorld"
 {
 
 Properties
@@ -27,7 +27,7 @@ Tags
     "DisableBatching" = "True"
 }
 
-Cull Back
+Cull Off
 
 CGINCLUDE
 
