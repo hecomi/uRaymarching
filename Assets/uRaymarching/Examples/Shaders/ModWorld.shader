@@ -31,6 +31,7 @@ Cull Back
 
 CGINCLUDE
 
+#define OBJECT_SHAPE_CUBE
 #define WORLD_SPACE
 
 #define USE_RAYMARCHING_DEPTH
@@ -85,7 +86,6 @@ Pass
     #pragma exclude_renderers nomrt
     #pragma multi_compile_prepassfinal
     #pragma multi_compile ___ UNITY_HDR_ON
-    #pragma shader_feature OBJECT_SHAPE_CUBE
     ENDCG
 }
 

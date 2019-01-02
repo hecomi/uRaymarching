@@ -474,7 +474,7 @@ public class GeneratorEditor : Editor
         try {
             ExportShader();
         } catch (System.Exception e) {
-            AddError(e.Message);
+            AddError(e);
         }
 
         generator.OnAfterConvert();
@@ -531,7 +531,7 @@ public class GeneratorEditor : Editor
                 }
             }
         } catch (System.Exception e) {
-            AddError(e.Message);
+            AddError(e);
         }
     }
 
@@ -556,12 +556,12 @@ public class GeneratorEditor : Editor
         errorMessage_ = "";
     }
 
-    void AddError(string error)
+    void AddError(System.Exception e)
     {
         if (!string.IsNullOrEmpty(errorMessage_)) {
             errorMessage_ += "\n";
         }
-        errorMessage_ += error;
+        errorMessage_ += e.Message;
     }
 }
 

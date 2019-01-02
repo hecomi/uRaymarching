@@ -34,6 +34,8 @@ Cull Back
 
 CGINCLUDE
 
+#define OBJECT_SHAPE_CUBE
+
 #define USE_RAYMARCHING_DETPH
 
 #define DISTANCE_FUNCTION DistanceFunction
@@ -97,6 +99,7 @@ inline float DistanceFunction(float3 pos)
     // combine
     return min(d1, d2);
 }
+
 // @endblock
 
 // @block PostEffect
@@ -132,7 +135,6 @@ Pass
     #pragma exclude_renderers nomrt
     #pragma multi_compile_prepassfinal
     #pragma multi_compile ___ UNITY_HDR_ON
-    #pragma shader_feature OBJECT_SHAPE_CUBE
     ENDCG
 }
 
@@ -147,7 +149,6 @@ Pass
     #pragma fragment Frag
     #pragma fragmentoption ARB_precision_hint_fastest
     #pragma multi_compile_shadowcaster
-    #pragma shader_feature OBJECT_SHAPE_CUBE
     ENDCG
 }
 

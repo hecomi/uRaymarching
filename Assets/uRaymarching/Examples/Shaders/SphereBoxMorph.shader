@@ -33,6 +33,8 @@ Cull Off
 
 CGINCLUDE
 
+#define OBJECT_SHAPE_CUBE
+
 #define USE_RAYMARCHING_DETPH
 #define SPHERICAL_HARMONICS_PER_PIXEL
 #define CAMERA_INSIDE_OBJECT
@@ -87,7 +89,6 @@ Pass
     #pragma exclude_renderers nomrt
     #pragma multi_compile_prepassfinal
     #pragma multi_compile ___ UNITY_HDR_ON
-    #pragma shader_feature OBJECT_SHAPE_CUBE
     ENDCG
 }
 
@@ -102,7 +103,6 @@ Pass
     #pragma fragment Frag
     #pragma fragmentoption ARB_precision_hint_fastest
     #pragma multi_compile_shadowcaster
-    #pragma shader_feature OBJECT_SHAPE_CUBE
     ENDCG
 }
 
