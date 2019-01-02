@@ -25,7 +25,8 @@ SubShader
 
 Tags
 {
-    "RenderType" = "Opaque"
+    "RenderType" = "Transparent"
+    "Queue" = "AlphaTest"
     "DisableBatching" = "True"
 }
 
@@ -35,7 +36,7 @@ CGINCLUDE
 
 #define OBJECT_SHAPE_CUBE
 
-#define USE_RAYMARCHING_DETPH
+#define USE_RAYMARCHING_DEPTH
 #define SPHERICAL_HARMONICS_PER_PIXEL
 #define CAMERA_INSIDE_OBJECT
 
@@ -48,6 +49,7 @@ CGINCLUDE
 // @block DistanceFunction
 inline float DistanceFunction(float3 pos)
 {
+    return Sphere(pos, 1.0);
     float t = _Time.x;
     float a = 6 * PI * t;
     float s = pow(sin(a), 2.0);
@@ -72,6 +74,22 @@ ENDCG
 
 Pass
 {
+    Tags { "LightMode" = "ForwardBase" }
+
+    CGPROGRAM
+    #define UNITY_PASS_FORWARDBASE
+    #include "Assets/uRaymarching/Shaders/Include/VertFragForwardObjectStandard.cginc"
+    #pragma target 3.0
+    #pragma vertex VertBase
+    #pragma fragment FragBase
+    #pragma multi_compile_instancing
+    #pragma multi_compile_fog
+    #pragma multi_compile_fwdbase
+    ENDCG
+}
+
+Pass
+{
     Tags { "LightMode" = "Deferred" }
 
     Stencil
@@ -82,6 +100,7 @@ Pass
     }
 
     CGPROGRAM
+    #define UNITY_PASS_DEFERRED
     #include "Assets/uRaymarching/Shaders/Include/VertFragDeferredObjectStandard.cginc"
     #pragma target 3.0
     #pragma vertex Vert
