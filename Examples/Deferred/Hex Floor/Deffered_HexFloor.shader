@@ -1,4 +1,4 @@
-Shader "Raymarching/HexFloor"
+Shader "Raymarching/Deffered_HexFloor"
 {
 
 Properties
@@ -118,22 +118,6 @@ ENDCG
 
 Pass
 {
-    Tags { "LightMode" = "ForwardBase" }
-
-    CGPROGRAM
-    #define UNITY_PASS_FORWARDBASE
-    #include "Assets/uRaymarching/Shaders/Include/VertFragForwardObjectStandard.cginc"
-    #pragma target 3.0
-    #pragma vertex VertBase
-    #pragma fragment FragBase
-    #pragma multi_compile_instancing
-    #pragma multi_compile_fog
-    #pragma multi_compile_fwdbase
-    ENDCG
-}
-
-Pass
-{
     Tags { "LightMode" = "Deferred" }
 
     Stencil
@@ -144,7 +128,6 @@ Pass
     }
 
     CGPROGRAM
-    #define UNITY_PASS_DEFERRED
     #include "Assets/uRaymarching/Shaders/Include/VertFragDeferredObjectStandard.cginc"
     #pragma target 3.0
     #pragma vertex Vert

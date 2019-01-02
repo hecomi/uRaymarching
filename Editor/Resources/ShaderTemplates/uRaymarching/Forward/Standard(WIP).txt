@@ -1,5 +1,7 @@
-Shader "Raymarching/SphereBoxMorph"
+Shader "Raymarching/<Name>"
 {
+
+@constants uRaymarching/Constants/uRaymarching Default Constants
 
 Properties
 {
@@ -11,13 +13,15 @@ Properties
     [Header(Raymarching Settings)]
     _Loop("Loop", Range(1, 100)) = 30
     _MinDistance("Minimum Distance", Range(0.001, 0.1)) = 0.01
+@if ShadowCaster : true
     _ShadowLoop("Shadow Loop", Range(1, 100)) = 10
     _ShadowMinDistance("Shadow Minimum Distance", Range(0.001, 0.1)) = 0.01
     _ShadowExtraBias("Shadow Extra Bias", Range(0.0, 1.0)) = 0.01
+@endif
 
-// @block Properties
-// _Color("Color", Color) = (1.0, 1.0, 1.0, 1.0)
-// @endblock
+@block Properties
+// _Color2("Color2", Color) = (1.0, 1.0, 1.0, 1.0)
+@endblock
 }
 
 SubShader
@@ -25,50 +29,49 @@ SubShader
 
 Tags
 {
-    "RenderType" = "Transparent"
-    "Queue" = "AlphaTest"
+    "RenderType" = "<RenderType=Opaque|Transparent|TransparentCutout|Background|Overlay>"
+    "Queue" = "<RenderQueue=Geometry|AlphaTest|Transparent|Background|Overlay|Geometry+1|Geometry-1>"
     "DisableBatching" = "True"
 }
 
-Cull Off
+Cull <Culling=Back|Front|Off>
 
 CGINCLUDE
 
-#define OBJECT_SHAPE_CUBE
-
+#define OBJECT_SHAPE_<ObjectShape=CUBE|NONE>
+@if FollowObjectScale : false
+#define OBJECT_SCALE
+@endif
+@if UseRaymarchingDepth : true
 #define USE_RAYMARCHING_DEPTH
+@endif
+@if SphericalHarmonicsPerPixel : true
 #define SPHERICAL_HARMONICS_PER_PIXEL
+@endif
+@if CameraInsideObject : false
 #define CAMERA_INSIDE_OBJECT
+@endif
 
 #define DISTANCE_FUNCTION DistanceFunction
 #define POST_EFFECT PostEffect
 #define PostEffectOutput SurfaceOutputStandard
 
-#include "Assets/uRaymarching/Shaders/Include/Common.cginc"
+#include "<RaymarchingShaderDirectory>/Common.cginc"
 
-// @block DistanceFunction
+@block DistanceFunction
 inline float DistanceFunction(float3 pos)
 {
-    return Sphere(pos, 1.0);
-    float t = _Time.x;
-    float a = 6 * PI * t;
-    float s = pow(sin(a), 2.0);
-    float d1 = Sphere(pos, 0.75);
-    float d2 = RoundBox(
-        Repeat(pos, 0.2),
-        0.1 - 0.1 * s,
-        0.1 / length(pos * 2.0));
-    return lerp(d1, d2, s);
+    return Sphere(pos, 0.5);
 }
-// @endblock
+@endblock
 
-// @block PostEffect
+@block PostEffect
 inline void PostEffect(RaymarchInfo ray, inout PostEffectOutput o)
 {
 }
-// @endblock
+@endblock
 
-#include "Assets/uRaymarching/Shaders/Include/Raymarching.cginc"
+#include "<RaymarchingShaderDirectory>/Raymarching.cginc"
 
 ENDCG
 
@@ -77,8 +80,7 @@ Pass
     Tags { "LightMode" = "ForwardBase" }
 
     CGPROGRAM
-    #define UNITY_PASS_FORWARDBASE
-    #include "Assets/uRaymarching/Shaders/Include/VertFragForwardObjectStandard.cginc"
+    #include "<RaymarchingShaderDirectory>/VertFragForwardObjectStandard.cginc"
     #pragma target 3.0
     #pragma vertex VertBase
     #pragma fragment FragBase
@@ -88,35 +90,13 @@ Pass
     ENDCG
 }
 
-Pass
-{
-    Tags { "LightMode" = "Deferred" }
-
-    Stencil
-    {
-        Comp Always
-        Pass Replace
-        Ref 128
-    }
-
-    CGPROGRAM
-    #define UNITY_PASS_DEFERRED
-    #include "Assets/uRaymarching/Shaders/Include/VertFragDeferredObjectStandard.cginc"
-    #pragma target 3.0
-    #pragma vertex Vert
-    #pragma fragment Frag
-    #pragma exclude_renderers nomrt
-    #pragma multi_compile_prepassfinal
-    #pragma multi_compile ___ UNITY_HDR_ON
-    ENDCG
-}
-
+@if ShadowCaster
 Pass
 {
     Tags { "LightMode" = "ShadowCaster" }
 
     CGPROGRAM
-    #include "Assets/uRaymarching/Shaders/Include/VertFragShadowObject.cginc"
+    #include "<RaymarchingShaderDirectory>/VertFragShadowObject.cginc"
     #pragma target 3.0
     #pragma vertex Vert
     #pragma fragment Frag
@@ -124,10 +104,15 @@ Pass
     #pragma multi_compile_shadowcaster
     ENDCG
 }
+@endif
 
 }
 
+@if FallbackToStandardShader : true
 Fallback "Raymarching/Fallbacks/StandardSurfaceShader"
+@else
+Fallback Off
+@endif
 
 CustomEditor "uShaderTemplate.MaterialEditor"
 
