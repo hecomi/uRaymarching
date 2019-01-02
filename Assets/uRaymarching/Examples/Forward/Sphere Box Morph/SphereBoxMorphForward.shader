@@ -6,8 +6,7 @@ Properties
     [Header(Base)]
     _Color("Color", Color) = (1.0, 1.0, 1.0, 1.0)
     [Enum(UnityEngine.Rendering.CullMode)] _Cull("Culling", Int) = 2
-    [Enum(UnityEngine.Rendering.BlendMode)] _BlendSrc("Blend Src", Float) = 5 
-    [Enum(UnityEngine.Rendering.BlendMode)] _BlendDst("Blend Dst", Float) = 10
+
     [Toggle][KeyEnum(Off, On)] _ZWrite("ZWrite", Float) = 1
 
     [Header(Raymarching Settings)]
@@ -27,8 +26,8 @@ SubShader
 
 Tags
 {
-    "RenderType" = "Transparent"
-    "Queue" = "Transparent"
+    "RenderType" = "Raymarching"
+    "Queue" = "Geometry"
     "DisableBatching" = "True"
 }
 
@@ -85,7 +84,6 @@ Pass
 {
     Tags { "LightMode" = "ForwardBase" }
 
-    Blend [_BlendSrc] [_BlendDst]
     ZWrite [_ZWrite]
 
     CGPROGRAM

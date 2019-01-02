@@ -117,3 +117,131 @@ Fallback Off
 CustomEditor "uShaderTemplate.MaterialEditor"
 
 }
+
+Shader "Raymarching/<Name>"
+{
+
+@constants uRaymarching/Constants/uRaymarching Default Constants
+
+Properties
+{
+    [Header(Base)]
+    _Color("Color", Color) = (1.0, 1.0, 1.0, 1.0)
+    _Metallic("Metallic", Range(0.0, 1.0)) = 0.5
+    _Glossiness("Smoothness", Range(0.0, 1.0)) = 0.5
+    [Enum(UnityEngine.Rendering.CullMode)] _Cull("Culling", Int) = 2
+@if Blend : false
+    [Enum(UnityEngine.Rendering.BlendMode)] _BlendSrc("Blend Src", Float) = 5 
+    [Enum(UnityEngine.Rendering.BlendMode)] _BlendDst("Blend Dst", Float) = 10
+@endif
+    [Toggle][KeyEnum(Off, On)] _ZWrite("ZWrite", Float) = 1
+
+    [Header(Raymarching Settings)]
+    _Loop("Loop", Range(1, 100)) = 30
+    _MinDistance("Minimum Distance", Range(0.001, 0.1)) = 0.01
+@if ShadowCaster : true
+    _ShadowLoop("Shadow Loop", Range(1, 100)) = 10
+    _ShadowMinDistance("Shadow Minimum Distance", Range(0.001, 0.1)) = 0.01
+    _ShadowExtraBias("Shadow Extra Bias", Range(0.0, 1.0)) = 0.01
+@endif
+
+@block Properties
+// _Color2("Color2", Color) = (1.0, 1.0, 1.0, 1.0)
+@endblock
+}
+
+SubShader
+{
+
+Tags
+{
+    "RenderType" = "<RenderType=Opaque|Transparent|TransparentCutout|Background|Overlay>"
+    "Queue" = "<RenderQueue=Geometry|AlphaTest|Transparent|Background|Overlay|Geometry+1|Geometry-1>"
+    "DisableBatching" = "True"
+}
+
+Cull [_Cull]
+
+CGINCLUDE
+
+#define OBJECT_SHAPE_<ObjectShape=CUBE|NONE>
+@if FollowObjectScale : false
+#define OBJECT_SCALE
+@endif
+@if UseRaymarchingDepth : true
+#define USE_RAYMARCHING_DEPTH
+@endif
+@if CameraInsideObject : false
+#define CAMERA_INSIDE_OBJECT
+@endif
+
+#define DISTANCE_FUNCTION DistanceFunction
+#define POST_EFFECT PostEffect
+#define PostEffectOutput float4
+
+#include "<RaymarchingShaderDirectory>/Common.cginc"
+
+@block DistanceFunction
+inline float DistanceFunction(float3 pos)
+{
+    return Sphere(pos, 0.5);
+}
+@endblock
+
+@block PostEffect
+inline void PostEffect(RaymarchInfo ray, inout PostEffectOutput o)
+{
+}
+@endblock
+
+#include "<RaymarchingShaderDirectory>/Raymarching.cginc"
+
+ENDCG
+
+Pass
+{
+    Tags { "LightMode" = "ForwardBase" }
+
+@if Blend : false
+    Blend [_BlendSrc] [_BlendDst]
+@endif
+    ZWrite [_ZWrite]
+
+    CGPROGRAM
+    #include "<RaymarchingShaderDirectory>/VertFragForwardObjectSimple.cginc"
+    #pragma target 3.0
+    #pragma vertex VertBase
+    #pragma fragment FragBase
+    #pragma multi_compile_instancing
+    #pragma multi_compile_fog
+    #pragma multi_compile_fwdbase
+    ENDCG
+}
+
+@if ShadowCaster
+Pass
+{
+    Tags { "LightMode" = "ShadowCaster" }
+
+    CGPROGRAM
+    #include "<RaymarchingShaderDirectory>/VertFragShadowObject.cginc"
+    #pragma target 3.0
+    #pragma vertex Vert
+    #pragma fragment Frag
+    #pragma fragmentoption ARB_precision_hint_fastest
+    #pragma multi_compile_shadowcaster
+    ENDCG
+}
+@endif
+
+}
+
+@if FallbackToStandardShader : true
+Fallback "Raymarching/Fallbacks/StandardSurfaceShader"
+@else
+Fallback Off
+@endif
+
+CustomEditor "uShaderTemplate.MaterialEditor"
+
+}
