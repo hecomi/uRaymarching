@@ -1,5 +1,5 @@
-﻿#ifndef VERT_FRAG_FORWARD_OBJECT_STANDARD_H
-#define VERT_FRAG_FORWARD_OBJECT_STANDARD_H
+﻿#ifndef VERT_FRAG_FORWARD_OBJECT_STANDARD_BASE_H
+#define VERT_FRAG_FORWARD_OBJECT_STANDARD_BASE_H
 
 #include "UnityCG.cginc"
 #include "Lighting.cginc"
@@ -16,7 +16,7 @@ fixed4 _Color;
 float _Glossiness;
 float _Metallic;
 
-struct Vert2FragBase
+struct VertOutput
 {
     UNITY_POSITION(pos);
     float3 worldNormal : TEXCOORD0;
@@ -35,7 +35,7 @@ struct Vert2FragBase
     UNITY_VERTEX_OUTPUT_STEREO
 };
 
-struct FragBaseOutput
+struct FragOutput
 {
     float4 color : SV_Target;
 #ifdef USE_RAYMARCHING_DEPTH
@@ -43,10 +43,10 @@ struct FragBaseOutput
 #endif
 };
 
-Vert2FragBase VertBase(appdata_full v)
+VertOutput Vert(appdata_full v)
 {
-    Vert2FragBase o;
-    UNITY_INITIALIZE_OUTPUT(Vert2FragBase, o);
+    VertOutput o;
+    UNITY_INITIALIZE_OUTPUT(VertOutput, o);
 
     UNITY_SETUP_INSTANCE_ID(v);
     UNITY_TRANSFER_INSTANCE_ID(v, o);
@@ -91,7 +91,7 @@ Vert2FragBase VertBase(appdata_full v)
     return o;
 }
 
-FragBaseOutput FragBase(Vert2FragBase i)
+FragOutput Frag(VertOutput i)
 {
     UNITY_SETUP_INSTANCE_ID(i);
 
@@ -191,8 +191,8 @@ FragBaseOutput FragBase(Vert2FragBase i)
     UNITY_APPLY_FOG(i.fogCoord, color);
     UNITY_OPAQUE_ALPHA(color.a);
 
-    FragBaseOutput o;
-    UNITY_INITIALIZE_OUTPUT(FragBaseOutput, o);
+    FragOutput o;
+    UNITY_INITIALIZE_OUTPUT(FragOutput, o);
     o.color = color;
 #ifdef USE_RAYMARCHING_DEPTH
     o.depth = ray.depth;
