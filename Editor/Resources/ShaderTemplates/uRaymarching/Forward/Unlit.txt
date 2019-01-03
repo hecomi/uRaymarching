@@ -49,6 +49,9 @@ CGINCLUDE
 @if UseRaymarchingDepth : true
 #define USE_RAYMARCHING_DEPTH
 @endif
+@if UseCameraDepthTexture : true
+#define USE_CAMERA_DEPTH_TEXTURE
+@endif
 @if CameraInsideObject : false
 #define CAMERA_INSIDE_OBJECT
 @endif
@@ -88,8 +91,8 @@ Pass
     CGPROGRAM
     #include "<RaymarchingShaderDirectory>/VertFragForwardObjectSimple.cginc"
     #pragma target 3.0
-    #pragma vertex VertBase
-    #pragma fragment FragBase
+    #pragma vertex Vert
+    #pragma fragment Frag
     #pragma multi_compile_instancing
     #pragma multi_compile_fog
     #pragma multi_compile_fwdbase

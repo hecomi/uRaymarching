@@ -14,20 +14,22 @@ float _MinDistance;
 int _Loop;
 fixed4 _Color;
 
-struct Vert2FragBase
+struct Vert2Frag
 {
     float4 pos : POSITION;
-    float4 projPos : TEXCOORD0;
-    float3 worldNormal : TEXCOORD1;
-    float3 worldPos : TEXCOORD2;
-    float4 lmap : TEXCOORD3;
-    UNITY_SHADOW_COORDS(4)
-    UNITY_FOG_COORDS(5)
+    float3 worldNormal : TEXCOORD0;
+    float3 worldPos : TEXCOORD1;
+    float4 lmap : TEXCOORD2;
+    UNITY_SHADOW_COORDS(3)
+    UNITY_FOG_COORDS(4)
+#ifdef USE_CAMERA_DEPTH_TEXTURE
+    float4 projPos : TEXCOORD5;
+#endif
     UNITY_VERTEX_INPUT_INSTANCE_ID
     UNITY_VERTEX_OUTPUT_STEREO
 };
 
-struct FragBaseOutput
+struct FragOutput
 {
     float4 color : SV_Target;
 #ifdef USE_RAYMARCHING_DEPTH
@@ -35,10 +37,10 @@ struct FragBaseOutput
 #endif
 };
 
-Vert2FragBase VertBase(appdata_full v)
+Vert2Frag Vert(appdata_full v)
 {
-    Vert2FragBase o;
-    UNITY_INITIALIZE_OUTPUT(Vert2FragBase, o);
+    Vert2Frag o;
+    UNITY_INITIALIZE_OUTPUT(Vert2Frag, o);
 
     UNITY_SETUP_INSTANCE_ID(v);
     UNITY_TRANSFER_INSTANCE_ID(v, o);
@@ -50,12 +52,17 @@ Vert2FragBase VertBase(appdata_full v)
     o.worldPos = worldPos;
     o.worldNormal = worldNormal;
 
+#ifdef USE_CAMERA_DEPTH_TEXTURE
+    o.projPos = ComputeScreenPos(o.pos);
+    COMPUTE_EYEDEPTH(o.projPos.z);
+#endif
+
     UNITY_TRANSFER_SHADOW(o,v.texcoord1.xy);
     UNITY_TRANSFER_FOG(o,o.pos);
     return o;
 }
 
-FragBaseOutput FragBase(Vert2FragBase i)
+FragOutput Frag(Vert2Frag i)
 {
     UNITY_SETUP_INSTANCE_ID(i);
 
@@ -73,13 +80,17 @@ FragBaseOutput FragBase(Vert2FragBase i)
 
     ray.polyNormal = i.worldNormal;
     ray.minDistance = _MinDistance;
+#ifdef USE_CAMERA_DEPTH_TEXTURE
+    ray.maxDistance = GetMaxDistanceFromDepthTexture(i.projPos, ray.rayDir);
+#else
     ray.maxDistance = GetCameraFarClip();
+#endif
     ray.maxLoop = _Loop;
 
     Raymarch(ray);
 
-    FragBaseOutput o;
-    UNITY_INITIALIZE_OUTPUT(FragBaseOutput, o);
+    FragOutput o;
+    UNITY_INITIALIZE_OUTPUT(FragOutput, o);
     o.color = _Color;
 #ifdef USE_RAYMARCHING_DEPTH
     o.depth = ray.depth;
