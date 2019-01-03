@@ -95,9 +95,6 @@ FragBaseOutput FragBase(Vert2FragBase i)
 {
     UNITY_SETUP_INSTANCE_ID(i);
 
-    FragBaseOutput o;
-    UNITY_INITIALIZE_OUTPUT(FragBaseOutput, o);
-
     RaymarchInfo ray;
     UNITY_INITIALIZE_OUTPUT(RaymarchInfo, ray);
     ray.rayDir = normalize(i.worldPos - GetCameraPosition());
@@ -116,10 +113,6 @@ FragBaseOutput FragBase(Vert2FragBase i)
     ray.maxLoop = _Loop;
 
     Raymarch(ray);
-
-#ifdef USE_RAYMARCHING_DEPTH
-    o.depth = ray.depth;
-#endif
 
     float3 worldPos = ray.endPos;
     float3 worldNormal = 2.0 * ray.normal - 1.0;
@@ -191,11 +184,19 @@ FragBaseOutput FragBase(Vert2FragBase i)
     giInput.probePosition[1] = unity_SpecCube1_ProbePosition;
 #endif
 
+    float4 color = 0.0;
     LightingStandard_GI(so, giInput, gi);
-    o.color += LightingStandard(so, worldViewDir, gi);
+    color += LightingStandard(so, worldViewDir, gi);
 
-    UNITY_APPLY_FOG(i.fogCoord, o.color);
-    UNITY_OPAQUE_ALPHA(o.color.a);
+    UNITY_APPLY_FOG(i.fogCoord, color);
+    UNITY_OPAQUE_ALPHA(color.a);
+
+    FragBaseOutput o;
+    UNITY_INITIALIZE_OUTPUT(FragBaseOutput, o);
+    o.color = color;
+#ifdef USE_RAYMARCHING_DEPTH
+    o.depth = ray.depth;
+#endif
 
     return o;
 }
