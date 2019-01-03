@@ -82,7 +82,7 @@ void Raymarch(inout RaymarchInfo ray)
 
     if (ray.totalLength < ray.minDistance) {
         ray.normal = EncodeNormal(ray.polyNormal);
-        ray.depth = GetCameraDepth(ray.startPos);
+        ray.depth = GetCameraDepth(ray.startPos) - 1e-6;
     } else {
         ray.normal = GetDistanceFunctiontionNormal(ray.endPos);
         ray.depth = GetCameraDepth(ray.endPos);
