@@ -93,7 +93,7 @@ void Frag(
     UNITY_INITIALIZE_OUTPUT(RaymarchInfo, ray);
     ray.startPos = i.worldPos;
     ray.minDistance = _ShadowMinDistance;
-    ray.maxDistance = GetCameraMaxDistance();
+    ray.maxDistance = GetCameraFarClip();
     ray.maxLoop = _ShadowLoop;
 
     if (IsCameraPerspective()) {

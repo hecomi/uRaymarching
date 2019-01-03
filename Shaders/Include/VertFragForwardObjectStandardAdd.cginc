@@ -19,7 +19,7 @@ float _Metallic;
 struct VertOutput
 {
     UNITY_POSITION(pos);
-    float2 pack0 : TEXCOORD0;
+    float4 projPos : TEXCOORD0;
     float3 worldPos : TEXCOORD1;
     float3 worldNormal : TEXCOORD2;
     UNITY_SHADOW_COORDS(3)
@@ -38,6 +38,8 @@ VertOutput Vert(appdata_full v)
     UNITY_INITIALIZE_VERTEX_OUTPUT_STEREO(o);
 
     o.pos = UnityObjectToClipPos(v.vertex);
+    o.projPos = ComputeScreenPos(o.pos);
+    COMPUTE_EYEDEPTH(o.projPos.z);
     o.worldPos = mul(unity_ObjectToWorld, v.vertex).xyz;
     o.worldNormal = UnityObjectToWorldNormal(v.normal);
 
@@ -64,7 +66,11 @@ float4 Frag(VertOutput i) : SV_Target
 
     ray.polyNormal = i.worldNormal;
     ray.minDistance = _MinDistance;
-    ray.maxDistance = GetCameraMaxDistance();
+#ifdef USE_CAMERA_DEPTH_TEXTURE
+    ray.maxDistance = GetMaxDistanceFromDepthTexture(i.projPos, ray.rayDir);
+#else
+    ray.maxDistance = GetCameraFarClip();
+#endif
     ray.maxLoop = _Loop;
 
     Raymarch(ray);

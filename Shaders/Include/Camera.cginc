@@ -8,7 +8,6 @@ inline float3 GetCameraRight()       { return UNITY_MATRIX_V[0].xyz;     }
 inline float  GetCameraFocalLength() { return abs(UNITY_MATRIX_P[1][1]); }
 inline float  GetCameraNearClip()    { return _ProjectionParams.y;       }
 inline float  GetCameraFarClip()     { return _ProjectionParams.z;       }
-inline float  GetCameraMaxDistance() { return GetCameraFarClip() - GetCameraNearClip(); }
 inline bool   IsCameraPerspective()  { return any(UNITY_MATRIX_P[3].xyz); }
 inline bool   IsCameraOrtho()        { return !IsCameraPerspective(); }
 

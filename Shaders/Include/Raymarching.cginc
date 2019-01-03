@@ -2,6 +2,7 @@
 #define RAYMARCHING_CGINC
 
 #include "UnityCG.cginc"
+#include "./Camera.cginc"
 #include "./Utils.cginc"
 
 #ifndef DISTANCE_FUNCTION
@@ -34,13 +35,26 @@ inline float3 GetDistanceFunctiontionNormal(float3 pos)
         _DistanceFunction(pos + float3(0.0, 0.0,   d)) - _DistanceFunction(pos))));
 }
 
+#ifdef USE_CAMERA_DEPTH_TEXTURE
+UNITY_DECLARE_DEPTH_TEXTURE(_CameraDepthTexture);
+
+inline float GetMaxDistanceFromDepthTexture(float4 projPos, float3 rayDir)
+{
+    float depth = LinearEyeDepth(SAMPLE_DEPTH_TEXTURE_PROJ(_CameraDepthTexture, UNITY_PROJ_COORD(projPos)));
+    float maxLen = depth / dot(rayDir, GetCameraForward());
+    return maxLen;
+}
+#endif
+
 inline bool _ShouldRaymarchFinish(RaymarchInfo ray)
 {
     if (ray.lastDistance < ray.minDistance) return true;
 
-#ifdef WORLD_SPACE
+#if defined(WORLD_SPACE) || defined(USE_CAMERA_DEPTH_TEXTURE)
     if (ray.totalLength > ray.maxDistance) return true;
-#else
+#endif
+
+#ifndef WORLD_SPACE
     if (!IsInnerObject(ray.endPos)) return true;
 #endif
 
@@ -51,7 +65,7 @@ inline bool _Raymarch(inout RaymarchInfo ray)
 {
     ray.endPos = ray.startPos;
     ray.lastDistance = 0.0;
-    ray.totalLength = 0.0;
+    ray.totalLength = length(ray.startPos - GetCameraPosition());
 
     for (ray.loop = 0; ray.loop < ray.maxLoop; ++ray.loop) {
         ray.lastDistance = _DistanceFunction(ray.endPos);

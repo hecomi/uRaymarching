@@ -73,7 +73,7 @@ FragBaseOutput FragBase(Vert2FragBase i)
 
     ray.polyNormal = i.worldNormal;
     ray.minDistance = _MinDistance;
-    ray.maxDistance = GetCameraMaxDistance();
+    ray.maxDistance = GetCameraFarClip();
     ray.maxLoop = _Loop;
 
     Raymarch(ray);
