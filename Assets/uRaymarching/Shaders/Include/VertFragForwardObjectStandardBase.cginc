@@ -19,15 +19,16 @@ float _Metallic;
 struct VertOutput
 {
     UNITY_POSITION(pos);
-    float3 worldNormal : TEXCOORD0;
-    float3 worldPos : TEXCOORD1;
-    float4 lmap : TEXCOORD2;
-    UNITY_SHADOW_COORDS(3)
-    UNITY_FOG_COORDS(4)
+    float4 projPos : TEXCOORD0;
+    float3 worldNormal : TEXCOORD1;
+    float3 worldPos : TEXCOORD2;
+    float4 lmap : TEXCOORD3;
+    UNITY_SHADOW_COORDS(4)
+    UNITY_FOG_COORDS(5)
 #ifndef SPHERICAL_HARMONICS_PER_PIXEL
     #ifndef LIGHTMAP_ON
         #if UNITY_SHOULD_SAMPLE_SH
-        half3 sh : TEXCOORD5;
+        half3 sh : TEXCOORD6;
         #endif
     #endif
 #endif
@@ -53,6 +54,8 @@ VertOutput Vert(appdata_full v)
     UNITY_INITIALIZE_VERTEX_OUTPUT_STEREO(o);
 
     o.pos = UnityObjectToClipPos(v.vertex);
+    o.projPos = ComputeScreenPos(o.pos);
+    COMPUTE_EYEDEPTH(o.projPos.z);
     float3 worldPos = mul(unity_ObjectToWorld, v.vertex).xyz;
     float3 worldNormal = UnityObjectToWorldNormal(v.normal);
     o.worldPos = worldPos;
@@ -109,7 +112,11 @@ FragOutput Frag(VertOutput i)
 
     ray.polyNormal = i.worldNormal;
     ray.minDistance = _MinDistance;
-    ray.maxDistance = GetCameraMaxDistance();
+#ifdef USE_CAMERA_DEPTH_TEXTURE
+    ray.maxDistance = GetMaxDistanceFromDepthTexture(i.projPos, ray.rayDir);
+#else
+    ray.maxDistance = GetCameraFarClip();
+#endif
     ray.maxLoop = _Loop;
 
     Raymarch(ray);
@@ -189,7 +196,7 @@ FragOutput Frag(VertOutput i)
     color += LightingStandard(so, worldViewDir, gi);
 
     UNITY_APPLY_FOG(i.fogCoord, color);
-    UNITY_OPAQUE_ALPHA(color.a);
+    //UNITY_OPAQUE_ALPHA(color.a);
 
     FragOutput o;
     UNITY_INITIALIZE_OUTPUT(FragOutput, o);

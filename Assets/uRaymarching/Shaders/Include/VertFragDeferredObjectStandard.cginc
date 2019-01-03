@@ -74,7 +74,7 @@ GBufferOut Frag(v2f i, GBufferOut o)
 
     ray.polyNormal = i.worldNormal;
     ray.minDistance = _MinDistance;
-    ray.maxDistance = GetCameraMaxDistance();
+    ray.maxDistance = GetCameraFarClip();
     ray.maxLoop = _Loop;
 
     Raymarch(ray);

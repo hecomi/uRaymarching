@@ -51,6 +51,9 @@ CGINCLUDE
 @if UseRaymarchingDepth : true
 #define USE_RAYMARCHING_DEPTH
 @endif
+@if UseCameraDepthTexture : true
+#define USE_CAMERA_DEPTH_TEXTURE
+@endif
 @if SphericalHarmonicsPerPixel : true
 #define SPHERICAL_HARMONICS_PER_PIXEL
 @endif

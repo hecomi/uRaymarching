@@ -36,7 +36,7 @@ GBufferOut Frag(v2f i)
     ray.rayDir = GetCameraDirection(i.screenPos);
     ray.startPos = GetCameraPosition() + GetCameraNearClip() * ray.rayDir;
     ray.minDistance = _MinDistance;
-    ray.maxDistance = GetCameraMaxDistance();
+    ray.maxDistance = GetCameraFarClip();
     ray.maxLoop = _Loop;
 
     Raymarch(ray);

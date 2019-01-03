@@ -8,7 +8,8 @@ Properties
     _Metallic("Metallic", Range(0.0, 1.0)) = 0.5
     _Glossiness("Smoothness", Range(0.0, 1.0)) = 0.5
     [Enum(UnityEngine.Rendering.CullMode)] _Cull("Culling", Int) = 2
-
+    [Enum(UnityEngine.Rendering.BlendMode)] _BlendSrc("Blend Src", Float) = 5 
+    [Enum(UnityEngine.Rendering.BlendMode)] _BlendDst("Blend Dst", Float) = 10
     [Toggle][KeyEnum(Off, On)] _ZWrite("ZWrite", Float) = 1
 
     [Header(Raymarching Settings)]
@@ -28,8 +29,8 @@ SubShader
 
 Tags
 {
-    "RenderType" = "Opaque"
-    "Queue" = "Geometry"
+    "RenderType" = "Transparent"
+    "Queue" = "Transparent"
     "DisableBatching" = "True"
 }
 
@@ -39,7 +40,7 @@ CGINCLUDE
 
 #define OBJECT_SHAPE_CUBE
 
-#define USE_RAYMARCHING_DEPTH
+#define USE_CAMERA_DEPTH_TEXTURE
 #define SPHERICAL_HARMONICS_PER_PIXEL
 #define CAMERA_INSIDE_OBJECT
 
@@ -67,7 +68,8 @@ inline float DistanceFunction(float3 pos)
 // @block PostEffect
 inline void PostEffect(RaymarchInfo ray, inout PostEffectOutput o)
 {
-    o.Occlusion *= 1.0 - 1.0 * ray.loop / ray.maxLoop;
+    o.Occlusion *= pow(1.0 - 1.0 * ray.loop / ray.maxLoop, 2.0);
+    o.Alpha = 0.5;
 }
 // @endblock
 
@@ -76,7 +78,7 @@ ENDCG
 Pass
 {
     Tags { "LightMode" = "ForwardBase" }
-
+    Blend [_BlendSrc] [_BlendDst]
     ZWrite [_ZWrite]
 
     CGPROGRAM
