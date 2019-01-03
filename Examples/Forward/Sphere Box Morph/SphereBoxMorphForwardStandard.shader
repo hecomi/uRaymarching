@@ -1,10 +1,12 @@
-Shader "Raymarching/SphereBoxMorphForward"
+Shader "Raymarching/SphereBoxMorphForwardStandard"
 {
 
 Properties
 {
     [Header(Base)]
     _Color("Color", Color) = (1.0, 1.0, 1.0, 1.0)
+    _Metallic("Metallic", Range(0.0, 1.0)) = 0.5
+    _Glossiness("Smoothness", Range(0.0, 1.0)) = 0.5
     [Enum(UnityEngine.Rendering.CullMode)] _Cull("Culling", Int) = 2
 
     [Toggle][KeyEnum(Off, On)] _ZWrite("ZWrite", Float) = 1
@@ -26,7 +28,7 @@ SubShader
 
 Tags
 {
-    "RenderType" = "Raymarching"
+    "RenderType" = "Opaque"
     "Queue" = "Geometry"
     "DisableBatching" = "True"
 }
@@ -37,12 +39,11 @@ CGINCLUDE
 
 #define OBJECT_SHAPE_CUBE
 
-#define USE_RAYMARCHING_DEPTH
-#define CAMERA_INSIDE_OBJECT
+#define SPHERICAL_HARMONICS_PER_PIXEL
 
 #define DISTANCE_FUNCTION DistanceFunction
 #define POST_EFFECT PostEffect
-#define PostEffectOutput float4
+#define PostEffectOutput SurfaceOutputStandard
 
 #include "Assets/uRaymarching/Shaders/Include/Common.cginc"
 
@@ -64,15 +65,6 @@ inline float DistanceFunction(float3 pos)
 // @block PostEffect
 inline void PostEffect(RaymarchInfo ray, inout PostEffectOutput o)
 {
-#ifdef USING_DIRECTIONAL_LIGHT
-    float3 lightDir = _WorldSpaceLightPos0.xyz;
-#else
-    float3 worldPos = ray.endPos;
-    float3 lightDir = normalize(UnityWorldSpaceLightDir(worldPos));
-#endif
-    float light = (dot(ray.normal, lightDir) + 1.0) * 0.5;
-    light *= 1.0 - 1.0 * ray.loop / ray.maxLoop;
-    o *= light;
 }
 // @endblock
 
@@ -87,7 +79,7 @@ Pass
     ZWrite [_ZWrite]
 
     CGPROGRAM
-    #include "Assets/uRaymarching/Shaders/Include/VertFragForwardObjectSimple.cginc"
+    #include "Assets/uRaymarching/Shaders/Include/VertFragForwardObjectStandard.cginc"
     #pragma target 3.0
     #pragma vertex VertBase
     #pragma fragment FragBase
