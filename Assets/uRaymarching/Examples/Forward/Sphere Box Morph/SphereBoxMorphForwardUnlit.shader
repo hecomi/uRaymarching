@@ -37,8 +37,7 @@ CGINCLUDE
 
 #define OBJECT_SHAPE_CUBE
 
-#define USE_RAYMARCHING_DEPTH
-#define CAMERA_INSIDE_OBJECT
+#define USE_CAMERA_DEPTH_TEXTURE
 
 #define DISTANCE_FUNCTION DistanceFunction
 #define POST_EFFECT PostEffect
@@ -64,12 +63,7 @@ inline float DistanceFunction(float3 pos)
 // @block PostEffect
 inline void PostEffect(RaymarchInfo ray, inout PostEffectOutput o)
 {
-#ifdef USING_DIRECTIONAL_LIGHT
-    float3 lightDir = _WorldSpaceLightPos0.xyz;
-#else
-    float3 worldPos = ray.endPos;
-    float3 lightDir = normalize(UnityWorldSpaceLightDir(worldPos));
-#endif
+    float3 lightDir = _WorldSpaceLightPos0;
     float light = (dot(ray.normal, lightDir) + 1.0) * 0.5;
     light *= 1.0 - 1.0 * ray.loop / ray.maxLoop;
     o *= light;
@@ -89,8 +83,8 @@ Pass
     CGPROGRAM
     #include "Assets/uRaymarching/Shaders/Include/VertFragForwardObjectSimple.cginc"
     #pragma target 3.0
-    #pragma vertex VertBase
-    #pragma fragment FragBase
+    #pragma vertex Vert
+    #pragma fragment Frag
     #pragma multi_compile_instancing
     #pragma multi_compile_fog
     #pragma multi_compile_fwdbase
