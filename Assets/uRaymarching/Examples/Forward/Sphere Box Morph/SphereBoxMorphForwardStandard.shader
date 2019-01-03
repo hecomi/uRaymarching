@@ -40,9 +40,8 @@ CGINCLUDE
 #define OBJECT_SHAPE_CUBE
 
 #define USE_RAYMARCHING_DEPTH
-
+#define USE_CAMERA_DEPTH_TEXTURE
 #define SPHERICAL_HARMONICS_PER_PIXEL
-#define CAMERA_INSIDE_OBJECT
 
 #define DISTANCE_FUNCTION DistanceFunction
 #define PostEffectOutput SurfaceOutputStandard

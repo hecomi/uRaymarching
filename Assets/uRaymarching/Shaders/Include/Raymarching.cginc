@@ -26,13 +26,13 @@ inline float _DistanceFunction(float3 pos)
 #endif
 }
 
-inline float3 GetDistanceFunctiontionNormal(float3 pos)
+inline float3 GetDistanceFunctionNormal(float3 pos)
 {
     const float d = 0.0001;
-    return EncodeNormal(normalize(float3(
+    return normalize(float3(
         _DistanceFunction(pos + float3(  d, 0.0, 0.0)) - _DistanceFunction(pos),
         _DistanceFunction(pos + float3(0.0,   d, 0.0)) - _DistanceFunction(pos),
-        _DistanceFunction(pos + float3(0.0, 0.0,   d)) - _DistanceFunction(pos))));
+        _DistanceFunction(pos + float3(0.0, 0.0,   d)) - _DistanceFunction(pos)));
 }
 
 #ifdef USE_CAMERA_DEPTH_TEXTURE
@@ -82,7 +82,8 @@ void Raymarch(inout RaymarchInfo ray)
     if (!_Raymarch(ray)) discard;
 
 #ifdef WORLD_SPACE
-    ray.normal = GetDistanceFunctiontionNormal(ray.endPos);
+    float3 normal = GetDistanceFunctionNormal(ray.endPos);
+    ray.normal = EncodeNormal(normal);
     ray.depth = GetCameraDepth(ray.endPos);
 #else
 
@@ -94,11 +95,13 @@ void Raymarch(inout RaymarchInfo ray)
     }
     #endif
 
-    if (ray.totalLength < ray.minDistance) {
+    float initLength = length(ray.startPos - GetCameraPosition());
+    if (ray.totalLength - initLength < ray.minDistance) {
         ray.normal = EncodeNormal(ray.polyNormal);
         ray.depth = GetCameraDepth(ray.startPos) - 1e-6;
     } else {
-        ray.normal = GetDistanceFunctiontionNormal(ray.endPos);
+        float3 normal = GetDistanceFunctionNormal(ray.endPos);
+        ray.normal = EncodeNormal(normal);
         ray.depth = GetCameraDepth(ray.endPos);
     }
 #endif
