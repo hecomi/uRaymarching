@@ -60,6 +60,7 @@ CGINCLUDE
 
 #define DISTANCE_FUNCTION DistanceFunction
 #define PostEffectOutput SurfaceOutputStandard
+#define POST_EFFECT PostEffect
 
 #include "<RaymarchingShaderDirectory>/Common.cginc"
 
@@ -70,14 +71,8 @@ inline float DistanceFunction(float3 pos)
 }
 @endblock
 
-@block PostEffectBasePass
-inline void PostEffect_BasePass(RaymarchInfo ray, inout PostEffectOutput o)
-{
-}
-@endblock
-
-@block PostEffectAddPass
-inline void PostEffect_AddPass(RaymarchInfo ray, inout PostEffectOutput o)
+@block PostEffect
+inline void PostEffect(RaymarchInfo ray, inout PostEffectOutput o)
 {
 }
 @endblock
@@ -93,7 +88,6 @@ Pass
     ZWrite [_ZWrite]
 
     CGPROGRAM
-    #define POST_EFFECT PostEffect_BasePass
     #include "<RaymarchingShaderDirectory>/VertFragForwardObjectStandardBase.cginc"
     #pragma target 3.0
     #pragma vertex Vert
@@ -112,7 +106,6 @@ Pass
     Blend One One
 
     CGPROGRAM
-    #define POST_EFFECT PostEffect_AddPass
     #include "<RaymarchingShaderDirectory>/VertFragForwardObjectStandardAdd.cginc"
     #pragma target 3.0
     #pragma vertex Vert
