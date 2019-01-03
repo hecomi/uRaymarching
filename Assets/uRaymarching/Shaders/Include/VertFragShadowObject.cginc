@@ -1,6 +1,7 @@
 ﻿#ifndef VERT_FRAG_SHADOW_OBJECT_CGINC
 #define VERT_FRAG_SHADOW_OBJECT_CGINC
 
+#include "AutoLight.cginc"
 #include "UnityCG.cginc"
 #include "./Structs.cginc"
 #include "./Raymarching.cginc"
@@ -20,12 +21,12 @@ struct appdata
 struct v2f
 {
     V2F_SHADOW_CASTER;
-    float4 screenPos : TEXCOORD1;
-    float4 worldPos  : TEXCOORD2;
-    float3 normal    : TEXCOORD3;
+    float4 worldPos  : TEXCOORD1;
+    float3 normal    : TEXCOORD2;
+    float4 screenPos : TEXCOORD3;
 };
 
-float4 ApplyLinearShadowBias(float4 clipPos)
+inline float4 ApplyLinearShadowBias(float4 clipPos)
 {
 #if defined(UNITY_REVERSED_Z)
     clipPos.z += max(-1.0, min((unity_LightShadowBias.x - _ShadowExtraBias) / clipPos.w, 0.0));
@@ -38,13 +39,28 @@ float4 ApplyLinearShadowBias(float4 clipPos)
     return clipPos;
 }
 
+inline float3 CalcDirectionFromWorldPos(float3 worldPos)
+{
+    return normalize(worldPos - GetCameraPosition());
+}
+
+inline float3 CalcDirectionFromScreenPos(float4 screenPos)
+{
+#if UNITY_UV_STARTS_AT_TOP
+    screenPos.y *= -1.0;
+#endif
+    screenPos.xy /= screenPos.w;
+
+    return _GetCameraDirection(screenPos.xy);
+}
+
 v2f Vert(appdata v)
 {
     v2f o;
     o.pos = UnityObjectToClipPos(v.vertex);
-    o.screenPos = o.pos;
     o.worldPos = mul(unity_ObjectToWorld, v.vertex);
     o.normal = mul(unity_ObjectToWorld, v.normal);
+    o.screenPos = o.pos;
     return o;
 }
 
@@ -54,7 +70,7 @@ float4 Frag(v2f i) : SV_Target
 {
     RaymarchInfo ray;
     UNITY_INITIALIZE_OUTPUT(RaymarchInfo, ray);
-    ray.rayDir = GetCameraDirectionForShadow(i.screenPos);
+    ray.rayDir = CalcDirectionFromScreenPos(i.screenPos);
     ray.startPos = i.worldPos;
     ray.minDistance = _ShadowMinDistance;
     ray.maxDistance = GetCameraMaxDistance();
@@ -80,15 +96,16 @@ void Frag(
     ray.maxDistance = GetCameraMaxDistance();
     ray.maxLoop = _ShadowLoop;
 
-    // light direction of spot light
-    if ((UNITY_MATRIX_P[3].x != 0.0) || 
-        (UNITY_MATRIX_P[3].y != 0.0) || 
-        (UNITY_MATRIX_P[3].z != 0.0)) {
-        ray.rayDir = GetCameraDirectionForShadow(i.screenPos);
-    }
-    // light direction of directional light 
-    else {
-        ray.rayDir = -UNITY_MATRIX_V[2].xyz;
+    if (IsCameraPerspective()) {
+        // Hack: This pass run in the UpdateDepthTexture stage.
+        if (abs(unity_LightShadowBias.x) < 1e-5) {
+            ray.rayDir = CalcDirectionFromWorldPos(i.worldPos);
+        // Run in the SpotLight shadow stage.
+        } else {
+            ray.rayDir = CalcDirectionFromScreenPos(i.screenPos);
+        }
+    } else {
+        ray.rayDir = GetCameraForward();
     }
 
     if (!_Raymarch(ray)) discard;

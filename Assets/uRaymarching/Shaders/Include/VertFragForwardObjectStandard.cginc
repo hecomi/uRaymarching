@@ -124,10 +124,10 @@ FragBaseOutput FragBase(Vert2FragBase i)
     float3 worldPos = ray.endPos;
     float3 worldNormal = 2.0 * ray.normal - 1.0;
     fixed3 worldViewDir = normalize(UnityWorldSpaceViewDir(worldPos));
-#ifndef USING_DIRECTIONAL_LIGHT
-    fixed3 lightDir = normalize(UnityWorldSpaceLightDir(worldPos));
-#else
+#ifdef USING_DIRECTIONAL_LIGHT
     fixed3 lightDir = _WorldSpaceLightPos0.xyz;
+#else
+    fixed3 lightDir = normalize(UnityWorldSpaceLightDir(worldPos));
 #endif
 
     SurfaceOutputStandard so;
