@@ -1,7 +1,5 @@
-Shader "Raymarching/<Name>"
+Shader "Raymarching/Forward_ModWorld"
 {
-
-@constants uRaymarching/Constants/uRaymarching Default Constants
 
 Properties
 {
@@ -10,24 +8,19 @@ Properties
     _Metallic("Metallic", Range(0.0, 1.0)) = 0.5
     _Glossiness("Smoothness", Range(0.0, 1.0)) = 0.5
     [Enum(UnityEngine.Rendering.CullMode)] _Cull("Culling", Int) = 2
-@if Blend : false
-    [Enum(UnityEngine.Rendering.BlendMode)] _BlendSrc("Blend Src", Float) = 5 
-    [Enum(UnityEngine.Rendering.BlendMode)] _BlendDst("Blend Dst", Float) = 10
-@endif
+
     [Toggle][KeyEnum(Off, On)] _ZWrite("ZWrite", Float) = 1
 
     [Header(Raymarching Settings)]
     _Loop("Loop", Range(1, 100)) = 30
     _MinDistance("Minimum Distance", Range(0.001, 0.1)) = 0.01
-@if ShadowCaster : true
     _ShadowLoop("Shadow Loop", Range(1, 100)) = 10
     _ShadowMinDistance("Shadow Minimum Distance", Range(0.001, 0.1)) = 0.01
     _ShadowExtraBias("Shadow Extra Bias", Range(0.0, 1.0)) = 0.01
-@endif
 
-@block Properties
+// @block Properties
 // _Color2("Color2", Color) = (1.0, 1.0, 1.0, 1.0)
-@endblock
+// @endblock
 }
 
 SubShader
@@ -35,8 +28,8 @@ SubShader
 
 Tags
 {
-    "RenderType" = "<RenderType=Opaque|Transparent|TransparentCutout|Background|Overlay>"
-    "Queue" = "<RenderQueue=Geometry|AlphaTest|Transparent|Background|Overlay|Geometry+1|Geometry-1>"
+    "RenderType" = "Opaque"
+    "Queue" = "Geometry"
     "DisableBatching" = "True"
 }
 
@@ -44,57 +37,46 @@ Cull [_Cull]
 
 CGINCLUDE
 
-#define OBJECT_SHAPE_<ObjectShape=CUBE|NONE>
-@if WorldSpace : false
+#define OBJECT_SHAPE_NONE
 #define WORLD_SPACE
-@endif
-@if FollowObjectScale : false
-#define OBJECT_SCALE
-@endif
-@if UseRaymarchingDepth : true
+
 #define USE_RAYMARCHING_DEPTH
-@endif
-@if UseCameraDepthTexture : true
 #define USE_CAMERA_DEPTH_TEXTURE
-@endif
-@if SphericalHarmonicsPerPixel : true
 #define SPHERICAL_HARMONICS_PER_PIXEL
-@endif
-@if CameraInsideObject : false
-#define CAMERA_INSIDE_OBJECT
-@endif
 
 #define DISTANCE_FUNCTION DistanceFunction
 #define PostEffectOutput SurfaceOutputStandard
 #define POST_EFFECT PostEffect
 
-#include "<RaymarchingShaderDirectory>/Common.cginc"
+#include "Assets/uRaymarching/Shaders/Include/Common.cginc"
 
-@block DistanceFunction
+// @block DistanceFunction
 inline float DistanceFunction(float3 pos)
 {
-    return Sphere(pos, 0.5);
+    float r = abs(sin(2 * PI * _Time.y / 2.0));
+    float d1 = RoundBox(Repeat(pos, float3(6, 6, 6)), 1 - r, r);
+    float d2 = Sphere(pos, 3.0);
+    float d3 = Plane(pos - float3(0, -3, 0), float3(0, 1, 0));
+    return SmoothMin(SmoothMin(d1, d2, 1.0), d3, 1.0);
 }
-@endblock
+// @endblock
 
-@block PostEffect
+// @block PostEffect
 inline void PostEffect(RaymarchInfo ray, inout PostEffectOutput o)
 {
 }
-@endblock
+// @endblock
 
 ENDCG
 
 Pass
 {
     Tags { "LightMode" = "ForwardBase" }
-@if Blend : false
-    Blend [_BlendSrc] [_BlendDst]
-@endif
+
     ZWrite [_ZWrite]
 
     CGPROGRAM
-    #include "<RaymarchingShaderDirectory>/VertFragForwardObjectStandardBase.cginc"
+    #include "Assets/uRaymarching/Shaders/Include/VertFragForwardObjectStandardBase.cginc"
     #pragma target 3.0
     #pragma vertex Vert
     #pragma fragment Frag
@@ -104,7 +86,6 @@ Pass
     ENDCG
 }
 
-@if ForwardAdd
 Pass
 {
     Tags { "LightMode" = "ForwardAdd" }
@@ -112,7 +93,7 @@ Pass
     Blend One One
 
     CGPROGRAM
-    #include "<RaymarchingShaderDirectory>/VertFragForwardObjectStandardAdd.cginc"
+    #include "Assets/uRaymarching/Shaders/Include/VertFragForwardObjectStandardAdd.cginc"
     #pragma target 3.0
     #pragma vertex Vert
     #pragma fragment Frag
@@ -122,15 +103,13 @@ Pass
     #pragma multi_compile_fwdadd_fullshadows
     ENDCG
 }
-@endif
 
-@if ShadowCaster
 Pass
 {
     Tags { "LightMode" = "ShadowCaster" }
 
     CGPROGRAM
-    #include "<RaymarchingShaderDirectory>/VertFragShadowObject.cginc"
+    #include "Assets/uRaymarching/Shaders/Include/VertFragShadowObject.cginc"
     #pragma target 3.0
     #pragma vertex Vert
     #pragma fragment Frag
@@ -138,15 +117,10 @@ Pass
     #pragma multi_compile_shadowcaster
     ENDCG
 }
-@endif
 
 }
 
-@if FallbackToStandardShader : true
-Fallback "Raymarching/Fallbacks/StandardSurfaceShader"
-@else
 Fallback Off
-@endif
 
 CustomEditor "uShaderTemplate.MaterialEditor"
 

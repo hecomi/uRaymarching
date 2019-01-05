@@ -32,7 +32,8 @@ sysinfo.txt
 # OS
 *.DS_Store
 
-# VSCode
+# VS / VSCode
+.vs
 .vscode
 
 # For This Project
