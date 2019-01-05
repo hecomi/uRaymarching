@@ -67,8 +67,6 @@ inline void PostEffect(RaymarchInfo ray, inout PostEffectOutput o)
 }
 // @endblock
 
-#include "Assets/uRaymarching/Shaders/Include/Raymarching.cginc"
-
 ENDCG
 
 Pass
@@ -83,7 +81,7 @@ Pass
     }
 
     CGPROGRAM
-    #include "Assets/uRaymarching/Shaders/Include/VertFragDeferredObjectStandard.cginc"
+    #include "Assets/uRaymarching/Shaders/Include/DeferredStandard.cginc"
     #pragma target 3.0
     #pragma vertex Vert
     #pragma fragment Frag
@@ -98,7 +96,7 @@ Pass
     Tags { "LightMode" = "ShadowCaster" }
 
     CGPROGRAM
-    #include "Assets/uRaymarching/Shaders/Include/VertFragShadowObject.cginc"
+    #include "Assets/uRaymarching/Shaders/Include/ShadowCaster.cginc"
     #pragma target 3.0
     #pragma vertex Vert
     #pragma fragment Frag

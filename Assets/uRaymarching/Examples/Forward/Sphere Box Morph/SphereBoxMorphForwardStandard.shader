@@ -80,7 +80,7 @@ Pass
     ZWrite [_ZWrite]
 
     CGPROGRAM
-    #include "Assets/uRaymarching/Shaders/Include/VertFragForwardObjectStandardBase.cginc"
+    #include "Assets/uRaymarching/Shaders/Include/ForwardBaseStandard.cginc"
     #pragma target 3.0
     #pragma vertex Vert
     #pragma fragment Frag
@@ -97,7 +97,7 @@ Pass
     Blend One One
 
     CGPROGRAM
-    #include "Assets/uRaymarching/Shaders/Include/VertFragForwardObjectStandardAdd.cginc"
+    #include "Assets/uRaymarching/Shaders/Include/ForwardAddStandard.cginc"
     #pragma target 3.0
     #pragma vertex Vert
     #pragma fragment Frag
@@ -113,7 +113,7 @@ Pass
     Tags { "LightMode" = "ShadowCaster" }
 
     CGPROGRAM
-    #include "Assets/uRaymarching/Shaders/Include/VertFragShadowObject.cginc"
+    #include "Assets/uRaymarching/Shaders/Include/ShadowCaster.cginc"
     #pragma target 3.0
     #pragma vertex Vert
     #pragma fragment Frag

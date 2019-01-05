@@ -75,8 +75,6 @@ inline void PostEffect(RaymarchInfo ray, inout PostEffectOutput o)
 }
 @endblock
 
-#include "<RaymarchingShaderDirectory>/Raymarching.cginc"
-
 ENDCG
 
 Pass
@@ -89,7 +87,7 @@ Pass
     ZWrite [_ZWrite]
 
     CGPROGRAM
-    #include "<RaymarchingShaderDirectory>/VertFragForwardObjectSimple.cginc"
+    #include "<RaymarchingShaderDirectory>/ForwardBaseUnlit.cginc"
     #pragma target 3.0
     #pragma vertex Vert
     #pragma fragment Frag
@@ -105,7 +103,7 @@ Pass
     Tags { "LightMode" = "ShadowCaster" }
 
     CGPROGRAM
-    #include "<RaymarchingShaderDirectory>/VertFragShadowObject.cginc"
+    #include "<RaymarchingShaderDirectory>/ShadowCaster.cginc"
     #pragma target 3.0
     #pragma vertex Vert
     #pragma fragment Frag
