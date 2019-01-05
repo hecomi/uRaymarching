@@ -27,11 +27,11 @@ Tags
     "DisableBatching" = "True"
 }
 
-Cull Off
+Cull Back
 
 CGINCLUDE
 
-#define OBJECT_SHAPE_CUBE
+#define OBJECT_SHAPE_NONE
 #define WORLD_SPACE
 
 #define USE_RAYMARCHING_DEPTH
@@ -63,8 +63,6 @@ inline void PostEffect(RaymarchInfo ray, inout PostEffectOutput o)
 }
 // @endblock
 
-#include "Assets/uRaymarching/Shaders/Include/Raymarching.cginc"
-
 ENDCG
 
 Pass
@@ -79,7 +77,7 @@ Pass
     }
 
     CGPROGRAM
-    #include "Assets/uRaymarching/Shaders/Include/VertFragDeferredScreenDirect.cginc"
+    #include "Assets/uRaymarching/Shaders/Include/DeferredDirect.cginc"
     #pragma target 3.0
     #pragma vertex Vert
     #pragma fragment Frag
