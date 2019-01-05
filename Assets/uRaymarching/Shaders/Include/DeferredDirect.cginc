@@ -15,7 +15,7 @@ float4 _Emission;
 struct appdata
 {
     float4 vertex : POSITION;
-#ifndef WORLD_SPACE
+#ifndef FULL_SCREEN
     float3 normal : NORMAL;
 #endif
 };
@@ -23,7 +23,7 @@ struct appdata
 struct v2f
 {
     float4 vertex    : SV_POSITION;
-#ifdef WORLD_SPACE
+#ifdef FULL_SCREEN
     float4 screenPos : TEXCOORD0;
 #else
     float4 worldPos    : TEXCOORD0;
@@ -34,7 +34,7 @@ struct v2f
 v2f Vert(appdata i)
 {
     v2f o;
-#ifdef WORLD_SPACE
+#ifdef FULL_SCREEN
     o.vertex = i.vertex;
     o.screenPos = i.vertex;
 #else
@@ -45,12 +45,12 @@ v2f Vert(appdata i)
     return o;
 }
 
-GBufferOut Frag(v2f i)
+GBufferOut Frag(v2f i, GBufferOut o)
 {
     RaymarchInfo ray;
     UNITY_INITIALIZE_OUTPUT(RaymarchInfo, ray);
 
-#ifdef WORLD_SPACE
+#ifdef FULL_SCREEN
     ray.rayDir = GetCameraDirection(i.screenPos);
     ray.startPos = GetCameraPosition() + GetCameraNearClip() * ray.rayDir;
     ray.maxDistance = GetCameraFarClip();
@@ -65,8 +65,6 @@ GBufferOut Frag(v2f i)
 
     Raymarch(ray);
 
-    GBufferOut o;
-    UNITY_INITIALIZE_OUTPUT(GBufferOut, o);
     o.diffuse  = _Diffuse;
     o.specular = _Specular;
     o.emission = _Emission;
@@ -80,7 +78,7 @@ GBufferOut Frag(v2f i)
 #endif
 
 #ifndef UNITY_HDR_ON
-    o.emission = exp2(-o.emission);
+    o.emission.rgb = exp2(-o.emission.rgb);
 #endif
 
     return o;

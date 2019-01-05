@@ -38,15 +38,19 @@ Cull <Culling=Off|Back|Front>
 CGINCLUDE
 
 #define OBJECT_SHAPE_<ObjectShape=CUBE|NONE>
-@if WorldSpace : false
-#define WORLD_SPACE
+
+@if FullScreen : false
+#define FULL_SCREEN
 @endif
+
 @if FollowObjectScale : false
 #define OBJECT_SCALE
 @endif
+
 @if UseRaymarchingDepth : true
 #define USE_RAYMARCHING_DEPTH
 @endif
+
 @if CameraInsideObject : false
 #define CAMERA_INSIDE_OBJECT
 @endif
