@@ -15,7 +15,7 @@ inline float _DefaultDistanceFunction(float3 pos)
 
 inline float _DistanceFunction(float3 pos)
 {
-#ifdef WORLD_SPACE
+#ifdef FULL_SCREEN
     return DISTANCE_FUNCTION(pos);
 #else
     #ifdef OBJECT_SCALE
@@ -50,11 +50,11 @@ inline bool _ShouldRaymarchFinish(RaymarchInfo ray)
 {
     if (ray.lastDistance < ray.minDistance) return true;
 
-#if defined(WORLD_SPACE) || defined(USE_CAMERA_DEPTH_TEXTURE)
+#if defined(FULL_SCREEN) || defined(USE_CAMERA_DEPTH_TEXTURE)
     if (ray.totalLength > ray.maxDistance) return true;
 #endif
 
-#ifndef WORLD_SPACE
+#ifndef FULL_SCREEN
     if (!IsInnerObject(ray.endPos)) return true;
 #endif
 
@@ -81,7 +81,7 @@ void Raymarch(inout RaymarchInfo ray)
 {
     if (!_Raymarch(ray)) discard;
 
-#ifdef WORLD_SPACE
+#ifdef FULL_SCREEN
     float3 normal = GetDistanceFunctionNormal(ray.endPos);
     ray.normal = EncodeNormal(normal);
     ray.depth = GetCameraDepth(ray.endPos);

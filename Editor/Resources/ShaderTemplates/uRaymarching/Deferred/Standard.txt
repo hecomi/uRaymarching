@@ -39,15 +39,23 @@ Cull <Culling=Back|Front|Off>
 CGINCLUDE
 
 #define OBJECT_SHAPE_<ObjectShape=CUBE|NONE>
+
 @if FollowObjectScale : false
 #define OBJECT_SCALE
 @endif
+
+@if FullScreen : false
+#define FULL_SCREEN
+@endif
+
 @if UseRaymarchingDepth : true
 #define USE_RAYMARCHING_DEPTH
 @endif
+
 @if SphericalHarmonicsPerPixel : true
 #define SPHERICAL_HARMONICS_PER_PIXEL
 @endif
+
 @if CameraInsideObject : false
 #define CAMERA_INSIDE_OBJECT
 @endif

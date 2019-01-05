@@ -17,11 +17,20 @@ float _Metallic;
 
 struct v2f
 {
+#ifdef FULL_SCREEN
+    float4 pos         : SV_POSITION;
+    float4 screenPos   : TEXCOORD0;
+    float4 lmap        : TEXCOORD1;
+    #ifdef LIGHTMAP_OFF
+        #if UNITY_SHOULD_SAMPLE_SH
+    half3 sh           : TEXCOORD2;
+        #endif
+    #endif
+#else
     float4 pos         : SV_POSITION;
     float4 worldPos    : TEXCOORD0;
     float3 worldNormal : TEXCOORD1;
     float4 lmap        : TEXCOORD2;
-#ifndef SPHERICAL_HARMONICS_PER_PIXEL
     #ifdef LIGHTMAP_OFF
         #if UNITY_SHOULD_SAMPLE_SH
     half3 sh           : TEXCOORD3;
@@ -33,9 +42,15 @@ struct v2f
 v2f Vert(appdata_full v)
 {
     v2f o;
+
+#ifdef FULL_SCREEN
+    o.pos = v.vertex;
+    o.screenPos = v.vertex;
+#else
     o.pos = UnityObjectToClipPos(v.vertex);
     o.worldPos = mul(unity_ObjectToWorld, v.vertex);
     o.worldNormal = UnityObjectToWorldNormal(v.normal);
+#endif
 
 #ifndef DYNAMICLIGHTMAP_OFF
     o.lmap.zw = v.texcoord2.xy * unity_DynamicLightmapST.xy + unity_DynamicLightmapST.zw;
@@ -62,19 +77,24 @@ GBufferOut Frag(v2f i, GBufferOut o)
 {
     RaymarchInfo ray;
     UNITY_INITIALIZE_OUTPUT(RaymarchInfo, ray);
+
+#ifdef FULL_SCREEN
+    ray.rayDir = GetCameraDirection(i.screenPos);
+    ray.startPos = GetCameraPosition() + GetCameraNearClip() * ray.rayDir;
+    ray.maxDistance = GetCameraFarClip();
+#else
     ray.rayDir = normalize(i.worldPos - GetCameraPosition());
     ray.startPos = i.worldPos;
-
-#ifdef CAMERA_INSIDE_OBJECT
+    #ifdef CAMERA_INSIDE_OBJECT
     float3 startPos = GetCameraPosition() + (GetCameraNearClip() + 0.01) * ray.rayDir;
     if (IsInnerObject(startPos)) {
         ray.startPos = startPos;
     }
-#endif
-
+    #endif
     ray.polyNormal = i.worldNormal;
-    ray.minDistance = _MinDistance;
     ray.maxDistance = GetCameraFarClip();
+#endif
+    ray.minDistance = _MinDistance;
     ray.maxLoop = _Loop;
 
     Raymarch(ray);

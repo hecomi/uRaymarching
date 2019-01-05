@@ -32,7 +32,8 @@ Cull Back
 CGINCLUDE
 
 #define OBJECT_SHAPE_NONE
-#define WORLD_SPACE
+
+#define FULL_SCREEN
 
 #define USE_RAYMARCHING_DEPTH
 
@@ -59,7 +60,7 @@ float4 _Grid_ST;
 
 inline void PostEffect(RaymarchInfo ray, inout PostEffectOutput o)
 {
-    o.emission = tex2D(_Grid, ray.endPos.xy * _Grid_ST.xy + _Grid_ST.zw);
+    o.emission += tex2D(_Grid, ray.endPos.xy * _Grid_ST.xy + _Grid_ST.zw);
 }
 // @endblock
 
