@@ -110,6 +110,7 @@ float4 Frag(VertOutput i) : SV_Target
 
     float4 c = 0;
     c += LightingStandard(so, worldViewDir, gi);
+    c.rgb += so.Emission;
     c.a = 0.0;
 
     UNITY_APPLY_FOG(i.fogCoord, c);
