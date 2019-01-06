@@ -15,7 +15,7 @@ inline float _DefaultDistanceFunction(float3 pos)
 
 inline float _DistanceFunction(float3 pos)
 {
-#ifdef FULL_SCREEN
+#ifdef WORLD_SPACE
     return DISTANCE_FUNCTION(pos);
 #else
     #ifdef OBJECT_SCALE
@@ -35,31 +35,69 @@ inline float3 GetDistanceFunctionNormal(float3 pos)
         _DistanceFunction(pos + float3(0.0, 0.0,   d)) - _DistanceFunction(pos)));
 }
 
-#ifdef USE_CAMERA_DEPTH_TEXTURE
-UNITY_DECLARE_DEPTH_TEXTURE(_CameraDepthTexture);
-
-inline float GetMaxDistanceFromDepthTexture(float4 projPos, float3 rayDir)
-{
-    float depth = LinearEyeDepth(SAMPLE_DEPTH_TEXTURE_PROJ(_CameraDepthTexture, UNITY_PROJ_COORD(projPos)));
-    float maxLen = depth / dot(rayDir, GetCameraForward());
-    return maxLen;
-}
-#endif
-
 inline bool _ShouldRaymarchFinish(RaymarchInfo ray)
 {
-    if (ray.lastDistance < ray.minDistance) return true;
+    if (ray.lastDistance < ray.minDistance || ray.totalLength > ray.maxDistance) return true;
 
-#if defined(FULL_SCREEN) || defined(USE_CAMERA_DEPTH_TEXTURE)
-    if (ray.totalLength > ray.maxDistance) return true;
-#endif
-
-#ifndef FULL_SCREEN
+#if defined(OBJECT_SHAPE_CUBE) && !defined(FULL_SCREEN)
     if (!IsInnerObject(ray.endPos)) return true;
 #endif
 
     return false;
 }
+
+float _MinDistance;
+int _Loop;
+
+inline void InitRaymarchFullScreen(out RaymarchInfo ray, float4 screenPos)
+{
+    UNITY_INITIALIZE_OUTPUT(RaymarchInfo, ray);
+    ray.rayDir = GetCameraDirection(screenPos);
+    ray.startPos = GetCameraPosition() + GetCameraNearClip() * ray.rayDir;
+    ray.minDistance = _MinDistance;
+    ray.maxDistance = GetCameraFarClip();
+    ray.maxLoop = _Loop;
+}
+
+inline void InitRaymarchObject(out RaymarchInfo ray, float3 worldPos, float3 worldNormal)
+{
+    UNITY_INITIALIZE_OUTPUT(RaymarchInfo, ray);
+    ray.rayDir = normalize(worldPos - GetCameraPosition());
+    ray.startPos = worldPos;
+#ifdef CAMERA_INSIDE_OBJECT
+    float3 startPos = GetCameraPosition() + (GetCameraNearClip() + 0.01) * ray.rayDir;
+    if (IsInnerObject(startPos)) {
+        ray.startPos = startPos;
+    }
+#endif
+    ray.polyNormal = worldNormal;
+    ray.maxDistance = GetCameraFarClip();
+    ray.minDistance = _MinDistance;
+    ray.maxLoop = _Loop;
+}
+
+#ifdef USE_CAMERA_DEPTH_TEXTURE
+UNITY_DECLARE_DEPTH_TEXTURE(_CameraDepthTexture);
+
+inline void UseCameraDepthTextureForMaxDistance(inout RaymarchInfo ray, float4 projPos)
+{
+    float depth = LinearEyeDepth(SAMPLE_DEPTH_TEXTURE_PROJ(_CameraDepthTexture, UNITY_PROJ_COORD(projPos)));
+    float dist = depth / dot(ray.rayDir, GetCameraForward());
+    ray.maxDistance = dist;
+}
+#endif
+
+#if defined(FULL_SCREEN)
+    #define INITIALIZE_RAYMARCH_INFO(ray, i) \
+        InitRaymarchFullScreen(ray, i.screenPos);
+#elif defined(USE_CAMERA_DEPTH_TEXTURE)
+    #define INITIALIZE_RAYMARCH_INFO(ray, i) \
+        InitRaymarchObject(ray, i.worldPos, i.worldNormal); \
+        UseCameraDepthTextureForMaxDistance(ray, i.projPos);
+#else
+    #define INITIALIZE_RAYMARCH_INFO(ray, i) \
+        InitRaymarchObject(ray, i.worldPos, i.worldNormal);
+#endif
 
 inline bool _Raymarch(inout RaymarchInfo ray)
 {
@@ -85,15 +123,16 @@ void Raymarch(inout RaymarchInfo ray)
     float3 normal = GetDistanceFunctionNormal(ray.endPos);
     ray.normal = EncodeNormal(normal);
     ray.depth = GetCameraDepth(ray.endPos);
-#else
+    return;
+#endif
 
-    #ifdef CAMERA_INSIDE_OBJECT
+#ifdef CAMERA_INSIDE_OBJECT
     if (IsInnerObject(GetCameraPosition()) && ray.totalLength < GetCameraNearClip()) {
         ray.normal = EncodeNormal(-ray.rayDir);
         ray.depth = GetCameraDepth(ray.startPos);
         return;
     }
-    #endif
+#endif
 
     float initLength = length(ray.startPos - GetCameraPosition());
     if (ray.totalLength - initLength < ray.minDistance) {
@@ -104,7 +143,6 @@ void Raymarch(inout RaymarchInfo ray)
         ray.normal = EncodeNormal(normal);
         ray.depth = GetCameraDepth(ray.endPos);
     }
-#endif
 }
 
 #endif

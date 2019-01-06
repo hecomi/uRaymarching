@@ -9,35 +9,40 @@
 #include "./Raymarching.cginc"
 #include "./Utils.cginc"
 
-float _MinDistance;
-int _Loop;
 fixed4 _Color;
 float _Glossiness;
 float _Metallic;
 
+#ifdef FULL_SCREEN
+
 struct v2f
 {
-#ifdef FULL_SCREEN
     float4 pos         : SV_POSITION;
     float4 screenPos   : TEXCOORD0;
     float4 lmap        : TEXCOORD1;
-    #ifdef LIGHTMAP_OFF
-        #if UNITY_SHOULD_SAMPLE_SH
+#ifdef LIGHTMAP_OFF
+    #if UNITY_SHOULD_SAMPLE_SH
     half3 sh           : TEXCOORD2;
-        #endif
-    #endif
-#else
-    float4 pos         : SV_POSITION;
-    float4 worldPos    : TEXCOORD0;
-    float3 worldNormal : TEXCOORD1;
-    float4 lmap        : TEXCOORD2;
-    #ifdef LIGHTMAP_OFF
-        #if UNITY_SHOULD_SAMPLE_SH
-    half3 sh           : TEXCOORD3;
-        #endif
     #endif
 #endif
 };
+
+#else
+
+struct v2f
+{
+    float4 pos         : SV_POSITION;
+    float3 worldPos    : TEXCOORD0;
+    float3 worldNormal : TEXCOORD1;
+    float4 lmap        : TEXCOORD2;
+#ifdef LIGHTMAP_OFF
+    #if UNITY_SHOULD_SAMPLE_SH
+    half3 sh           : TEXCOORD3;
+    #endif
+#endif
+};
+
+#endif
 
 v2f Vert(appdata_full v)
 {
@@ -76,27 +81,7 @@ v2f Vert(appdata_full v)
 GBufferOut Frag(v2f i, GBufferOut o)
 {
     RaymarchInfo ray;
-    UNITY_INITIALIZE_OUTPUT(RaymarchInfo, ray);
-
-#ifdef FULL_SCREEN
-    ray.rayDir = GetCameraDirection(i.screenPos);
-    ray.startPos = GetCameraPosition() + GetCameraNearClip() * ray.rayDir;
-    ray.maxDistance = GetCameraFarClip();
-#else
-    ray.rayDir = normalize(i.worldPos - GetCameraPosition());
-    ray.startPos = i.worldPos;
-    #ifdef CAMERA_INSIDE_OBJECT
-    float3 startPos = GetCameraPosition() + (GetCameraNearClip() + 0.01) * ray.rayDir;
-    if (IsInnerObject(startPos)) {
-        ray.startPos = startPos;
-    }
-    #endif
-    ray.polyNormal = i.worldNormal;
-    ray.maxDistance = GetCameraFarClip();
-#endif
-    ray.minDistance = _MinDistance;
-    ray.maxLoop = _Loop;
-
+    INITIALIZE_RAYMARCH_INFO(ray, i);
     Raymarch(ray);
 
 #ifdef USE_RAYMARCHING_DEPTH

@@ -1,5 +1,8 @@
 ﻿using UnityEngine;
 using UnityEngine.Rendering;
+#if UNITY_EDITOR
+using UnityEditor;
+#endif
 using System.Collections.Generic;
 
 [ExecuteInEditMode]
@@ -9,9 +12,10 @@ public class RaymarchingRenderer : MonoBehaviour
     Mesh quad_;
 
     [SerializeField] Material material = null;
-    [SerializeField] CameraEvent pass = CameraEvent.BeforeGBuffer;
+    [SerializeField] CameraEvent pass = CameraEvent.AfterGBuffer;
+    CameraEvent pass_;
 
-    Mesh GenerateQuad()
+    Mesh CreateQuad()
     {
         var mesh = new Mesh();
         mesh.vertices = new Vector3[4] {
@@ -26,13 +30,14 @@ public class RaymarchingRenderer : MonoBehaviour
         return mesh;
     }
 
+    [ContextMenu("CleanUp")]
     void CleanUp()
     {
         foreach (var pair in cameras_) {
             var camera = pair.Key;
             var buffer = pair.Value;
             if (camera) {
-                camera.RemoveCommandBuffer(pass, buffer);
+                camera.RemoveCommandBuffer(pass_, buffer);
             }
         }
         cameras_.Clear();
@@ -41,6 +46,7 @@ public class RaymarchingRenderer : MonoBehaviour
     void OnEnable()
     {
         CleanUp();
+        pass_ = pass;
     }
 
     void OnDisable()
@@ -48,23 +54,36 @@ public class RaymarchingRenderer : MonoBehaviour
         CleanUp();
     }
 
-    void OnWillRenderObject()
+    void Update()
     {
-        UpdateCommandBuffer();
-    }
-
-    void UpdateCommandBuffer()
-    {
-        var act = gameObject.activeInHierarchy && enabled && material;
-        if (!act) {
-            OnDisable();
+        if (!gameObject.activeInHierarchy || !enabled || !material) {
+            CleanUp();
             return;
         }
 
-        var camera = Camera.current;
+        if (pass != pass_) {
+            CleanUp();
+            pass_ = pass;
+        }
+
+        foreach (var camera in Camera.allCameras) {
+            UpdateCommandBuffer(camera);
+        }
+
+#if UNITY_EDITOR
+        foreach (SceneView view in SceneView.sceneViews) {
+            if (view != null) {
+                UpdateCommandBuffer(view.camera);
+            }
+        }
+#endif
+    }
+
+    void UpdateCommandBuffer(Camera camera)
+    {
         if (!camera || cameras_.ContainsKey(camera)) return;
 
-        if (!quad_) quad_ = GenerateQuad();
+        if (!quad_) quad_ = CreateQuad();
 
         var buffer = new CommandBuffer();
         buffer.name = "Raymarching";
