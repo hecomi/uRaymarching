@@ -202,6 +202,7 @@ FragOutput Frag(VertOutput i)
     float4 color = 0.0;
     LightingStandard_GI(so, giInput, gi);
     color += LightingStandard(so, worldViewDir, gi);
+    color.rgb += so.Emission;
 
     UNITY_APPLY_FOG(i.fogCoord, color);
     //UNITY_OPAQUE_ALPHA(color.a);
