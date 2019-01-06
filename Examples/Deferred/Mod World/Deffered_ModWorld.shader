@@ -3,10 +3,10 @@ Shader "Raymarching/Deffered_ModWorld"
 
 Properties
 {
-    [Header(GBuffer)]
-    _Diffuse("Diffuse", Color) = (1.0, 1.0, 1.0, 1.0)
-    _Specular("Specular", Color) = (0.0, 0.0, 0.0, 0.0)
-    _Emission("Emission", Color) = (0.0, 0.0, 0.0, 0.0)
+    [Header(PBS)]
+    _Color("Color", Color) = (1.0, 1.0, 1.0, 1.0)
+    _Metallic("Metallic", Range(0.0, 1.0)) = 0.5
+    _Glossiness("Smoothness", Range(0.0, 1.0)) = 0.5
 
     [Header(Raymarching Settings)]
     _Loop("Loop", Range(1, 100)) = 30
@@ -24,6 +24,7 @@ SubShader
 Tags
 {
     "RenderType" = "Opaque"
+    "Queue" = "Geometry"
     "DisableBatching" = "True"
 }
 
@@ -31,15 +32,21 @@ Cull Back
 
 CGINCLUDE
 
+#define FULL_SCREEN
+
+#define WORLD_SPACE 
+
 #define OBJECT_SHAPE_NONE
 
-#define FULL_SCREEN
+#define CAMERA_INSIDE_OBJECT
 
 #define USE_RAYMARCHING_DEPTH
 
+#define SPHERICAL_HARMONICS_PER_PIXEL
+
 #define DISTANCE_FUNCTION DistanceFunction
 #define POST_EFFECT PostEffect
-#define PostEffectOutput GBufferOut
+#define PostEffectOutput SurfaceOutputStandard
 
 #include "Assets/uRaymarching/Shaders/Include/Common.cginc"
 
@@ -60,7 +67,7 @@ float4 _Grid_ST;
 
 inline void PostEffect(RaymarchInfo ray, inout PostEffectOutput o)
 {
-    o.emission += tex2D(_Grid, ray.endPos.xy * _Grid_ST.xy + _Grid_ST.zw);
+    o.Emission += tex2D(_Grid, ray.endPos.xy * _Grid_ST.xy + _Grid_ST.zw);
 }
 // @endblock
 
@@ -78,7 +85,7 @@ Pass
     }
 
     CGPROGRAM
-    #include "Assets/uRaymarching/Shaders/Include/DeferredDirect.cginc"
+    #include "Assets/uRaymarching/Shaders/Include/DeferredStandard.cginc"
     #pragma target 3.0
     #pragma vertex Vert
     #pragma fragment Frag

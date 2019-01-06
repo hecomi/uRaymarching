@@ -10,11 +10,23 @@
 #include "./Raymarching.cginc"
 #include "./Utils.cginc"
 
-float _MinDistance;
-int _Loop;
 fixed4 _Color;
 float _Glossiness;
 float _Metallic;
+
+#ifdef FULL_SCREEN
+
+struct VertOutput
+{
+    UNITY_POSITION(pos);
+    float4 screenPos : TEXCOORD0;
+    UNITY_SHADOW_COORDS(1)
+    UNITY_FOG_COORDS(2)
+    UNITY_VERTEX_INPUT_INSTANCE_ID
+    UNITY_VERTEX_OUTPUT_STEREO
+};
+
+#else
 
 struct VertOutput
 {
@@ -28,6 +40,8 @@ struct VertOutput
     UNITY_VERTEX_OUTPUT_STEREO
 };
 
+#endif
+
 VertOutput Vert(appdata_full v)
 {
     VertOutput o;
@@ -37,11 +51,16 @@ VertOutput Vert(appdata_full v)
     UNITY_TRANSFER_INSTANCE_ID(v,o);
     UNITY_INITIALIZE_VERTEX_OUTPUT_STEREO(o);
 
+#ifdef FULL_SCREEN
+    o.pos = v.vertex;
+    o.screenPos = v.vertex;
+#else
     o.pos = UnityObjectToClipPos(v.vertex);
     o.projPos = ComputeScreenPos(o.pos);
     COMPUTE_EYEDEPTH(o.projPos.z);
     o.worldPos = mul(unity_ObjectToWorld, v.vertex).xyz;
     o.worldNormal = UnityObjectToWorldNormal(v.normal);
+#endif
 
     UNITY_TRANSFER_SHADOW(o,v.texcoord1.xy);
     UNITY_TRANSFER_FOG(o,o.pos);
@@ -53,26 +72,7 @@ float4 Frag(VertOutput i) : SV_Target
     UNITY_SETUP_INSTANCE_ID(IN);
 
     RaymarchInfo ray;
-    UNITY_INITIALIZE_OUTPUT(RaymarchInfo, ray);
-    ray.rayDir = normalize(i.worldPos - GetCameraPosition());
-    ray.startPos = i.worldPos;
-
-#ifdef CAMERA_INSIDE_OBJECT
-    float3 startPos = GetCameraPosition() + (GetCameraNearClip() + 0.01) * ray.rayDir;
-    if (IsInnerObject(startPos)) {
-        ray.startPos = startPos;
-    }
-#endif
-
-    ray.polyNormal = i.worldNormal;
-    ray.minDistance = _MinDistance;
-#ifdef USE_CAMERA_DEPTH_TEXTURE
-    ray.maxDistance = GetMaxDistanceFromDepthTexture(i.projPos, ray.rayDir);
-#else
-    ray.maxDistance = GetCameraFarClip();
-#endif
-    ray.maxLoop = _Loop;
-
+    INITIALIZE_RAYMARCH_INFO(ray, i);
     Raymarch(ray);
 
     float3 worldPos = ray.endPos;

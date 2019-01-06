@@ -6,8 +6,6 @@
 #include "./Raymarching.cginc"
 #include "./Utils.cginc"
 
-float _MinDistance;
-int _Loop;
 float4 _Diffuse;
 float4 _Specular;
 float4 _Emission;
@@ -15,16 +13,14 @@ float4 _Emission;
 struct appdata
 {
     float4 vertex : POSITION;
-#ifndef FULL_SCREEN
     float3 normal : NORMAL;
-#endif
 };
 
 struct v2f
 {
-    float4 vertex    : SV_POSITION;
+    float4 vertex      : SV_POSITION;
 #ifdef FULL_SCREEN
-    float4 screenPos : TEXCOORD0;
+    float4 screenPos   : TEXCOORD0;
 #else
     float4 worldPos    : TEXCOORD0;
     float3 worldNormal : TEXCOORD1;
@@ -48,21 +44,7 @@ v2f Vert(appdata i)
 GBufferOut Frag(v2f i, GBufferOut o)
 {
     RaymarchInfo ray;
-    UNITY_INITIALIZE_OUTPUT(RaymarchInfo, ray);
-
-#ifdef FULL_SCREEN
-    ray.rayDir = GetCameraDirection(i.screenPos);
-    ray.startPos = GetCameraPosition() + GetCameraNearClip() * ray.rayDir;
-    ray.maxDistance = GetCameraFarClip();
-#else
-    ray.rayDir = normalize(i.worldPos - GetCameraPosition());
-    ray.startPos = i.worldPos;
-    ray.polyNormal = i.worldNormal;
-    ray.maxDistance = GetCameraFarClip();
-#endif
-    ray.minDistance = _MinDistance;
-    ray.maxLoop = _Loop;
-
+    INITIALIZE_RAYMARCH_INFO(ray, i);
     Raymarch(ray);
 
     o.diffuse  = _Diffuse;

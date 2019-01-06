@@ -30,7 +30,7 @@ Tags
     "DisableBatching" = "True"
 }
 
-Cull Off
+Cull Back
 
 CGINCLUDE
 
@@ -39,8 +39,6 @@ CGINCLUDE
 #define USE_RAYMARCHING_DEPTH
 
 #define SPHERICAL_HARMONICS_PER_PIXEL
-
-#define CAMERA_INSIDE_OBJECT
 
 #define DISTANCE_FUNCTION DistanceFunction
 #define POST_EFFECT PostEffect
@@ -109,7 +107,7 @@ Pass
 
 }
 
-Fallback "Raymarching/Fallbacks/StandardSurfaceShader"
+Fallback Off
 
 CustomEditor "uShaderTemplate.MaterialEditor"
 
