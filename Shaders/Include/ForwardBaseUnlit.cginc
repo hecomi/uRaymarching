@@ -10,6 +10,8 @@
 #include "./Raymarching.cginc"
 #include "./Utils.cginc"
 
+int _Loop;
+float _MinDistance;
 fixed4 _Color;
 
 #ifdef FULL_SCREEN
@@ -62,13 +64,10 @@ Vert2Frag Vert(appdata_full v)
     o.screenPos = v.vertex;
 #else
     o.pos = UnityObjectToClipPos(v.vertex);
-    o.worldPos = mul(unity_ObjectToWorld, v.vertex).xyz;
-    o.worldNormal = UnityObjectToWorldNormal(v.normal);
-#endif
-
-#ifdef USE_CAMERA_DEPTH_TEXTURE
     o.projPos = ComputeScreenPos(o.pos);
     COMPUTE_EYEDEPTH(o.projPos.z);
+    o.worldPos = mul(unity_ObjectToWorld, v.vertex).xyz;
+    o.worldNormal = UnityObjectToWorldNormal(v.normal);
 #endif
 
     UNITY_TRANSFER_SHADOW(o,v.texcoord1.xy);
@@ -81,7 +80,7 @@ FragOutput Frag(Vert2Frag i)
     UNITY_SETUP_INSTANCE_ID(i);
 
     RaymarchInfo ray;
-    INITIALIZE_RAYMARCH_INFO(ray, i);
+    INITIALIZE_RAYMARCH_INFO(ray, i, _Loop, _MinDistance);
     Raymarch(ray);
 
     FragOutput o;
@@ -95,7 +94,7 @@ FragOutput Frag(Vert2Frag i)
     POST_EFFECT(ray, o.color);
 #endif
 
-    // UNITY_APPLY_FOG(i.fogCoord, o.color);
+    UNITY_APPLY_FOG(i.fogCoord, o.color);
 
     return o;
 }

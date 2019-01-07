@@ -28,11 +28,17 @@ struct v2f
 
 inline float4 ApplyLinearShadowBias(float4 clipPos)
 {
-#if defined(UNITY_REVERSED_Z)
+#if !(defined(SHADOWS_CUBE) && defined(SHADOWS_CUBE_IN_DEPTH_TEX))
+    #if defined(UNITY_REVERSED_Z)
     clipPos.z += max(-1.0, min((unity_LightShadowBias.x - _ShadowExtraBias) / clipPos.w, 0.0));
+    #else
+    clipPos.z += saturate((unity_LightShadowBias.x + _ShadowExtraBias) / clipPos.w);
+    #endif
+#endif
+
+#if defined(UNITY_REVERSED_Z)
     float clamped = min(clipPos.z, clipPos.w * UNITY_NEAR_CLIP_VALUE);
 #else
-    clipPos.z += saturate((unity_LightShadowBias.x + _ShadowExtraBias) / clipPos.w);
     float clamped = max(clipPos.z, clipPos.w * UNITY_NEAR_CLIP_VALUE);
 #endif
     clipPos.z = lerp(clipPos.z, clamped, unity_LightShadowBias.y);

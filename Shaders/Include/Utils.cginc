@@ -32,7 +32,7 @@ inline float EncodeDepth(float4 pos)
 #endif 
 }
 
-inline float GetCameraDepth(float3 pos)
+inline float EncodeDepth(float3 pos)
 {
     float4 vpPos = mul(UNITY_MATRIX_VP, float4(pos, 1.0));
     return EncodeDepth(vpPos);
