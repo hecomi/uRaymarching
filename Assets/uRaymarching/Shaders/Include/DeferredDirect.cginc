@@ -6,6 +6,8 @@
 #include "./Raymarching.cginc"
 #include "./Utils.cginc"
 
+int _Loop;
+float _MinDistance;
 float4 _Diffuse;
 float4 _Specular;
 float4 _Emission;
@@ -44,7 +46,7 @@ v2f Vert(appdata i)
 GBufferOut Frag(v2f i, GBufferOut o)
 {
     RaymarchInfo ray;
-    INITIALIZE_RAYMARCH_INFO(ray, i);
+    INITIALIZE_RAYMARCH_INFO(ray, i, _Loop, _MinDistance);
     Raymarch(ray);
 
     o.diffuse  = _Diffuse;

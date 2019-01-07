@@ -9,6 +9,8 @@
 #include "./Raymarching.cginc"
 #include "./Utils.cginc"
 
+int _Loop;
+float _MinDistance;
 fixed4 _Color;
 float _Glossiness;
 float _Metallic;
@@ -81,7 +83,7 @@ v2f Vert(appdata_full v)
 GBufferOut Frag(v2f i, GBufferOut o)
 {
     RaymarchInfo ray;
-    INITIALIZE_RAYMARCH_INFO(ray, i);
+    INITIALIZE_RAYMARCH_INFO(ray, i, _Loop, _MinDistance);
     Raymarch(ray);
 
 #ifdef USE_RAYMARCHING_DEPTH

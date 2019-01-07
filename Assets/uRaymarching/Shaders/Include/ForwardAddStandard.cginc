@@ -10,6 +10,8 @@
 #include "./Raymarching.cginc"
 #include "./Utils.cginc"
 
+int _Loop;
+float _MinDistance;
 fixed4 _Color;
 float _Glossiness;
 float _Metallic;
@@ -72,7 +74,7 @@ float4 Frag(VertOutput i) : SV_Target
     UNITY_SETUP_INSTANCE_ID(IN);
 
     RaymarchInfo ray;
-    INITIALIZE_RAYMARCH_INFO(ray, i);
+    INITIALIZE_RAYMARCH_INFO(ray, i, _Loop, _MinDistance);
     Raymarch(ray);
 
     float3 worldPos = ray.endPos;

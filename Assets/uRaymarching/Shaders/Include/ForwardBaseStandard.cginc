@@ -10,6 +10,8 @@
 #include "./Raymarching.cginc"
 #include "./Utils.cginc"
 
+int _Loop;
+float _MinDistance;
 fixed4 _Color;
 float _Glossiness;
 float _Metallic;
@@ -82,10 +84,8 @@ VertOutput Vert(appdata_full v)
     o.pos = UnityObjectToClipPos(v.vertex);
     o.projPos = ComputeScreenPos(o.pos);
     COMPUTE_EYEDEPTH(o.projPos.z);
-    float3 worldPos = mul(unity_ObjectToWorld, v.vertex).xyz;
-    float3 worldNormal = UnityObjectToWorldNormal(v.normal);
-    o.worldPos = worldPos;
-    o.worldNormal = worldNormal;
+    o.worldPos = mul(unity_ObjectToWorld, v.vertex).xyz;
+    o.worldNormal = UnityObjectToWorldNormal(v.normal);
 #endif
 
 #ifdef DYNAMICLIGHTMAP_ON
@@ -108,8 +108,8 @@ VertOutput Vert(appdata_full v)
                     unity_LightColor[2].rgb, 
                     unity_LightColor[3].rgb,
                     unity_4LightAtten0, 
-                    worldPos, 
-                    worldNormal);
+                    o.worldPos, 
+                    o.worldNormal);
             #endif
             o.sh = ShadeSHPerVertex(worldNormal, o.sh);
         #endif
@@ -126,7 +126,7 @@ FragOutput Frag(VertOutput i)
     UNITY_SETUP_INSTANCE_ID(i);
 
     RaymarchInfo ray;
-    INITIALIZE_RAYMARCH_INFO(ray, i);
+    INITIALIZE_RAYMARCH_INFO(ray, i, _Loop, _MinDistance);
     Raymarch(ray);
 
     float3 worldPos = ray.endPos;

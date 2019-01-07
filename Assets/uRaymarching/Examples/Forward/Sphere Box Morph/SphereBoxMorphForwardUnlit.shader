@@ -6,7 +6,8 @@ Properties
     [Header(Base)]
     _Color("Color", Color) = (1.0, 1.0, 1.0, 1.0)
     [Enum(UnityEngine.Rendering.CullMode)] _Cull("Culling", Int) = 2
-
+    [Enum(UnityEngine.Rendering.BlendMode)] _BlendSrc("Blend Src", Float) = 5 
+    [Enum(UnityEngine.Rendering.BlendMode)] _BlendDst("Blend Dst", Float) = 10
     [Toggle][KeyEnum(Off, On)] _ZWrite("ZWrite", Float) = 1
 
     [Header(Raymarching Settings)]
@@ -65,10 +66,9 @@ inline float DistanceFunction(float3 pos)
 // @block PostEffect
 inline void PostEffect(RaymarchInfo ray, inout PostEffectOutput o)
 {
-    float3 lightDir = _WorldSpaceLightPos0;
-    float light = (dot(ray.normal, lightDir) + 1.0) * 0.5;
-    light *= 1.0 - 1.0 * ray.loop / ray.maxLoop;
-    o *= light;
+    float ao = 1.0 - 1.0 * ray.loop / ray.maxLoop;
+    o.rgb *= ao;
+    o.a *= pow(ao, 3);
 }
 // @endblock
 
@@ -78,6 +78,7 @@ Pass
 {
     Tags { "LightMode" = "ForwardBase" }
 
+    Blend [_BlendSrc] [_BlendDst]
     ZWrite [_ZWrite]
 
     CGPROGRAM
