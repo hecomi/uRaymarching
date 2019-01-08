@@ -70,8 +70,8 @@ Vert2Frag Vert(appdata_full v)
     o.worldNormal = UnityObjectToWorldNormal(v.normal);
 #endif
 
-    UNITY_TRANSFER_SHADOW(o,v.texcoord1.xy);
-    UNITY_TRANSFER_FOG(o,o.pos);
+    UNITY_TRANSFER_SHADOW(o, v.texcoord1.xy);
+    UNITY_TRANSFER_FOG(o, o.pos);
     return o;
 }
 
@@ -94,6 +94,9 @@ FragOutput Frag(Vert2Frag i)
     POST_EFFECT(ray, o.color);
 #endif
 
+#if defined(FULL_SCREEN) && (defined(FOG_LINEAR) || defined(FOG_EXP) || defined(FOG_EXP2))
+    i.fogCoord.x = mul(UNITY_MATRIX_VP, float4(ray.endPos, 1.0)).z;
+#endif
     UNITY_APPLY_FOG(i.fogCoord, o.color);
 
     return o;
