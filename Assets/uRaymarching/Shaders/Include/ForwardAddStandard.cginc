@@ -44,6 +44,14 @@ struct VertOutput
 
 #endif
 
+struct FragOutput
+{
+    float4 color : SV_Target;
+#ifdef USE_RAYMARCHING_DEPTH
+    float depth : SV_Depth;
+#endif
+};
+
 VertOutput Vert(appdata_full v)
 {
     VertOutput o;
@@ -69,7 +77,7 @@ VertOutput Vert(appdata_full v)
     return o;
 }
 
-float4 Frag(VertOutput i) : SV_Target
+FragOutput Frag(VertOutput i)
 {
     UNITY_SETUP_INSTANCE_ID(IN);
 
@@ -110,15 +118,22 @@ float4 Frag(VertOutput i) : SV_Target
     gi.light.dir = lightDir;
     gi.light.color *= atten;
 
-    float4 c = 0;
-    c += LightingStandard(so, worldViewDir, gi);
-    c.rgb += so.Emission;
-    c.a = 0.0;
+    float4 color = 0;
+    color += LightingStandard(so, worldViewDir, gi);
+    color.rgb += so.Emission;
+    color.a = 0.0;
 
-    UNITY_APPLY_FOG(i.fogCoord, c);
-    UNITY_OPAQUE_ALPHA(c.a);
+    UNITY_APPLY_FOG(i.fogCoord, color);
+    UNITY_OPAQUE_ALPHA(color.a);
 
-    return c;
+    FragOutput o;
+    UNITY_INITIALIZE_OUTPUT(FragOutput, o);
+    o.color = color;
+#ifdef USE_RAYMARCHING_DEPTH
+    o.depth = ray.depth;
+#endif
+
+    return o;
 }
 
 #endif
