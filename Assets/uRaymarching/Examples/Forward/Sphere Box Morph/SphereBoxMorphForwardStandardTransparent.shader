@@ -17,7 +17,8 @@ Properties
     _MinDistance("Minimum Distance", Range(0.001, 0.1)) = 0.01
 
 // @block Properties
-// _Color("Color", Color) = (1.0, 1.0, 1.0, 1.0)
+[Header(Additional Properties)]
+_Alpha("Alpha", Range(0, 1)) = 0.5
 // @endblock
 }
 
@@ -63,10 +64,12 @@ inline float DistanceFunction(float3 pos)
 // @endblock
 
 // @block PostEffect
+float _Alpha;
+
 inline void PostEffect(RaymarchInfo ray, inout PostEffectOutput o)
 {
-    o.Occlusion *= pow(1.0 - 1.0 * ray.loop / ray.maxLoop, 2.0);
-    o.Alpha = 0.5;
+    //o.Occlusion *= pow(1.0 - 1.0 * ray.loop / ray.maxLoop, 2.0);
+    o.Alpha = _Alpha;
 }
 // @endblock
 
