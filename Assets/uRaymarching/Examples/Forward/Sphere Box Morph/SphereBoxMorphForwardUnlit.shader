@@ -18,7 +18,8 @@ Properties
     _ShadowExtraBias("Shadow Extra Bias", Range(0.0, 1.0)) = 0.01
 
 // @block Properties
-// _Color("Color", Color) = (1.0, 1.0, 1.0, 1.0)
+[Header(Additional Properties)]
+_Alpha("Alpha", Range(0.0, 1.0)) = 0.5
 // @endblock
 }
 
@@ -27,8 +28,8 @@ SubShader
 
 Tags
 {
-    "RenderType" = "Opaque"
-    "Queue" = "Geometry"
+    "RenderType" = "Transparent"
+    "Queue" = "Transparent"
     "DisableBatching" = "True"
 }
 
@@ -37,8 +38,6 @@ Cull [_Cull]
 CGINCLUDE
 
 #define OBJECT_SHAPE_CUBE
-
-#define USE_RAYMARCHING_DEPTH
 
 #define USE_CAMERA_DEPTH_TEXTURE
 
@@ -64,11 +63,13 @@ inline float DistanceFunction(float3 pos)
 // @endblock
 
 // @block PostEffect
+float _Alpha;
+
 inline void PostEffect(RaymarchInfo ray, inout PostEffectOutput o)
 {
     float ao = 1.0 - 1.0 * ray.loop / ray.maxLoop;
     o.rgb *= ao;
-    o.a *= pow(ao, 3);
+    o.a *= pow(ao, 3) * _Alpha;
 }
 // @endblock
 
