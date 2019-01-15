@@ -109,6 +109,7 @@ inline void PostEffect(RaymarchInfo ray, inout PostEffectOutput o)
 {
     float3 localPos = ToLocal(ray.endPos);
     o.Emission += smoothstep(0.48, 0.50, localPos.y) * _TopColor;
+    o.Occlusion *= 1.0 - 1.0 * ray.loop / ray.maxLoop;
 }
 // @endblock
 
