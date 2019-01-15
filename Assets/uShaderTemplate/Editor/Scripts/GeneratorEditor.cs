@@ -45,8 +45,6 @@ public class GeneratorEditor : Editor
 
     void OnEnable()
     {
-        if (target == null) return;
-
         name_ = serializedObject.FindProperty("shaderName");
         shader_ = serializedObject.FindProperty("shaderReference");
         variables_ = serializedObject.FindProperty("variables");
@@ -473,8 +471,8 @@ public class GeneratorEditor : Editor
 
         try {
             ExportShader();
-        } catch (System.Exception e) {
-            AddError(e);
+        } catch (Exception e) {
+            AddError(e.Message);
         }
 
         generator.OnAfterConvert();
@@ -531,7 +529,7 @@ public class GeneratorEditor : Editor
                 }
             }
         } catch (System.Exception e) {
-            AddError(e);
+            AddError(e.Message);
         }
     }
 
@@ -545,7 +543,7 @@ public class GeneratorEditor : Editor
     void HandleKeyEvents()
     {
         var e = Event.current;
-        var isKeyPressing = e.type == EventType.Layout; // not KeyDown
+        var isKeyPressing = e.type == EventType.KeyUp;
         if (isKeyPressing && e.control && e.keyCode == KeyCode.R) {
             ExportShaderWithErrorCheck();
         }
@@ -556,12 +554,12 @@ public class GeneratorEditor : Editor
         errorMessage_ = "";
     }
 
-    void AddError(System.Exception e)
+    void AddError(string error)
     {
         if (!string.IsNullOrEmpty(errorMessage_)) {
             errorMessage_ += "\n";
         }
-        errorMessage_ += e.Message;
+        errorMessage_ += error;
     }
 }
 
