@@ -3,20 +3,22 @@ Shader "Raymarching/SphereBoxMorphForwardStandard"
 
 Properties
 {
-    [Header(Base)]
+    [Header(PBS)]
     _Color("Color", Color) = (1.0, 1.0, 1.0, 1.0)
     _Metallic("Metallic", Range(0.0, 1.0)) = 0.5
     _Glossiness("Smoothness", Range(0.0, 1.0)) = 0.5
+
+    [Header(Pass)]
     [Enum(UnityEngine.Rendering.CullMode)] _Cull("Culling", Int) = 2
 
     [Toggle][KeyEnum(Off, On)] _ZWrite("ZWrite", Float) = 1
 
-    [Header(Raymarching Settings)]
+    [Header(Raymarching)]
     _Loop("Loop", Range(1, 100)) = 30
     _MinDistance("Minimum Distance", Range(0.001, 0.1)) = 0.01
-    _ShadowLoop("Shadow Loop", Range(1, 100)) = 10
+    _ShadowLoop("Shadow Loop", Range(1, 100)) = 30
     _ShadowMinDistance("Shadow Minimum Distance", Range(0.001, 0.1)) = 0.01
-    _ShadowExtraBias("Shadow Extra Bias", Range(0.0, 1.0)) = 0.01
+    _ShadowExtraBias("Shadow Extra Bias", Range(0.0, 1.0)) = 0.0
 
 // @block Properties
 // _Color("Color", Color) = (1.0, 1.0, 1.0, 1.0)

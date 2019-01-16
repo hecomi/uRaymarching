@@ -8,7 +8,10 @@ Properties
     _Metallic("Metallic", Range(0.0, 1.0)) = 0.5
     _Glossiness("Smoothness", Range(0.0, 1.0)) = 0.5
 
-    [Header(Raymarching Settings)]
+    [Header(Pass)]
+    [Enum(UnityEngine.Rendering.CullMode)] _Cull("Culling", Int) = 2
+
+    [Header(Raymarching)]
     _Loop("Loop", Range(1, 100)) = 30
     _MinDistance("Minimum Distance", Range(0.001, 0.1)) = 0.01
     _ShadowLoop("Shadow Loop", Range(1, 100)) = 10
@@ -31,7 +34,7 @@ Tags
     "DisableBatching" = "True"
 }
 
-Cull Back
+Cull [_Cull]
 
 CGINCLUDE
 

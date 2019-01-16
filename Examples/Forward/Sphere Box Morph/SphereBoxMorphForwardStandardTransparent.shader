@@ -3,16 +3,18 @@ Shader "Raymarching/SphereBoxMorphForwardStandardTransparent"
 
 Properties
 {
-    [Header(Base)]
+    [Header(PBS)]
     _Color("Color", Color) = (1.0, 1.0, 1.0, 1.0)
     _Metallic("Metallic", Range(0.0, 1.0)) = 0.5
     _Glossiness("Smoothness", Range(0.0, 1.0)) = 0.5
+
+    [Header(Pass)]
     [Enum(UnityEngine.Rendering.CullMode)] _Cull("Culling", Int) = 2
     [Enum(UnityEngine.Rendering.BlendMode)] _BlendSrc("Blend Src", Float) = 5 
     [Enum(UnityEngine.Rendering.BlendMode)] _BlendDst("Blend Dst", Float) = 10
     [Toggle][KeyEnum(Off, On)] _ZWrite("ZWrite", Float) = 1
 
-    [Header(Raymarching Settings)]
+    [Header(Raymarching)]
     _Loop("Loop", Range(1, 100)) = 30
     _MinDistance("Minimum Distance", Range(0.001, 0.1)) = 0.01
 
