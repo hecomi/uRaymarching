@@ -21,9 +21,9 @@ struct RaymarchInfo
     float minDistance;
     float maxDistance;
     int maxLoop;
-    int loop;
 
     // Output
+    int loop;
     float3 endPos;
     float lastDistance;
     float totalLength;
