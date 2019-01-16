@@ -10,7 +10,10 @@ Properties
     _Specular("Specular", Color) = (0.0, 0.0, 0.0, 0.0)
     _Emission("Emission", Color) = (0.0, 0.0, 0.0, 0.0)
 
-    [Header(Raymarching Settings)]
+    [Header(Pass)]
+    [Enum(UnityEngine.Rendering.CullMode)] _Cull("Culling", Int) = 2
+
+    [Header(Raymarching)]
     _Loop("Loop", Range(1, 100)) = 30
     _MinDistance("Minimum Distance", Range(0.001, 0.1)) = 0.01
 @if ShadowCaster : true
@@ -33,7 +36,7 @@ Tags
     "DisableBatching" = "True"
 }
 
-Cull <Culling=Off|Back|Front>
+Cull [_Cull]
 
 CGINCLUDE
 
