@@ -72,6 +72,7 @@ inline void PostEffect(RaymarchInfo ray, inout PostEffectOutput o)
     float light = (dot(ray.normal, lightDir) + 1.0) * 0.5; // half lambert
     float ao = 1.0 - 1.0 * ray.loop / ray.maxLoop; // ambient occlusion using raymarching loop count
 
+    o.rgb = abs(1.0 - Mod(ray.endPos * 0.1 + _Time.y, 2.0));
     o += tex2D(_Grid, ray.endPos.xy * _Grid_ST.xy + _Grid_ST.zw);
     o *= light * ao;
 }
