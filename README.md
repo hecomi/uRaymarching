@@ -107,7 +107,7 @@ This block is inserted into a `Property` section in a shader.
 _Grid("Grid", 2D) = "" {}
 ```
 
-<img src="https://raw.githubusercontent.com/wiki/hecomi/uRaymarching/property" width="720" />
+<img src="https://raw.githubusercontent.com/wiki/hecomi/uRaymarching/property.png" width="720" />
 
 Distance Function
 -----------------
