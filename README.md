@@ -124,7 +124,7 @@ inline float DistanceFunction(float3 pos)
 }
 ```
 
-*<a href="Assets/uRaymarching/Shaders/Include/Math.cginc">Math.cginc</a>* and *<a href="Assets/uRaymarching/Shaders/Include/Primitives.cginc">Primitives.cginc</a>* is included in the generated shader, so in this example some functions like `RoundBox()` and `Repeat()` come from these include files (of cource you can write them by yourself).
+*<a href="Assets/uRaymarching/Shaders/Include/Math.cginc">Math.cginc</a>* and *<a href="Assets/uRaymarching/Shaders/Include/Primitives.cginc">Primitives.cginc</a>* are included in the generated shader, so in this example some functions like `RoundBox()` and `Repeat()` come from these include files (of cource you can write them by yourself).
 
 Post Effect
 -----------
@@ -178,7 +178,7 @@ The `RaymarchingRenderer` component creates a quad plane and renders raymarching
 
 Attach a `RayamarchingRenderer` component to an arbitrary object, and create a material which selects a shader created by uRaymarching with the flag of *Full Screen* (please see the *Conditions* section in this document). Then, set it to the *Material* field, and select the rendering timing from the *Pass* drop-down list. You can see the raymarching world with the distance function you write, and it intersects polygon objects.
 
-Please see the following *Known Issues* section regarding the limitation.
+Please see the following *Known Issues* section regarding limitations.
 
 
 Known Issues
@@ -194,7 +194,7 @@ This built-in shader outputs the depth of a polygon surface, so post effects whi
 
 ### No lighting with `RaymarchingRenderer` in forward path
 
-In forward path, when rendering raymarching objects with `RaymarchingRenderer`, some shader keywords related to the lighting are not defined because it uses `CommandBuffer`. This causes wrong lighting result. So if you want to do fullscreen raymarching in forward path, please create a large box following the camera (as a child of camera), and set `Cull Off` or `Cull Front` flag, then activate `Camera Inside Object`.
+In forward path, when rendering raymarching objects with `RaymarchingRenderer`, some shader keywords related to the lighting are not defined because it uses `CommandBuffer`. This causes wrong lighting result. So if you want to do fullscreen raymarching in forward path with lighting, please create a large box following the camera (as a child of camera), and set `Cull Off` or `Cull Front` flag, then activate `Camera Inside Object`.
 
 
 License
