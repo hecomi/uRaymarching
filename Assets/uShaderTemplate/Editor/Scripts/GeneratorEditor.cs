@@ -45,6 +45,8 @@ public class GeneratorEditor : Editor
 
     void OnEnable()
     {
+        if (!target) return;
+
         name_ = serializedObject.FindProperty("shaderName");
         shader_ = serializedObject.FindProperty("shaderReference");
         variables_ = serializedObject.FindProperty("variables");
@@ -61,7 +63,8 @@ public class GeneratorEditor : Editor
         template_.onChange.AddListener(OnTemplateChanged);
 
         watcher_.onChanged.AddListener(CheckShaderUpdate);
-        if (hasShaderReference) {
+        if (hasShaderReference)
+        {
             watcher_.Start(GetShaderPath());
         }
 
@@ -70,10 +73,12 @@ public class GeneratorEditor : Editor
 
     void OnDisable()
     {
-        if (template_ != null) {
+        if (template_ != null)
+        {
             template_.onChange.RemoveListener(OnTemplateChanged);
         }
-        if (watcher_ != null) {
+        if (watcher_ != null)
+        {
             watcher_.Stop();
             watcher_.onChanged.RemoveListener(CheckShaderUpdate);
         }
@@ -86,7 +91,8 @@ public class GeneratorEditor : Editor
 
         HandleKeyEvents();
 
-        if (templateParser_ == null) {
+        if (templateParser_ == null)
+        {
             OnTemplateChanged();
         }
 
@@ -109,10 +115,12 @@ public class GeneratorEditor : Editor
 
     SerializedProperty FindProperty(SerializedProperty array, string key, string keyName = "key")
     {
-        for (int i = 0; i < array.arraySize; ++i) {
+        for (int i = 0; i < array.arraySize; ++i)
+        {
             var prop = array.GetArrayElementAtIndex(i);
             var keyProp = prop.FindPropertyRelative(keyName);
-            if (keyProp.stringValue == key) {
+            if (keyProp.stringValue == key)
+            {
                 return prop;
             }
         }
@@ -132,7 +140,8 @@ public class GeneratorEditor : Editor
     void DrawBasics()
     {
         basicFolded_.boolValue = Utils.Foldout("Basic", basicFolded_.boolValue);
-        if (basicFolded_.boolValue) {
+        if (basicFolded_.boolValue)
+        {
             ++EditorGUI.indentLevel;
             EditorGUILayout.PropertyField(name_);
             EditorGUILayout.PropertyField(shader_);
@@ -143,7 +152,8 @@ public class GeneratorEditor : Editor
 
     void DrawConditions()
     {
-        if (templateParser_.conditions.Count == 0) {
+        if (templateParser_.conditions.Count == 0)
+        {
             return;
         }
 
@@ -152,13 +162,15 @@ public class GeneratorEditor : Editor
 
         ++EditorGUI.indentLevel;
 
-        foreach (var kv in templateParser_.conditions) {
+        foreach (var kv in templateParser_.conditions)
+        {
             var prop = FindProperty(conditions_, kv.Key);
             var value = prop.FindPropertyRelative("value");
             var name = Utils.ToSpacedCamel(kv.Key);
 
             var isSelected = EditorGUILayout.Toggle(name, value.boolValue);
-            if (value.boolValue != isSelected) {
+            if (value.boolValue != isSelected)
+            {
                 value.boolValue = isSelected;
             }
         }
@@ -168,7 +180,8 @@ public class GeneratorEditor : Editor
 
     void DrawBlocks()
     {
-        foreach (var kv in templateParser_.blocks) {
+        foreach (var kv in templateParser_.blocks)
+        {
             var prop = FindProperty(blocks_, kv.Key);
             var value = prop.FindPropertyRelative("value");
             var folded = prop.FindPropertyRelative("folded");
@@ -176,9 +189,12 @@ public class GeneratorEditor : Editor
             var name = Utils.ToSpacedCamel(kv.Key);
             ShaderCodeEditor editor = null;
 
-            if (editors_.ContainsKey(name)) {
+            if (editors_.ContainsKey(name))
+            {
                 editor = editors_[name];
-            } else {
+            }
+            else
+            {
                 editor = new ShaderCodeEditor(name, value, folded);
                 editors_.Add(name, editor);
             }
@@ -189,7 +205,8 @@ public class GeneratorEditor : Editor
 
     void DrawVariables()
     {
-        if (templateParser_.variables.Count == 0) {
+        if (templateParser_.variables.Count == 0)
+        {
             return;
         }
 
@@ -200,7 +217,8 @@ public class GeneratorEditor : Editor
 
         var constVars = new Dictionary<string, string>();
 
-        foreach (var kv in templateParser_.variables) {
+        foreach (var kv in templateParser_.variables)
+        {
             var prop = FindProperty(variables_, kv.Key);
             if (prop == null) continue;
             var value = prop.FindPropertyRelative("value");
@@ -209,13 +227,19 @@ public class GeneratorEditor : Editor
             var constValue = ToConstVariable(kv.Key);
             string changedValue;
 
-            if (constValue != null) {
+            if (constValue != null)
+            {
                 changedValue = constValue;
                 constVars.Add(name, constValue);
-            } else {
-                if (kv.Value.Count <= 1) {
+            }
+            else
+            {
+                if (kv.Value.Count <= 1)
+                {
                     changedValue = EditorGUILayout.TextField(name, value.stringValue);
-                } else {
+                }
+                else
+                {
                     var index = kv.Value.IndexOf(value.stringValue);
                     if (index == -1) index = 0;
                     index = EditorGUILayout.Popup(name, index, kv.Value.ToArray());
@@ -223,16 +247,20 @@ public class GeneratorEditor : Editor
                 }
             }
 
-            if (value.stringValue != changedValue) {
+            if (value.stringValue != changedValue)
+            {
                 value.stringValue = changedValue;
             }
         }
 
-        if (constVars.Count > 0) {
+        if (constVars.Count > 0)
+        {
             constVarsFolded_ = EditorGUILayout.Foldout(constVarsFolded_, "Constants");
-            if (constVarsFolded_) {
+            if (constVarsFolded_)
+            {
                 ++EditorGUI.indentLevel;
-                foreach (var kv in constVars) {
+                foreach (var kv in constVars)
+                {
                     Utils.ReadOnlyTextField(kv.Key, kv.Value);
                 }
                 --EditorGUI.indentLevel;
@@ -248,17 +276,19 @@ public class GeneratorEditor : Editor
         if (!constantsFolded_.boolValue) return;
 
         ++EditorGUI.indentLevel;
-        EditorGUILayout.BeginHorizontal(); 
+        EditorGUILayout.BeginHorizontal();
         {
             EditorGUILayout.PropertyField(constants_);
-            if (templateParser_ != null && templateParser_.constants) {
+            if (templateParser_ != null && templateParser_.constants)
+            {
                 var style = new GUIStyle(EditorStyles.miniButtonLeft);
                 style.fixedWidth = 64;
-                if (GUILayout.Button("Use Default", style)) {
+                if (GUILayout.Button("Use Default", style))
+                {
                     constants_.objectReferenceValue = templateParser_.constants;
                 }
             }
-        } 
+        }
         EditorGUILayout.EndHorizontal();
         --EditorGUI.indentLevel;
     }
@@ -270,11 +300,15 @@ public class GeneratorEditor : Editor
 
         ++EditorGUI.indentLevel;
         var materials = Utils.FindMaterialsUsingShader(shader_.objectReferenceValue as Shader);
-        if (materials.Count > 0) {
-            foreach (var material in materials) {
+        if (materials.Count > 0)
+        {
+            foreach (var material in materials)
+            {
                 EditorGUILayout.ObjectField(material, typeof(Material), false);
             }
-        } else {
+        }
+        else
+        {
             EditorGUILayout.LabelField("No material using this shader.");
         }
         --EditorGUI.indentLevel;
@@ -291,35 +325,40 @@ public class GeneratorEditor : Editor
             var style = new GUIStyle(EditorStyles.miniButtonLeft);
             style.fontSize = buttonFontSize;
             style.padding = buttonPadding;
-            if (GUILayout.Button("Export (Ctrl+R)", style)) {
+            if (GUILayout.Button("Export (Ctrl+R)", style))
+            {
                 ExportShaderWithErrorCheck();
             }
 
             style = new GUIStyle(EditorStyles.miniButtonMid);
             style.fontSize = buttonFontSize;
             style.padding = buttonPadding;
-            if (GUILayout.Button("Create Material", style)) {
+            if (GUILayout.Button("Create Material", style))
+            {
                 CreateMaterial();
             }
 
             style = new GUIStyle(EditorStyles.miniButtonMid);
             style.fontSize = buttonFontSize;
             style.padding = buttonPadding;
-            if (GUILayout.Button("Reset to Default", style)) {
+            if (GUILayout.Button("Reset to Default", style))
+            {
                 ResetToDefault();
             }
 
             style = new GUIStyle(EditorStyles.miniButtonMid);
             style.fontSize = buttonFontSize;
             style.padding = buttonPadding;
-            if (GUILayout.Button("Update Template", style)) {
+            if (GUILayout.Button("Update Template", style))
+            {
                 OnTemplateChanged();
             }
 
             style = new GUIStyle(EditorStyles.miniButtonRight);
             style.fontSize = buttonFontSize;
             style.padding = buttonPadding;
-            if (GUILayout.Button("Reconvert All", style)) {
+            if (GUILayout.Button("Reconvert All", style))
+            {
                 ReconvertAll();
             }
         }
@@ -328,18 +367,23 @@ public class GeneratorEditor : Editor
 
     void DrawMessages()
     {
-        if (!string.IsNullOrEmpty(errorMessage_)) {
+        if (!string.IsNullOrEmpty(errorMessage_))
+        {
             EditorGUILayout.HelpBox(errorMessage_, MessageType.Error, true);
         }
     }
 
     string ToConstVariable(string name)
     {
-        if (name == "Name") {
+        if (name == "Name")
+        {
             return name_.stringValue;
-        } else if (constants_ != null) {
+        }
+        else if (constants_ != null)
+        {
             var constants = (Constants)constants_.objectReferenceValue;
-            foreach (var kv in constants.values) {
+            foreach (var kv in constants.values)
+            {
                 if (kv.name == name) return kv.value;
             }
         }
@@ -350,18 +394,20 @@ public class GeneratorEditor : Editor
     {
         templateParser_ = new ShaderTemplateParser(template_.text);
 
-        constants_.objectReferenceValue = 
+        constants_.objectReferenceValue =
             templateParser_.constants ??
             Resources.Load<Constants>(Common.Setting.defaultConstants);
 
-        foreach (var kv in templateParser_.conditions) {
+        foreach (var kv in templateParser_.conditions)
+        {
             if (FindProperty(conditions_, kv.Key) != null) continue;
             var prop = AddProperty(conditions_, kv.Key);
             prop.FindPropertyRelative("key").stringValue = kv.Key;
             prop.FindPropertyRelative("value").boolValue = kv.Value;
         }
 
-        foreach (var kv in templateParser_.blocks) {
+        foreach (var kv in templateParser_.blocks)
+        {
             if (FindProperty(blocks_, kv.Key) != null) continue;
             var prop = AddProperty(blocks_, kv.Key);
             prop.FindPropertyRelative("key").stringValue = kv.Key;
@@ -369,7 +415,8 @@ public class GeneratorEditor : Editor
             prop.FindPropertyRelative("folded").boolValue = false;
         }
 
-        foreach (var kv in templateParser_.variables) {
+        foreach (var kv in templateParser_.variables)
+        {
             if (FindProperty(variables_, kv.Key) != null) continue;
             var prop = AddProperty(variables_, kv.Key);
             var hasDefaultValue = (kv.Value.Count >= 1);
@@ -381,7 +428,8 @@ public class GeneratorEditor : Editor
     string GetShaderName()
     {
         var name = name_.stringValue;
-        if (string.IsNullOrEmpty(name)) {
+        if (string.IsNullOrEmpty(name))
+        {
             throw new System.Exception(string.Format("Shader name of \"{0}\" is empty.", target.name));
         }
         return name_.stringValue;
@@ -389,7 +437,8 @@ public class GeneratorEditor : Editor
 
     string GetOutputDirPath()
     {
-        if (hasShaderReference) {
+        if (hasShaderReference)
+        {
             return Path.GetDirectoryName(AssetDatabase.GetAssetPath(shader_.objectReferenceValue));
         }
         return Path.GetDirectoryName(AssetDatabase.GetAssetPath(target));
@@ -411,23 +460,27 @@ public class GeneratorEditor : Editor
     {
         var info = new ShaderTemplateConvertInfo();
 
-        foreach (var kv in templateParser_.conditions) {
+        foreach (var kv in templateParser_.conditions)
+        {
             var prop = FindProperty(conditions_, kv.Key);
             var value = prop.FindPropertyRelative("value");
             info.conditions.Add(kv.Key, value.boolValue);
         }
 
-        foreach (var kv in templateParser_.blocks) {
+        foreach (var kv in templateParser_.blocks)
+        {
             var prop = FindProperty(blocks_, kv.Key);
             var value = prop.FindPropertyRelative("value");
             info.blocks.Add(kv.Key, value.stringValue);
         }
 
-        foreach (var kv in templateParser_.variables) {
+        foreach (var kv in templateParser_.variables)
+        {
             var prop = FindProperty(variables_, kv.Key);
             var value = prop.FindPropertyRelative("value");
             var constValue = ToConstVariable(kv.Key);
-            if (constValue != null) {
+            if (constValue != null)
+            {
                 value.stringValue = constValue;
             }
             info.variables.Add(kv.Key, value.stringValue);
@@ -436,13 +489,16 @@ public class GeneratorEditor : Editor
         var code = templateParser_.Convert(info);
 
         // rename if generator has a shader reference.
-        if (hasShaderReference) {
+        if (hasShaderReference)
+        {
             var shaderFilePath = AssetDatabase.GetAssetPath(shader_.objectReferenceValue);
             var shaderFileName = Path.GetFileNameWithoutExtension(shaderFilePath);
             var newFilePath = GetShaderPath();
 
-            if (GetShaderName() != shaderFileName) {
-                if (File.Exists(newFilePath)) {
+            if (GetShaderName() != shaderFileName)
+            {
+                if (File.Exists(newFilePath))
+                {
                     throw new System.Exception(
                         string.Format("attempted to rename {0} to {1}, but target file existed.",
                             shaderFilePath, newFilePath));
@@ -451,13 +507,15 @@ public class GeneratorEditor : Editor
             }
         }
 
-        using (var writer = new StreamWriter(GetShaderPath())) {
+        using (var writer = new StreamWriter(GetShaderPath()))
+        {
             writer.Write(code);
         }
 
         ReImport();
 
-        if (hasShaderReference) {
+        if (hasShaderReference)
+        {
             watcher_.Start(GetShaderPath());
         }
     }
@@ -469,9 +527,12 @@ public class GeneratorEditor : Editor
         var generator = target as Generator;
         generator.OnBeforeConvert();
 
-        try {
+        try
+        {
             ExportShader();
-        } catch (Exception e) {
+        }
+        catch (Exception e)
+        {
             AddError(e.Message);
         }
 
@@ -488,26 +549,33 @@ public class GeneratorEditor : Editor
 
     void ReconvertAll()
     {
-        Debug.LogFormat("<color=blue>Reconvert started.\n------------------------------</color>"); 
+        Debug.LogFormat("<color=blue>Reconvert started.\n------------------------------</color>");
         var generators = Utils.FindAllAssets<Generator>();
-        foreach (var generator in generators) {
-            try {
-                if (target == generator) {
+        foreach (var generator in generators)
+        {
+            try
+            {
+                if (target == generator)
+                {
                     Debug.LogFormat("<color=green>{0}</color>", GetShaderPath());
                     OnTemplateChanged();
                     ExportShaderWithErrorCheck();
-                } else {
+                }
+                else
+                {
                     var editor = Editor.CreateEditor(generator) as GeneratorEditor;
                     Debug.LogFormat("<color=green>{0}</color>", editor.GetShaderPath());
                     editor.CheckShaderUpdate();
                     editor.OnTemplateChanged();
                     editor.ExportShaderWithErrorCheck();
                 }
-            } catch (System.Exception e) {
-                Debug.LogFormat("<color=red>Error: " + e.Message + "</color>"); 
+            }
+            catch (System.Exception e)
+            {
+                Debug.LogFormat("<color=red>Error: " + e.Message + "</color>");
             }
         }
-        Debug.LogFormat("<color=blue>------------------------------\nReconvert finished.</color>"); 
+        Debug.LogFormat("<color=blue>------------------------------\nReconvert finished.</color>");
     }
 
     void CheckShaderUpdate()
@@ -515,20 +583,26 @@ public class GeneratorEditor : Editor
         if (!hasShaderReference) return;
 
         ClearError();
-        try {
+        try
+        {
             var shaderPath = GetShaderPath();
-            using (var reader = new StreamReader(shaderPath)) {
+            using (var reader = new StreamReader(shaderPath))
+            {
                 var code = reader.ReadToEnd();
                 var parser = new ShaderTemplateParser(code);
-                foreach (var kv in parser.blocks) {
+                foreach (var kv in parser.blocks)
+                {
                     var prop = FindProperty(blocks_, kv.Key);
-                    if (prop != null) {
+                    if (prop != null)
+                    {
                         var value = prop.FindPropertyRelative("value");
                         value.stringValue = kv.Value;
                     }
                 }
             }
-        } catch (System.Exception e) {
+        }
+        catch (System.Exception e)
+        {
             AddError(e.Message);
         }
     }
@@ -544,7 +618,8 @@ public class GeneratorEditor : Editor
     {
         var e = Event.current;
         var isKeyPressing = e.type == EventType.KeyUp;
-        if (isKeyPressing && e.control && e.keyCode == KeyCode.R) {
+        if (isKeyPressing && e.control && e.keyCode == KeyCode.R)
+        {
             ExportShaderWithErrorCheck();
         }
     }
@@ -556,7 +631,8 @@ public class GeneratorEditor : Editor
 
     void AddError(string error)
     {
-        if (!string.IsNullOrEmpty(errorMessage_)) {
+        if (!string.IsNullOrEmpty(errorMessage_))
+        {
             errorMessage_ += "\n";
         }
         errorMessage_ += error;
