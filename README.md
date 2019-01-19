@@ -128,7 +128,7 @@ inline float DistanceFunction(float3 pos)
 
 Post Effect
 -----------
-*Post Effect* is similar to a surface function in a surface shader. The following code is the one of the hexagon-tile example in *Screenshots* section.
+*Post Effect* is similar to a surface function in a surface shader. The following code is used in the hexagon-tile example in *Screenshots* section.
 
 ```hlsl
 float4 _TopColor;
@@ -164,7 +164,7 @@ struct RaymarchInfo
 };
 ```
 
-So `ray.loop / ray.maxLoop` becomes small on the position where a ray reaches easily and becomes big when hard. so you can use `1.0 - ray.loop / ray.maxLoop` as an occlusion factor.
+So `ray.loop / ray.maxLoop` is a normalized value and becomes close to 0.0 on the position where a ray reaches easily and becomes close to 1.0 when hard. So you can use it as a factor of a rechability or `1.0 - ray.loop / ray.maxLoop` as an simple and a light-weight occlusion factor.
 
 `PostEffectOutput` is defferent depending on the selected shader template. For example, it is an alias of `SurfaceOutputStandard` in *Standard* template. Please see each template file by clicking *Edit* button on the right side of the *Shader Template* drop-down list for more details.
 
