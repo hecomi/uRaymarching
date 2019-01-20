@@ -17,19 +17,15 @@ inline float3 _GetCameraDirection(float2 sp)
     float3 camUp       = GetCameraUp();
     float3 camSide     = GetCameraRight();
     float  focalLen    = GetCameraFocalLength();
-
     return normalize((camSide * sp.x) + (camUp * sp.y) + (camDir * focalLen));
 }
 
-inline float3 GetCameraDirection(float4 screenPos)
+inline float3 GetCameraDirection(float4 projPos)
 {
-#if UNITY_UV_STARTS_AT_TOP
-    screenPos.y *= -1.0;
-#endif
-    screenPos.x *= _ScreenParams.x / _ScreenParams.y;
-    screenPos.xy /= screenPos.w;
-
-    return _GetCameraDirection(screenPos.xy);
+    projPos.xy /= projPos.w;
+    projPos.xy = (projPos.xy - 0.5) * 2.0;
+    projPos.x *= _ScreenParams.x / _ScreenParams.y;
+    return _GetCameraDirection(projPos.xy);
 }
 
 #endif

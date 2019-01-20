@@ -21,7 +21,7 @@ float _Metallic;
 struct VertOutput
 {
     UNITY_POSITION(pos);
-    float4 screenPos : TEXCOORD0;
+    float4 projPos : TEXCOORD0;
     float4 lmap : TEXCOORD1;
     UNITY_SHADOW_COORDS(2)
     UNITY_FOG_COORDS(3)
@@ -79,14 +79,13 @@ VertOutput Vert(appdata_full v)
 
 #ifdef FULL_SCREEN
     o.pos = v.vertex;
-    o.screenPos = v.vertex;
 #else
     o.pos = UnityObjectToClipPos(v.vertex);
-    o.projPos = ComputeScreenPos(o.pos);
-    COMPUTE_EYEDEPTH(o.projPos.z);
     o.worldPos = mul(unity_ObjectToWorld, v.vertex).xyz;
     o.worldNormal = UnityObjectToWorldNormal(v.normal);
 #endif
+    o.projPos = ComputeNonStereoScreenPos(o.pos);
+    COMPUTE_EYEDEPTH(o.projPos.z);
 
 #ifdef DYNAMICLIGHTMAP_ON
     o.lmap.zw = v.texcoord2.xy * unity_DynamicLightmapST.xy + unity_DynamicLightmapST.zw;
@@ -111,7 +110,7 @@ VertOutput Vert(appdata_full v)
                     o.worldPos, 
                     o.worldNormal);
             #endif
-            o.sh = ShadeSHPerVertex(worldNormal, o.sh);
+            o.sh = ShadeSHPerVertex(o.worldNormal, o.sh);
         #endif
     #endif
 #endif
@@ -124,6 +123,7 @@ VertOutput Vert(appdata_full v)
 FragOutput Frag(VertOutput i)
 {
     UNITY_SETUP_INSTANCE_ID(i);
+    UNITY_SETUP_STEREO_EYE_INDEX_POST_VERTEX(i);
 
     RaymarchInfo ray;
     INITIALIZE_RAYMARCH_INFO(ray, i, _Loop, _MinDistance);
