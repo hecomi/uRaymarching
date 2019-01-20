@@ -88,19 +88,17 @@ void Frag(
     ray.maxDistance = GetCameraFarClip();
     ray.maxLoop = _ShadowLoop;
 
-    /*
-#ifdef CAMERA_INSIDE_OBJECT
-    float3 startPos = GetCameraPosition() + GetDistanceFromCameraToNearClipPlane(i.projPos) * ray.rayDir;
-    if (IsInnerObject(startPos)) {
-        ray.startPos = startPos;
-        ray.polyNormal = -ray.rayDir;
-    }
-#endif*/
-
     if (IsCameraPerspective()) {
         // Hack: This pass run in the UpdateDepthTexture stage.
         if (abs(unity_LightShadowBias.x) < 1e-5) {
             ray.rayDir = normalize(i.worldPos - GetCameraPosition());
+#ifdef CAMERA_INSIDE_OBJECT
+            float3 startPos = GetCameraPosition() + GetDistanceFromCameraToNearClipPlane(i.projPos) * ray.rayDir;
+            if (IsInnerObject(startPos)) {
+                ray.startPos = startPos;
+                ray.polyNormal = -ray.rayDir;
+            }
+#endif
         // Run in the SpotLight shadow stage.
         } else {
             ray.rayDir = GetCameraDirection(i.projPos);
