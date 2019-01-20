@@ -36,10 +36,11 @@ struct v2f
     float4 pos         : SV_POSITION;
     float3 worldPos    : TEXCOORD0;
     float3 worldNormal : TEXCOORD1;
-    float4 lmap        : TEXCOORD2;
+    float4 projPos     : TEXCOORD2;
+    float4 lmap        : TEXCOORD3;
 #ifdef LIGHTMAP_OFF
     #if UNITY_SHOULD_SAMPLE_SH
-    half3 sh           : TEXCOORD3;
+    half3 sh           : TEXCOORD4;
     #endif
 #endif
 };
@@ -52,13 +53,13 @@ v2f Vert(appdata_full v)
 
 #ifdef FULL_SCREEN
     o.pos = v.vertex;
-    o.projPos = ComputeNonStereoScreenPos(o.pos);
-    COMPUTE_EYEDEPTH(o.projPos.z);
 #else
     o.pos = UnityObjectToClipPos(v.vertex);
     o.worldPos = mul(unity_ObjectToWorld, v.vertex);
     o.worldNormal = UnityObjectToWorldNormal(v.normal);
 #endif
+    o.projPos = ComputeNonStereoScreenPos(o.pos);
+    COMPUTE_EYEDEPTH(o.projPos.z);
 
 #ifndef DYNAMICLIGHTMAP_OFF
     o.lmap.zw = v.texcoord2.xy * unity_DynamicLightmapST.xy + unity_DynamicLightmapST.zw;
