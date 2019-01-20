@@ -19,7 +19,7 @@ fixed4 _Color;
 struct Vert2Frag
 {
     float4 pos : POSITION;
-    float4 screenPos : TEXCOORD0;
+    float4 projPos : TEXCOORD0;
     UNITY_SHADOW_COORDS(1)
     UNITY_FOG_COORDS(2)
     UNITY_VERTEX_INPUT_INSTANCE_ID
@@ -61,14 +61,13 @@ Vert2Frag Vert(appdata_full v)
 
 #ifdef FULL_SCREEN
     o.pos = v.vertex;
-    o.screenPos = v.vertex;
 #else
     o.pos = UnityObjectToClipPos(v.vertex);
-    o.projPos = ComputeScreenPos(o.pos);
-    COMPUTE_EYEDEPTH(o.projPos.z);
     o.worldPos = mul(unity_ObjectToWorld, v.vertex).xyz;
     o.worldNormal = UnityObjectToWorldNormal(v.normal);
 #endif
+    o.projPos = ComputeNonStereoScreenPos(o.pos);
+    COMPUTE_EYEDEPTH(o.projPos.z);
 
     UNITY_TRANSFER_SHADOW(o, v.texcoord1.xy);
     UNITY_TRANSFER_FOG(o, o.pos);
@@ -77,6 +76,7 @@ Vert2Frag Vert(appdata_full v)
 
 FragOutput Frag(Vert2Frag i)
 {
+    UNITY_SETUP_STEREO_EYE_INDEX_POST_VERTEX(i);
     UNITY_SETUP_INSTANCE_ID(i);
 
     RaymarchInfo ray;

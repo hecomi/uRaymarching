@@ -46,11 +46,17 @@ inline bool _ShouldRaymarchFinish(RaymarchInfo ray)
     return false;
 }
 
-inline void InitRaymarchFullScreen(out RaymarchInfo ray, float4 screenPos)
+inline void InitRaymarchFullScreen(out RaymarchInfo ray, float4 projPos)
 {
     UNITY_INITIALIZE_OUTPUT(RaymarchInfo, ray);
-    ray.rayDir = GetCameraDirection(screenPos);
-    ray.startPos = GetCameraPosition() + GetCameraNearClip() * ray.rayDir;
+    ray.rayDir = GetCameraDirection(projPos);
+#if defined(USING_STEREO_MATRICES)
+    float3 cameraPos = unity_StereoWorldSpaceCameraPos[unity_StereoEyeIndex];
+    cameraPos += float3(1., 0, 0) * unity_StereoEyeIndex;
+#else
+    float3 cameraPos = _WorldSpaceCameraPos;
+#endif
+    ray.startPos = cameraPos + GetCameraNearClip() * ray.rayDir;
     ray.maxDistance = GetCameraFarClip();
 }
 
@@ -88,7 +94,7 @@ inline void UseCameraDepthTextureForMaxDistance(inout RaymarchInfo ray, float4 p
 
 #if defined(FULL_SCREEN)
     #define INITIALIZE_RAYMARCH_INFO(ray, i, loop, minDistance) \
-        InitRaymarchFullScreen(ray, i.screenPos); \
+        InitRaymarchFullScreen(ray, i.projPos); \
         InitRaymarchParams(ray, loop, minDistance);
 #elif defined(USE_CAMERA_DEPTH_TEXTURE)
     #define INITIALIZE_RAYMARCH_INFO(ray, i, loop, minDistance) \

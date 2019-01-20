@@ -22,7 +22,7 @@ struct v2f
 {
     float4 vertex      : SV_POSITION;
 #ifdef FULL_SCREEN
-    float4 screenPos   : TEXCOORD0;
+    float4 projPos     : TEXCOORD0;
 #else
     float4 worldPos    : TEXCOORD0;
     float3 worldNormal : TEXCOORD1;
@@ -34,7 +34,8 @@ v2f Vert(appdata i)
     v2f o;
 #ifdef FULL_SCREEN
     o.vertex = i.vertex;
-    o.screenPos = i.vertex;
+    o.projPos = ComputeNonStereoScreenPos(o.pos);
+    COMPUTE_EYEDEPTH(o.projPos.z);
 #else
     o.vertex = UnityObjectToClipPos(i.vertex);
     o.worldPos = mul(unity_ObjectToWorld, i.vertex);

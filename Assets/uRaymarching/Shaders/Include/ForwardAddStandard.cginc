@@ -63,14 +63,13 @@ VertOutput Vert(appdata_full v)
 
 #ifdef FULL_SCREEN
     o.pos = v.vertex;
-    o.screenPos = v.vertex;
 #else
     o.pos = UnityObjectToClipPos(v.vertex);
-    o.projPos = ComputeScreenPos(o.pos);
-    COMPUTE_EYEDEPTH(o.projPos.z);
     o.worldPos = mul(unity_ObjectToWorld, v.vertex).xyz;
     o.worldNormal = UnityObjectToWorldNormal(v.normal);
 #endif
+    o.projPos = ComputeNonStereoScreenPos(o.pos);
+    COMPUTE_EYEDEPTH(o.projPos.z);
 
     UNITY_TRANSFER_SHADOW(o,v.texcoord1.xy);
     UNITY_TRANSFER_FOG(o,o.pos);
