@@ -28,4 +28,13 @@ inline float3 GetCameraDirection(float4 projPos)
     return _GetCameraDirection(projPos.xy);
 }
 
+inline float GetDistanceFromCameraToNearClipPlane(float4 projPos)
+{
+    projPos.xy /= projPos.w;
+    projPos.xy = (projPos.xy - 0.5) * 2.0;
+    projPos.x *= _ScreenParams.x / _ScreenParams.y;
+    float3 norm = normalize(float3(projPos.xy, GetCameraFocalLength()));
+    return GetCameraNearClip() / norm.z;
+}
+
 #endif

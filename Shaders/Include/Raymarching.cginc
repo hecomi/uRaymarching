@@ -60,19 +60,21 @@ inline void InitRaymarchFullScreen(out RaymarchInfo ray, float4 projPos)
     ray.maxDistance = GetCameraFarClip();
 }
 
-inline void InitRaymarchObject(out RaymarchInfo ray, float3 worldPos, float3 worldNormal)
+inline void InitRaymarchObject(out RaymarchInfo ray, float4 projPos, float3 worldPos, float3 worldNormal)
 {
     UNITY_INITIALIZE_OUTPUT(RaymarchInfo, ray);
     ray.rayDir = normalize(worldPos - GetCameraPosition());
     ray.startPos = worldPos;
-#ifdef CAMERA_INSIDE_OBJECT
-    float3 startPos = GetCameraPosition() + (GetCameraNearClip() + 0.01) * ray.rayDir;
-    if (IsInnerObject(startPos)) {
-        ray.startPos = startPos;
-    }
-#endif
     ray.polyNormal = worldNormal;
     ray.maxDistance = GetCameraFarClip();
+
+#ifdef CAMERA_INSIDE_OBJECT
+    float3 startPos = GetCameraPosition() + GetDistanceFromCameraToNearClipPlane(projPos) * ray.rayDir;
+    if (IsInnerObject(startPos)) {
+        ray.startPos = startPos;
+        ray.polyNormal = -ray.rayDir;
+    }
+#endif
 }
 
 inline void InitRaymarchParams(inout RaymarchInfo ray, int maxLoop, float minDistance)
@@ -98,12 +100,12 @@ inline void UseCameraDepthTextureForMaxDistance(inout RaymarchInfo ray, float4 p
         InitRaymarchParams(ray, loop, minDistance);
 #elif defined(USE_CAMERA_DEPTH_TEXTURE)
     #define INITIALIZE_RAYMARCH_INFO(ray, i, loop, minDistance) \
-        InitRaymarchObject(ray, i.worldPos, i.worldNormal); \
+        InitRaymarchObject(ray, i.projPos, i.worldPos, i.worldNormal); \
         InitRaymarchParams(ray, loop, minDistance); \
         UseCameraDepthTextureForMaxDistance(ray, i.projPos);
 #else
     #define INITIALIZE_RAYMARCH_INFO(ray, i, loop, minDistance) \
-        InitRaymarchObject(ray, i.worldPos, i.worldNormal); \
+        InitRaymarchObject(ray, i.projPos, i.worldPos, i.worldNormal); \
         InitRaymarchParams(ray, loop, minDistance);
 #endif
 

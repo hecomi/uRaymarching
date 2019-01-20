@@ -23,7 +23,7 @@ struct v2f
     V2F_SHADOW_CASTER;
     float4 worldPos  : TEXCOORD1;
     float3 normal    : TEXCOORD2;
-    float4 screenPos : TEXCOORD3;
+    float4 projPos   : TEXCOORD3;
 };
 
 inline float4 ApplyLinearShadowBias(float4 clipPos)
@@ -45,28 +45,14 @@ inline float4 ApplyLinearShadowBias(float4 clipPos)
     return clipPos;
 }
 
-inline float3 CalcDirectionFromWorldPos(float3 worldPos)
-{
-    return normalize(worldPos - GetCameraPosition());
-}
-
-inline float3 CalcDirectionFromScreenPos(float4 screenPos)
-{
-#if UNITY_UV_STARTS_AT_TOP
-    screenPos.y *= -1.0;
-#endif
-    screenPos.xy /= screenPos.w;
-
-    return _GetCameraDirection(screenPos.xy);
-}
-
 v2f Vert(appdata v)
 {
     v2f o;
     o.pos = UnityObjectToClipPos(v.vertex);
     o.worldPos = mul(unity_ObjectToWorld, v.vertex);
     o.normal = mul(unity_ObjectToWorld, v.normal);
-    o.screenPos = o.pos;
+    o.projPos = ComputeNonStereoScreenPos(o.pos);
+    COMPUTE_EYEDEPTH(o.projPos.z);
     return o;
 }
 
@@ -76,7 +62,7 @@ float4 Frag(v2f i) : SV_Target
 {
     RaymarchInfo ray;
     UNITY_INITIALIZE_OUTPUT(RaymarchInfo, ray);
-    ray.rayDir = CalcDirectionFromScreenPos(i.screenPos);
+    ray.rayDir = GetCameraDirection(i.projPos);
     ray.startPos = i.worldPos;
     ray.minDistance = _ShadowMinDistance;
     ray.maxDistance = GetCameraMaxDistance();
@@ -102,13 +88,22 @@ void Frag(
     ray.maxDistance = GetCameraFarClip();
     ray.maxLoop = _ShadowLoop;
 
+    /*
+#ifdef CAMERA_INSIDE_OBJECT
+    float3 startPos = GetCameraPosition() + GetDistanceFromCameraToNearClipPlane(i.projPos) * ray.rayDir;
+    if (IsInnerObject(startPos)) {
+        ray.startPos = startPos;
+        ray.polyNormal = -ray.rayDir;
+    }
+#endif*/
+
     if (IsCameraPerspective()) {
         // Hack: This pass run in the UpdateDepthTexture stage.
         if (abs(unity_LightShadowBias.x) < 1e-5) {
-            ray.rayDir = CalcDirectionFromWorldPos(i.worldPos);
+            ray.rayDir = normalize(i.worldPos - GetCameraPosition());
         // Run in the SpotLight shadow stage.
         } else {
-            ray.rayDir = CalcDirectionFromScreenPos(i.screenPos);
+            ray.rayDir = GetCameraDirection(i.projPos);
         }
     } else {
         ray.rayDir = GetCameraForward();
