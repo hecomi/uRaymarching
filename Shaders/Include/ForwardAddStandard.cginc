@@ -122,15 +122,19 @@ FragOutput Frag(VertOutput i)
     color.rgb += so.Emission;
     color.a = 0.0;
 
-    UNITY_APPLY_FOG(i.fogCoord, color);
-    UNITY_OPAQUE_ALPHA(color.a);
-
     FragOutput o;
     UNITY_INITIALIZE_OUTPUT(FragOutput, o);
     o.color = color;
 #ifdef USE_RAYMARCHING_DEPTH
     o.depth = ray.depth;
 #endif
+
+#if (defined(FOG_LINEAR) || defined(FOG_EXP) || defined(FOG_EXP2))
+    i.fogCoord.x = mul(UNITY_MATRIX_VP, float4(ray.endPos, 1.0)).z;
+#endif
+    UNITY_APPLY_FOG(i.fogCoord, o.color);
+
+    UNITY_OPAQUE_ALPHA(o.color.a);
 
     return o;
 }
