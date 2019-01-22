@@ -200,7 +200,7 @@ In forward path, when rendering raymarching objects with `RaymarchingRenderer`, 
 
 ### In VR, both eyes output same image with `RarymarchingRenderer`
 
-In VR, the cameras for two eyes seem to tell the same position in a shader when using `RaymarchingRenderer`. I'm not sure how to fix it now, so please do not use it for VR. Instead of using it, please create a shader which enables `Camera Inside Object` and `Disable View Culling` and set `Cull` flag as `Off` in the material inspector. Using `Camera Inside Object` with `Cull Off` allows you to enter raymarching objects. And *Disable View Culling* outputs faked z value in clip space and keeps the raymarching object always visible even if the outside cube polygon is very large. Please see the `Mod World for VR` scene as an example.
+In VR, the cameras for two eyes seem to tell the same position in a shader when using `RaymarchingRenderer`. I'm not sure how to fix it now, so please do not use it for VR. Instead of using it, please create a shader which enables `Camera Inside Object` and `Disable View Culling` and set `Cull` flag as `Off` in the material inspector. Using `Camera Inside Object` with `Cull Off` allows you to enter raymarching objects. And `Disable View Culling` outputs faked z value in clip space and keeps the raymarching object always visible even if the outside cube polygon is very large. Please see the `Mod World for VR` scene as an example.
 
 
 License
