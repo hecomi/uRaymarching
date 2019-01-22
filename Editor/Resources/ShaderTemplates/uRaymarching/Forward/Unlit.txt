@@ -70,6 +70,10 @@ CGINCLUDE
 #define USE_CAMERA_DEPTH_TEXTURE
 @endif
 
+@if DisableViewCulling : false 
+#define DISABLE_VIEW_CULLING
+@endif
+
 #define DISTANCE_FUNCTION DistanceFunction
 #define POST_EFFECT PostEffect
 #define PostEffectOutput float4

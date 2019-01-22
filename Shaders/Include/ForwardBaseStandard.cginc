@@ -81,6 +81,9 @@ VertOutput Vert(appdata_full v)
     o.pos = v.vertex;
 #else
     o.pos = UnityObjectToClipPos(v.vertex);
+    #ifdef DISABLE_VIEW_CULLING
+    o.pos.z = 1;
+    #endif
     o.worldPos = mul(unity_ObjectToWorld, v.vertex).xyz;
     o.worldNormal = UnityObjectToWorldNormal(v.normal);
 #endif
@@ -93,7 +96,7 @@ VertOutput Vert(appdata_full v)
 #ifdef LIGHTMAP_ON
     o.lmap.xy = v.texcoord1.xy * unity_LightmapST.xy + unity_LightmapST.zw;
 #endif
-#ifndef SPHERICAL_HARMONICS_PER_PIXEL
+#if !defined(FULL_SCREEN) && !defined(SPHERICAL_HARMONICS_PER_PIXEL)
     #ifndef LIGHTMAP_ON
         #if UNITY_SHOULD_SAMPLE_SH
             o.sh = 0;

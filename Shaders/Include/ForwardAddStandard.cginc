@@ -21,7 +21,7 @@ float _Metallic;
 struct VertOutput
 {
     UNITY_POSITION(pos);
-    float4 screenPos : TEXCOORD0;
+    float4 projPos : TEXCOORD0;
     UNITY_SHADOW_COORDS(1)
     UNITY_FOG_COORDS(2)
     UNITY_VERTEX_INPUT_INSTANCE_ID
@@ -65,6 +65,9 @@ VertOutput Vert(appdata_full v)
     o.pos = v.vertex;
 #else
     o.pos = UnityObjectToClipPos(v.vertex);
+    #ifdef DISABLE_VIEW_CULLING
+    o.pos.z = 1;
+    #endif
     o.worldPos = mul(unity_ObjectToWorld, v.vertex).xyz;
     o.worldNormal = UnityObjectToWorldNormal(v.normal);
 #endif

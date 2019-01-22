@@ -49,6 +49,9 @@ v2f Vert(appdata v)
 {
     v2f o;
     o.pos = UnityObjectToClipPos(v.vertex);
+    #ifdef DISABLE_VIEW_CULLING
+    o.pos.z = 1;
+    #endif
     o.worldPos = mul(unity_ObjectToWorld, v.vertex);
     o.normal = mul(unity_ObjectToWorld, v.normal);
     o.projPos = ComputeNonStereoScreenPos(o.pos);
