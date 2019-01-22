@@ -77,6 +77,8 @@ Conditions
 - Use Camera Depth Texture
   - The occlusion with the other objects is calculated using the `CameraDepthTexture`.
   - Please check in the case that you create a transparent shader and set `ZWrite Off` to a material.
+- Disable View Culling
+  - Please use this only for the fullscreen raymarching with *Camera Inside Object* option.
 - Spherical Harmonics Per Pixel
   - By default the SH calculation is done in a vertex shader (i.e. only 8 vertices of a cube) but if you create a complex shape and the calculation of the SH is bad, please check this flag to calculate it in a fragment shader (needs more cost than the unchecked case).
 - Forward Add
@@ -178,7 +180,7 @@ The `RaymarchingRenderer` component creates a quad plane and renders raymarching
 
 Attach a `RayamarchingRenderer` component to an arbitrary object, and create a material which selects a shader created by uRaymarching with the flag of *Full Screen* (please see the *Conditions* section in this document). Then, set it to the *Material* field, and select the rendering timing from the *Pass* drop-down list. You can see the raymarching world with the distance function you write, and it intersects polygon objects.
 
-Please see the following *Known Issues* section regarding limitations.
+However, now this has some problems regarding lightings and VR. Please see the following *Known Issues* section regarding those limitations.
 
 
 Known Issues
@@ -195,6 +197,10 @@ This built-in shader outputs the depth of a polygon surface, so post effects whi
 ### No lighting with `RaymarchingRenderer` in forward path
 
 In forward path, when rendering raymarching objects with `RaymarchingRenderer`, some shader keywords related to the lighting are not defined because it uses `CommandBuffer`. This causes wrong lighting result. So if you want to do fullscreen raymarching in forward path with lighting, please create a large box following the camera (as a child of camera), and set `Cull Off` or `Cull Front` flag, then activate `Camera Inside Object`.
+
+### In VR, both eyes output same image with `RarymarchingRenderer`
+
+In VR, the cameras for two eyes seem to tell the same position in a shader when using `RaymarchingRenderer`. I'm not sure how to fix it now, so please do not use it. Instead of using it, for VR, please create a shader which enables *Camera Inside Object* and *Disable View Culling* and set `Cull` flag as `Off` in the material inspector. Please see the *Mod World for VR* scene as an example.
 
 
 License
