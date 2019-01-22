@@ -72,6 +72,10 @@ CGINCLUDE
 #define USE_CAMERA_DEPTH_TEXTURE
 @endif
 
+@if DisableViewCulling : false 
+#define DISABLE_VIEW_CULLING
+@endif
+
 @if SphericalHarmonicsPerPixel : true
 #define SPHERICAL_HARMONICS_PER_PIXEL
 @endif

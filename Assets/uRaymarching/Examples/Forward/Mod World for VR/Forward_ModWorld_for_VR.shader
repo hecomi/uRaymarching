@@ -48,6 +48,8 @@ CGINCLUDE
 
 #define USE_RAYMARCHING_DEPTH
 
+#define DISABLE_VIEW_CULLING
+
 #define DISTANCE_FUNCTION DistanceFunction
 #define PostEffectOutput SurfaceOutputStandard
 #define POST_EFFECT PostEffect
