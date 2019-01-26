@@ -122,7 +122,7 @@ inline bool _Raymarch(inout RaymarchInfo ray)
         if (_ShouldRaymarchFinish(ray)) break;
     }
 
-    return ray.lastDistance < ray.minDistance && ray.totalLength < ray.maxDistance;
+    return ray.lastDistance < ray.minDistance;// && ray.totalLength < ray.maxDistance;
 }
 
 void Raymarch(inout RaymarchInfo ray)
