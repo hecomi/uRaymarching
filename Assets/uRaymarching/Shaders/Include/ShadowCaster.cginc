@@ -48,6 +48,7 @@ inline float4 ApplyLinearShadowBias(float4 clipPos)
 v2f Vert(appdata v)
 {
     v2f o;
+    UNITY_INITIALIZE_OUTPUT(v2f, o);
     o.pos = UnityObjectToClipPos(v.vertex);
     #ifdef DISABLE_VIEW_CULLING
     o.pos.z = 1;
@@ -68,7 +69,7 @@ float4 Frag(v2f i) : SV_Target
     ray.rayDir = GetCameraDirection(i.projPos);
     ray.startPos = i.worldPos;
     ray.minDistance = _ShadowMinDistance;
-    ray.maxDistance = GetCameraMaxDistance();
+    ray.maxDistance = GetCameraFarClip();
     ray.maxLoop = _ShadowLoop;
 
     if (!_Raymarch(ray)) discard;
