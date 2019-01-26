@@ -81,7 +81,7 @@ VertOutput Vert(appdata_full v)
 
 FragOutput Frag(VertOutput i)
 {
-    UNITY_SETUP_INSTANCE_ID(IN);
+    UNITY_SETUP_INSTANCE_ID(i);
 
     RaymarchInfo ray;
     INITIALIZE_RAYMARCH_INFO(ray, i, _Loop, _MinDistance);
