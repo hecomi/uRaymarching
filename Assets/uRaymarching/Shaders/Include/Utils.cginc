@@ -85,4 +85,8 @@ inline bool IsInnerObject(float3 pos)
 #endif
 }
 
+#ifndef UNITY_POSITION
+    #define UNITY_POSITION(pos) float4 pos : SV_POSITION
+#endif
+
 #endif
