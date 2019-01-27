@@ -66,6 +66,8 @@ MonoBehaviour:
     value: 1
   - key: FullScreen
     value: 0
+  - key: DisableViewCulling
+    value: 0
   blocks:
   - key: Properties
     value: '[Header(Additional Properties)]

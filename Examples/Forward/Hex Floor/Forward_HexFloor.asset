@@ -90,6 +90,8 @@ MonoBehaviour:
     value: 0
   - key: ForwardAdd
     value: 1
+  - key: DisableViewCulling
+    value: 0
   blocks:
   - key: Properties
     value: '[Header(Additional Properties)]

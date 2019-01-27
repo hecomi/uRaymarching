@@ -72,6 +72,8 @@ MonoBehaviour:
     value: 1
   - key: FullScreen
     value: 0
+  - key: DisableViewCulling
+    value: 0
   blocks:
   - key: Properties
     value: '[Header(Additional Properties)]
@@ -88,7 +90,7 @@ MonoBehaviour:
     value: "float _Alpha;\n\ninline void PostEffect(RaymarchInfo ray, inout PostEffectOutput
       o)\n{\n    float ao = 1.0 - 1.0 * ray.loop / ray.maxLoop;\n    o.rgb *= ao;\n
       \   o.a *= pow(ao, 3) * _Alpha;\n}"
-    folded: 1
+    folded: 0
   - key: SurfaceFunction
     value: 'fixed4 c = tex2D (_MainTex, IN.uv_MainTex) * _Color;
 
