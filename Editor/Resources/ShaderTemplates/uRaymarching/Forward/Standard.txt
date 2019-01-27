@@ -68,7 +68,7 @@ CGINCLUDE
 #define USE_RAYMARCHING_DEPTH
 @endif
 
-@if UseCameraDepthTexture : true
+@if UseCameraDepthTexture : false
 #define USE_CAMERA_DEPTH_TEXTURE
 @endif
 
@@ -120,7 +120,7 @@ Pass
     ENDCG
 }
 
-@if ForwardAdd
+@if ForwardAdd : true
 Pass
 {
     Tags { "LightMode" = "ForwardAdd" }
