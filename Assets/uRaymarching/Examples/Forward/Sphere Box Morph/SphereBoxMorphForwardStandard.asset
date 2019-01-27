@@ -66,6 +66,8 @@ MonoBehaviour:
     value: 0
   - key: FullScreen
     value: 0
+  - key: DisableViewCulling
+    value: 0
   blocks:
   - key: Properties
     value: // _Color("Color", Color) = (1.0, 1.0, 1.0, 1.0)
