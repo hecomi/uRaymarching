@@ -50,6 +50,7 @@ inline void InitRaymarchFullScreen(out RaymarchInfo ray, float4 projPos)
 {
     UNITY_INITIALIZE_OUTPUT(RaymarchInfo, ray);
     ray.rayDir = GetCameraDirection(projPos);
+    ray.projPos = projPos;
 #if defined(USING_STEREO_MATRICES)
     float3 cameraPos = unity_StereoWorldSpaceCameraPos[unity_StereoEyeIndex];
     cameraPos += float3(1., 0, 0) * unity_StereoEyeIndex;
@@ -64,6 +65,7 @@ inline void InitRaymarchObject(out RaymarchInfo ray, float4 projPos, float3 worl
 {
     UNITY_INITIALIZE_OUTPUT(RaymarchInfo, ray);
     ray.rayDir = normalize(worldPos - GetCameraPosition());
+    ray.projPos = projPos;
     ray.startPos = worldPos;
     ray.polyNormal = worldNormal;
     ray.maxDistance = GetCameraFarClip();
