@@ -102,6 +102,10 @@ inline void PostEffect(RaymarchInfo ray, inout PostEffectOutput o)
 
 ENDCG
 
+@if UseGrabPass : false
+GrabPass {}
+@endif
+
 Pass
 {
     Tags { "LightMode" = "ForwardBase" }
