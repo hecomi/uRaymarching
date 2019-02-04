@@ -109,6 +109,8 @@ inline void UseCameraDepthTextureForMaxDistance(inout RaymarchInfo ray, float4 p
         InitRaymarchParams(ray, loop, minDistance);
 #endif
 
+float _DistanceMultiplier;
+
 inline bool _Raymarch(inout RaymarchInfo ray)
 {
     ray.endPos = ray.startPos;
@@ -116,7 +118,7 @@ inline bool _Raymarch(inout RaymarchInfo ray)
     ray.totalLength = length(ray.startPos - GetCameraPosition());
 
     for (ray.loop = 0; ray.loop < ray.maxLoop; ++ray.loop) {
-        ray.lastDistance = _DistanceFunction(ray.endPos);
+        ray.lastDistance = _DistanceFunction(ray.endPos) * _DistanceMultiplier;
         ray.totalLength += ray.lastDistance;
         ray.endPos += ray.rayDir * ray.lastDistance;
         if (_ShouldRaymarchFinish(ray)) break;
