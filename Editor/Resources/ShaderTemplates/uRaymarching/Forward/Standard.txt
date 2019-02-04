@@ -21,6 +21,7 @@ Properties
     [Header(Raymarching)]
     _Loop("Loop", Range(1, 100)) = 30
     _MinDistance("Minimum Distance", Range(0.001, 0.1)) = 0.01
+    _DistanceMultiplier("Distance Multiplier", Range(0.001, 2.0)) = 1.0
 @if ShadowCaster : true
     _ShadowLoop("Shadow Loop", Range(1, 100)) = 30
     _ShadowMinDistance("Shadow Minimum Distance", Range(0.001, 0.1)) = 0.01
