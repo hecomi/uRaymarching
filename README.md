@@ -18,6 +18,9 @@ The following shapes are rendered in a 12-polygon cube.
 <img src="https://raw.githubusercontent.com/wiki/hecomi/uRaymarching/hex_floor.gif" width="720" />
 <img src="https://raw.githubusercontent.com/wiki/hecomi/uRaymarching/morph.gif" width="720" />
 
+Check more examples here:
+- [https://github.com/hecomi/uRaymarchingExamples](https://github.com/hecomi/uRaymarchingExamples)
+
 Install
 -------
 Please download the latest version of .unitypackage from the [Releases](https://github.com/hecomi/uRaymarching/releases) page and extract it in your project.
@@ -81,6 +84,8 @@ Conditions
   - Please use this only for the fullscreen raymarching with *Camera Inside Object* option.
 - `Spherical Harmonics Per Pixel`
   - By default the SH calculation is done in a vertex shader (i.e. only 8 vertices of a cube) but if you create a complex shape and the calculation of the SH is bad, please check this flag to calculate it in a fragment shader (needs more cost than the unchecked case).
+- `Use Grab Pass`
+  - If checked, insert `GrabPass {}` line before `ForwardBase` pass (see an example at [uRaymarchingExample](https://github.com/hecomi/uRaymarchingExamples) repository).
 - `Forward Add`
   - Create a `ForwardAdd` pass to calculate the effect from additional lights.
 - `Fallback To Standard Shader`
@@ -151,6 +156,7 @@ struct RaymarchInfo
     // Input
     float3 startPos;    // start position of ray
     float3 rayDir;      // ray direction
+    float3 projPos;     // ComputeScreenPos-applied position
     float3 polyNormal;  // normal on polygon surface
     float minDistance;  // minimum ray distance (comes from material setting)
     float maxDistance;  // maximum ray distance (changes by the raymarching setting)
@@ -169,6 +175,29 @@ struct RaymarchInfo
 So `ray.loop / ray.maxLoop` is a normalized value and becomes close to 0.0 on the position where a ray reaches easily and becomes close to 1.0 when hard. So you can use it as a factor of a rechability or `1.0 - ray.loop / ray.maxLoop` as an simple and a light-weight occlusion factor.
 
 `PostEffectOutput` is defferent depending on the selected shader template. For example, it is an alias of `SurfaceOutputStandard` in *Standard* template. Please see each template file by clicking *Edit* button on the right side of the *Shader Template* drop-down list for more details.
+
+Export
+------
+<img src="https://raw.githubusercontent.com/wiki/hecomi/uRaymarching/export.png" width="720" />
+
+Press *Export* button or *Ctrl + R* to export shader. Then, press *Create Material* button to generate a material which uses the shader (or create a material manually from the *Project* pane).
+
+Material
+--------
+<img src="https://raw.githubusercontent.com/wiki/hecomi/uRaymarching/material-properties.png" width="720" />
+
+- Loop
+  - The maximum number of loops of raymarching in basic passes.
+- Minimum Distance
+  - If the distance returned by a distance function becomes lower than this value, the loop finishes.
+- Distance Multiplier
+  - This value is multiplied by the output of a distance function.
+- Shadow Loop
+  - The maximum number of loops of raymarching in shadow pass.
+- Shadow Minimum Distance
+  - *Minimum Distance* in shadow pass.
+- Shadow Extra Bias
+  - Additional shadow bias.
 
 Fullscreen
 ----------
