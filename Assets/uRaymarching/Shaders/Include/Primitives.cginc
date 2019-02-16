@@ -8,13 +8,16 @@ inline float Sphere(float3 pos, float radius)
 
 inline float RoundBox(float3 pos, float3 size, float round)
 {
-    return length(max(abs(pos) - size, 0.0)) - round;
+    float3 d = abs(pos) - size;
+    return length(max(abs(pos) - size, 0.0)) - round
+        + min(max(d.x, max(d.y, d.z)), 0.0);
 }
 
 inline float Box(float3 pos, float3 size)
 {
-    // complete box (round = 0.0) cannot provide high-precision normals.
-    return RoundBox(pos, size, 0.0001);
+    float3 d = abs(pos) - size;
+    return length(max(abs(pos) - size, 0.0))
+        + min(max(d.x, max(d.y, d.z)), 0.0);
 }
 
 inline float Torus(float3 pos, float2 radius)
