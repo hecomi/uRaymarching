@@ -28,7 +28,7 @@ inline float _DistanceFunction(float3 pos)
 
 inline float3 GetDistanceFunctionNormal(float3 pos)
 {
-    const float d = 0.0001;
+    const float d = 1e-4;
     return normalize(float3(
         _DistanceFunction(pos + float3(  d, 0.0, 0.0)) - _DistanceFunction(pos),
         _DistanceFunction(pos + float3(0.0,   d, 0.0)) - _DistanceFunction(pos),
@@ -71,9 +71,9 @@ inline void InitRaymarchObject(out RaymarchInfo ray, float4 projPos, float3 worl
     ray.maxDistance = GetCameraFarClip();
 
 #ifdef CAMERA_INSIDE_OBJECT
-    float3 startPos = GetCameraPosition() + GetDistanceFromCameraToNearClipPlane(projPos) * ray.rayDir;
-    if (IsInnerObject(startPos)) {
-        ray.startPos = startPos;
+    float3 cameraNearPlanePos = GetCameraPosition() + GetDistanceFromCameraToNearClipPlane(projPos) * ray.rayDir;
+    if (IsInnerObject(cameraNearPlanePos)) {
+        ray.startPos = cameraNearPlanePos;
         ray.polyNormal = -ray.rayDir;
     }
 #endif
@@ -117,10 +117,16 @@ inline bool _Raymarch(inout RaymarchInfo ray)
 {
     ray.endPos = ray.startPos;
     ray.lastDistance = 0.0;
-    ray.totalLength = length(ray.startPos - GetCameraPosition());
+    ray.totalLength = length(ray.endPos - GetCameraPosition());
+
+    float multiplier = _DistanceMultiplier;
+#ifdef OBJECT_SCALE
+    float3 localRayDir = normalize(mul(unity_WorldToObject, ray.rayDir));
+    multiplier *= length(mul(unity_ObjectToWorld, localRayDir));
+#endif
 
     for (ray.loop = 0; ray.loop < ray.maxLoop; ++ray.loop) {
-        ray.lastDistance = _DistanceFunction(ray.endPos) * _DistanceMultiplier;
+        ray.lastDistance = _DistanceFunction(ray.endPos) * multiplier;
         ray.totalLength += ray.lastDistance;
         ray.endPos += ray.rayDir * ray.lastDistance;
         if (_ShouldRaymarchFinish(ray)) break;
