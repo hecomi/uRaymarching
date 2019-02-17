@@ -52,6 +52,8 @@ MonoBehaviour:
     value: 1
   - key: FallbackToStandardShader
     value: 0
+  - key: UseGrabPass
+    value: 0
   blocks:
   - key: Properties
     value: // _Color2("Color2", Color) = (1.0, 1.0, 1.0, 1.0)
