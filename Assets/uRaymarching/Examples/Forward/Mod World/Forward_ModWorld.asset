@@ -4,7 +4,8 @@
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
@@ -54,6 +55,8 @@ MonoBehaviour:
     value: 1
   - key: DisableViewCulling
     value: 0
+  - key: UseGrabPass
+    value: 0
   blocks:
   - key: Properties
     value: '[Header(Additional Parameters)]
@@ -69,12 +72,12 @@ MonoBehaviour:
     folded: 0
   - key: PostEffect
     value: "sampler2D _Grid;\nfloat4 _Grid_ST;\n\ninline void PostEffect(RaymarchInfo
-      ray, inout PostEffectOutput o)\n{\n    // PostEffectOutput = float4\n\n    float3
-      lightDir = _WorldSpaceLightPos0;\n    float light = (dot(ray.normal, lightDir)
-      + 1.0) * 0.5; // half lambert\n    float ao = 1.0 - 1.0 * ray.loop / ray.maxLoop;
-      // ambient occlusion using raymarching loop count\n\n    o.rgb = abs(1.0 - Mod(ray.endPos
-      * 0.1 + _Time.y, 2.0));\n    o += tex2D(_Grid, ray.endPos.xy * _Grid_ST.xy +
-      _Grid_ST.zw);\n    o *= light * ao;\n}"
+      ray, inout PostEffectOutput o)\n{\n    // PostEffectOutput = float4\n\n   
+      float3 lightDir = _WorldSpaceLightPos0;\n    float light = (dot(ray.normal,
+      lightDir) + 1.0) * 0.5; // half lambert\n    float ao = 1.0 - 1.0 * ray.loop
+      / ray.maxLoop; // ambient occlusion using raymarching loop count\n\n    o.rgb
+      = abs(1.0 - Mod(ray.endPos * 0.1 + _Time.y, 2.0));\n    o += tex2D(_Grid, ray.endPos.xy
+      * _Grid_ST.xy + _Grid_ST.zw);\n    o *= light * ao;\n}"
     folded: 1
   constants: {fileID: 11400000, guid: 4df15a420345e4af98645ddd9620aa5b, type: 2}
   basicFolded: 1
