@@ -48,13 +48,13 @@ CGINCLUDE
 #define POST_EFFECT PostEffect
 #define PostEffectOutput float4
 
-#include "Assets/uRaymarching/Shaders/Include/Common.cginc"
+#include "Assets/uRaymarching/Shaders/Include/Legacy/Common.cginc"
 
 // @block DistanceFunction
 inline float DistanceFunction(float3 pos)
 {
     float t = _Time.x;
-    float a = 6 * PI * t;
+   float a = 6 * PI * t;
     float s = pow(sin(a), 2.0);
     float d1 = Sphere(pos, 0.75);
     float d2 = RoundBox(
@@ -72,7 +72,7 @@ inline void PostEffect(RaymarchInfo ray, inout PostEffectOutput o)
 {
     float ao = 1.0 - 1.0 * ray.loop / ray.maxLoop;
     o.rgb *= ao;
-    o.a *= pow(ao, 3) * _Alpha;
+   o.a *= pow(ao, 3) * _Alpha;
 }
 // @endblock
 
@@ -86,7 +86,7 @@ Pass
     ZWrite [_ZWrite]
 
     CGPROGRAM
-    #include "Assets/uRaymarching/Shaders/Include/ForwardBaseUnlit.cginc"
+    #include "Assets/uRaymarching/Shaders/Include/Legacy/ForwardBaseUnlit.cginc"
     #pragma target 3.0
     #pragma vertex Vert
     #pragma fragment Frag
@@ -101,7 +101,7 @@ Pass
     Tags { "LightMode" = "ShadowCaster" }
 
     CGPROGRAM
-    #include "Assets/uRaymarching/Shaders/Include/ShadowCaster.cginc"
+    #include "Assets/uRaymarching/Shaders/Include/Legacy/ShadowCaster.cginc"
     #pragma target 3.0
     #pragma vertex Vert
     #pragma fragment Frag

@@ -52,7 +52,7 @@ CGINCLUDE
 #define POST_EFFECT PostEffect
 #define PostEffectOutput SurfaceOutputStandard
 
-#include "Assets/uRaymarching/Shaders/Include/Common.cginc"
+#include "Assets/uRaymarching/Shaders/Include/Legacy/Common.cginc"
 
 // @block DistanceFunction
 inline float DistanceFunction(float3 pos)
@@ -92,7 +92,7 @@ Pass
     }
 
     CGPROGRAM
-    #include "Assets/uRaymarching/Shaders/Include/DeferredStandard.cginc"
+    #include "Assets/uRaymarching/Shaders/Include/Legacy/DeferredStandard.cginc"
     #pragma target 3.0
     #pragma vertex Vert
     #pragma fragment Frag

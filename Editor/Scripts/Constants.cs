@@ -15,7 +15,7 @@ public class Constants : uShaderTemplate.Constants
 		values = new uShaderTemplate.Constant[] {
 			new uShaderTemplate.Constant() { 
 				name = ShaderDir,
-				value = Utils.GetCgincDirPath()
+				value = Utils.GetLegacyShaderIncludeDirPath()
 			}
 		};
 	}
@@ -27,7 +27,7 @@ public class Constants : uShaderTemplate.Constants
 			if (values[i].name != ShaderDir) continue;
 
 			var constant = values[i];
-			constant.value = Utils.GetCgincDirPath();
+			constant.value = Utils.GetLegacyShaderIncludeDirPath();
 			values[i] = constant;
 		}
 	}
