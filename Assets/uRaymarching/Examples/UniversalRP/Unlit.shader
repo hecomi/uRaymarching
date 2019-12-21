@@ -32,6 +32,7 @@ SubShader
 Tags 
 { 
     "RenderType" = "Opaque" 
+    "Queue" = "Geometry"
     "IgnoreProjector" = "True" 
     "RenderPipeline" = "UniversalPipeline" 
     "DisableBatching" = "True"
@@ -44,8 +45,7 @@ HLSLINCLUDE
 #define DISTANCE_FUNCTION DistanceFunction
 #define POST_EFFECT PostEffect
 #define OBJECT_SHAPE_CUBE
-//#define USE_RAYMARCHING_DEPTH
-//#define USE_CAMERA_DEPTH_TEXTURE
+#define USE_RAYMARCHING_DEPTH
 
 #include "Packages/com.unity.render-pipelines.universal/Shaders/UnlitInput.hlsl"
 #include "Assets/uRaymarching/Shaders/Include/SRP/Primitives.hlsl"
@@ -85,6 +85,8 @@ Pass
     Cull [_Cull]
 
     HLSLPROGRAM
+
+    #define USE_CAMERA_DEPTH_TEXTURE_FOR_START_POS
 
     #pragma prefer_hlslcc gles
     #pragma exclude_renderers d3d11_9x
@@ -146,5 +148,7 @@ Pass
 }
 
 }
+
+FallBack "Hidden/Universal Render Pipeline/FallbackError"
 
 }

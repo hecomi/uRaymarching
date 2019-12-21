@@ -1,6 +1,8 @@
 ﻿#ifndef URAYMARCHING_UTILS_HLSL
 #define URAYMARCHING_UTILS_HLSL
 
+#include "Packages/com.unity.render-pipelines.core/ShaderLibrary/SpaceTransforms.hlsl"
+
 inline float3 GetScale()
 {
     return float3(
@@ -32,10 +34,10 @@ inline float EncodeDepth(float4 pos)
 #endif 
 }
 
-inline float EncodeDepth(float3 pos)
+inline float EncodeDepth(float3 positionWS)
 {
-    float4 vpPos = mul(UNITY_MATRIX_VP, float4(pos, 1.0));
-    return EncodeDepth(vpPos);
+    float4 positionCS = TransformWorldToHClip(positionWS);
+    return EncodeDepth(positionCS);
 }
 
 inline float3 EncodeNormal(float3 normal)

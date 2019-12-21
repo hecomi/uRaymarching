@@ -42,13 +42,10 @@ Varyings Vert(Attributes input)
     UNITY_TRANSFER_INSTANCE_ID(input, output);
     UNITY_INITIALIZE_VERTEX_OUTPUT_STEREO(output);
 
-    VertexPositionInputs vertexInput = GetVertexPositionInputs(input.positionOS.xyz);
-    output.positionCS = vertexInput.positionCS;
-    output.fogCoord = ComputeFogFactor(vertexInput.positionCS.z);
-
+    output.positionCS = TransformObjectToHClip(input.positionOS.xyz);
+    output.fogCoord = ComputeFogFactor(output.positionCS.z);
     output.positionWS = TransformObjectToWorld(input.positionOS.xyz);
     output.normalWS = TransformObjectToWorldNormal(input.normalOS);
-
     output.positionSS = ComputeNonStereoScreenPos(output.positionCS);
     output.positionSS.z = -TransformWorldToView(output.positionWS).z;
 
@@ -62,9 +59,6 @@ FragOutput Frag(Varyings input)
 
     RaymarchInfo ray;
     INITIALIZE_RAYMARCH_INFO(ray, input, _Loop, _MinDistance);
-
-    ray.startPos = 
-
     Raymarch(ray);
 
     FragOutput o;
