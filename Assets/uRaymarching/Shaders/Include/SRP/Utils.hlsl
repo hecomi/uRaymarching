@@ -48,6 +48,14 @@ inline float3 DecodeNormal(float3 normal)
     return 2.0 * normal - 1.0;
 }
 
+inline float4 ComputeNonStereoScreenPos(float4 pos)
+{
+    float4 o = pos * 0.5f;
+    o.xy = float2(o.x, o.y * _ProjectionParams.x) + o.w;
+    o.zw = pos.zw;
+    return o;
+}
+
 inline bool IsInnerCube(float3 pos, float3 scale)
 {
     return all(max(scale * 0.5 - abs(pos), 0.0));
@@ -84,9 +92,5 @@ inline bool IsInnerObject(float3 pos)
     return _IsInnerObject(ToLocal(pos), GetScale());
 #endif
 }
-
-#ifndef UNITY_POSITION
-    #define UNITY_POSITION(pos) float4 pos : SV_POSITION
-#endif
 
 #endif

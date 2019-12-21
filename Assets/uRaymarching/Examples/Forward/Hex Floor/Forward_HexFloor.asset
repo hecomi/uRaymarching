@@ -19,7 +19,7 @@ MonoBehaviour:
   - key: Name
     value: Forward_HexFloor
   - key: RaymarchingShaderDirectory
-    value: Assets/uRaymarching/Shaders/Include
+    value: Assets/uRaymarching/Shaders/Include/Legacy
   - key: Fuga
     value: aaaa
   - key: Piyo
@@ -153,4 +153,4 @@ MonoBehaviour:
   conditionsFolded: 1
   variablesFolded: 1
   materialsFolded: 1
-  constantsFolded: 0
+  constantsFolded: 1

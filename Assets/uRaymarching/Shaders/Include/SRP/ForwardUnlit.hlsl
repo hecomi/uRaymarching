@@ -1,5 +1,5 @@
-﻿#ifndef URAYMARCHING_UNLIT_HLSL
-#define URAYMARCHING_UNLIT_HLSL
+﻿#ifndef URAYMARCHING_FORWARD_UNLIT_HLSL
+#define URAYMARCHING_FORWARD_UNLIT_HLSL
 
 #include "./Primitives.hlsl"
 #include "./Raymarching.hlsl"
@@ -34,14 +34,6 @@ struct FragOutput
 #endif
 };
 
-inline float4 ComputeNonStereoScreenPos(float4 pos)
-{
-    float4 o = pos * 0.5f;
-    o.xy = float2(o.x, o.y * _ProjectionParams.x) + o.w;
-    o.zw = pos.zw;
-    return o;
-}
-
 Varyings Vert(Attributes input)
 {
     Varyings output = (Varyings)0;
@@ -70,6 +62,9 @@ FragOutput Frag(Varyings input)
 
     RaymarchInfo ray;
     INITIALIZE_RAYMARCH_INFO(ray, input, _Loop, _MinDistance);
+
+    ray.startPos = 
+
     Raymarch(ray);
 
     FragOutput o;

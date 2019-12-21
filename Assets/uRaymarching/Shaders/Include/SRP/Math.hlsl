@@ -1,8 +1,6 @@
 ﻿#ifndef URAYMARCHING_MATH_HLSL
 #define URAYMARCHING_MATH_HLSL
 
-#define PI 3.14159265358979
-
 float Rand(float2 seed)
 {
     return frac(sin(dot(seed, float2(12.9898, 78.233))) * 43758.5453);
