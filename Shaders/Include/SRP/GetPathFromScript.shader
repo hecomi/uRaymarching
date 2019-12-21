@@ -1,4 +1,4 @@
-﻿Shader "Hidden/Raymarching/GetPathFromScript"
+﻿Shader "Hidden/Raymarching/SRP/GetPathFromScript"
 {
     Fallback "Diffuse"
 }

@@ -87,19 +87,15 @@ inline void InitRaymarchParams(inout RaymarchInfo ray, int maxLoop, float minDis
 }
 
 #ifdef USE_CAMERA_DEPTH_TEXTURE
-//UNITY_DECLARE_DEPTH_TEXTURE(_CameraDepthTexture);
 
 TEXTURE2D(_CameraDepthTexture);
 SAMPLER(sampler_CameraDepthTexture);
-inline float SampleDepthTexture(float4 uv)
-{
-    // TODO: Support VR
-    return SAMPLE_TEXTURE2D(_CameraDepthTexture, sampler_CameraDepthTexture, uv).r;
-}
 
 inline void UseCameraDepthTextureForMaxDistance(inout RaymarchInfo ray, float4 projPos)
 {
-    float depth = LinearEyeDepth(SAMPLE_DEPTH_TEXTURE(_CameraDepthTexture, sampler_CameraDepthTexture, projPos.xy / projPos.w), _ZBufferParams);
+    float2 uv = projPos.xy / projPos.w;
+    float depth = SAMPLE_DEPTH_TEXTURE(_CameraDepthTexture, sampler_CameraDepthTexture, uv);
+    depth = LinearEyeDepth(depth, _ZBufferParams);
     float dist = depth / dot(ray.rayDir, GetCameraForward());
     ray.maxDistance = dist;
 }
@@ -141,7 +137,7 @@ inline bool _Raymarch(inout RaymarchInfo ray)
         if (_ShouldRaymarchFinish(ray)) break;
     }
 
-    return ray.lastDistance < ray.minDistance;// && ray.totalLength < ray.maxDistance;
+    return ray.lastDistance < ray.minDistance;
 }
 
 void Raymarch(inout RaymarchInfo ray)
