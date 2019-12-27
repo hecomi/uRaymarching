@@ -42,12 +42,13 @@ Varyings Vert(Attributes input)
     UNITY_TRANSFER_INSTANCE_ID(input, output);
     UNITY_INITIALIZE_VERTEX_OUTPUT_STEREO(output);
 
-    output.positionCS = TransformObjectToHClip(input.positionOS.xyz);
-    output.fogCoord = ComputeFogFactor(output.positionCS.z);
-    output.positionWS = TransformObjectToWorld(input.positionOS.xyz);
+    VertexPositionInputs vertexInput = GetVertexPositionInputs(input.positionOS.xyz);
+    output.positionCS = vertexInput.positionCS;
+    output.positionWS = vertexInput.positionWS;
     output.normalWS = TransformObjectToWorldNormal(input.normalOS);
     output.positionSS = ComputeNonStereoScreenPos(output.positionCS);
     output.positionSS.z = -TransformWorldToView(output.positionWS).z;
+    output.fogCoord = ComputeFogFactor(output.positionCS.z);
 
     return output;
 }

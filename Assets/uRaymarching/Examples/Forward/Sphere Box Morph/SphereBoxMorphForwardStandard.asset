@@ -19,7 +19,7 @@ MonoBehaviour:
   - key: Name
     value: SphereBoxMorphForwardStandard
   - key: RaymarchingShaderDirectory
-    value: Assets/uRaymarching/Shaders/Include
+    value: 
   - key: Culling
     value: Off
   - key: LOD
