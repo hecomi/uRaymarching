@@ -34,9 +34,23 @@ struct FragOutput
     float depth : SV_Depth;
 };
 
-float4 GetShadowPositionHClip(float3 positionWS, float3 normalWS)
+inline float3 CustomApplyShadowBias(float3 positionWS, float3 normalWS)
 {
-    float4 positionCS = TransformWorldToHClip(ApplyShadowBias(positionWS, normalWS, _LightDirection));
+    positionWS += _LightDirection * _ShadowBias.xxx;
+    positionWS += _LightDirection * _ShadowExtraBias;
+
+    float invNdotL = 1.0 - saturate(dot(_LightDirection, normalWS));
+    float scale = invNdotL * _ShadowBias.y;
+    positionWS += normalWS * scale.xxx;
+
+    return positionWS;
+}
+
+inline float4 GetShadowPositionHClip(float3 positionWS, float3 normalWS)
+{
+    positionWS = CustomApplyShadowBias(positionWS, normalWS);
+    //positionWS = ApplyShadowBias(positionWS, normalWS, _LightDirection);
+    float4 positionCS = TransformWorldToHClip(positionWS);
 #if UNITY_REVERSED_Z
     positionCS.z = min(positionCS.z, positionCS.w * UNITY_NEAR_CLIP_VALUE);
 #else
@@ -83,11 +97,25 @@ FragOutput Frag(Varyings input)
 
     if (!_Raymarch(ray)) discard;
 
+    float initLength = length(ray.startPos - GetCameraPosition());
+    if (ray.totalLength - initLength < ray.minDistance) {
+        ray.normal = EncodeNormal(ray.polyNormal);
+        ray.depth = EncodeDepth(ray.startPos) - 1e-6;
+        ray.endPos = ray.startPos;
+    } else {
+        float3 normal = GetDistanceFunctionNormal(ray.endPos);
+        ray.normal = EncodeNormal(normal);
+        ray.depth = EncodeDepth(ray.endPos);
+    }
+
     float3 normalWS = DecodeNormal(ray.normal);
-    float4 positionCS = GetShadowPositionHClip(ray.endPos, normalWS);
+    float3 positionWS = ray.endPos;
+    //float4 positionCS = GetShadowPositionHClip(positionWS, normalWS);
+    positionWS = CustomApplyShadowBias(positionWS, normalWS);
 
     FragOutput o;
-    o.color = o.depth = EncodeDepth(positionCS);
+    o.color = o.depth = ray.depth;
+    //o.color = o.depth = EncodeDepth(positionWS);
     return o;
 }
 
