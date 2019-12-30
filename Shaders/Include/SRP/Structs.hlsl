@@ -6,6 +6,7 @@ struct RaymarchInfo
     // Input
     float3 startPos;
     float3 rayDir;
+    float3 polyPos;
     float3 polyNormal;
     float4 projPos;
     float minDistance;
