@@ -77,12 +77,21 @@ FragOutput Frag(Varyings input)
 
     InputData inputData = (InputData)0;
     inputData.positionWS = ray.endPos;
-    inputData.normalWS = DecodeNormal(ray.normal);
+    inputData.normalWS = DecodeNormalWS(ray.normal);
     inputData.viewDirectionWS = SafeNormalize(GetCameraPosition() - ray.endPos);
     inputData.shadowCoord = TransformWorldToShadowCoord(ray.endPos);
     inputData.fogCoord = input.fogFactorAndVertexLight.x;
     inputData.vertexLighting = input.fogFactorAndVertexLight.yzw;
     inputData.bakedGI = SAMPLE_GI(input.lightmapUV, input.vertexSH, inputData.normalWS);
+
+#if defined(_MAIN_LIGHT_SHADOWS) && !defined(_RECEIVE_SHADOWS_OFF)
+    #if SHADOWS_SCREEN
+    float4 positionCS = TransformWorldToHClip(ray.endPos);
+    inputData.shadowCoord = ComputeScreenPos(positionCS);
+    #else
+    inputData.shadowCoord = TransformWorldToShadowCoord(ray.endPos);
+    #endif
+#endif
 
     SurfaceData surfaceData = (SurfaceData)0;;
     InitializeStandardLitSurfaceData(float2(0, 0), surfaceData);

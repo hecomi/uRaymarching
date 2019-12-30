@@ -161,15 +161,15 @@ void Raymarch(inout RaymarchInfo ray)
 
 #ifdef FULL_SCREEN
     float3 normal = GetDistanceFunctionNormal(ray.endPos);
-    ray.normal = EncodeNormal(normal);
-    ray.depth = EncodeDepth(ray.endPos);
+    ray.normal = EncodeNormalWS(normal);
+    ray.depth = EncodeDepthWS(ray.endPos);
     return;
 #endif
 
 #ifdef CAMERA_INSIDE_OBJECT
     if (IsInnerObject(GetCameraPosition()) && ray.totalLength < GetCameraNearClip()) {
-        ray.normal = EncodeNormal(-GetCameraDirection());
-        ray.depth = EncodeDepth(ray.startPos);
+        ray.normal = EncodeNormalWS(-GetCameraDirection());
+        ray.depth = EncodeDepthWS(ray.startPos);
         ray.endPos = ray.startPos;
         return;
     }
@@ -177,13 +177,13 @@ void Raymarch(inout RaymarchInfo ray)
 
     float initLength = length(ray.startPos - GetCameraPosition());
     if (ray.totalLength - initLength < ray.minDistance) {
-        ray.normal = EncodeNormal(ray.polyNormal);
-        ray.depth = EncodeDepth(ray.startPos) - 1e-6;
+        ray.normal = EncodeNormalWS(ray.polyNormal);
+        ray.depth = EncodeDepthWS(ray.startPos) - 1e-6;
         ray.endPos = ray.startPos;
     } else {
         float3 normal = GetDistanceFunctionNormal(ray.endPos);
-        ray.normal = EncodeNormal(normal);
-        ray.depth = EncodeDepth(ray.endPos);
+        ray.normal = EncodeNormalWS(normal);
+        ray.depth = EncodeDepthWS(ray.endPos);
     }
 }
 

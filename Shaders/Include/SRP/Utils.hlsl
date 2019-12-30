@@ -21,7 +21,7 @@ inline float3 ToWorld(float3 pos)
     return mul(unity_ObjectToWorld, float4(pos, 1.0)).xyz;
 }
 
-inline float EncodeDepth(float4 pos)
+inline float EncodeDepthCS(float4 pos)
 {
     float z = pos.z / pos.w;
 #if defined(SHADER_API_GLCORE) || \
@@ -34,18 +34,18 @@ inline float EncodeDepth(float4 pos)
 #endif 
 }
 
-inline float EncodeDepth(float3 positionWS)
+inline float EncodeDepthWS(float3 positionWS)
 {
     float4 positionCS = TransformWorldToHClip(positionWS);
-    return EncodeDepth(positionCS);
+    return EncodeDepthCS(positionCS);
 }
 
-inline float3 EncodeNormal(float3 normal)
+inline float3 EncodeNormalWS(float3 normal)
 {
     return normal * 0.5 + 0.5;
 }
 
-inline float3 DecodeNormal(float3 normal)
+inline float3 DecodeNormalWS(float3 normal)
 {
     return 2.0 * normal - 1.0;
 }
