@@ -34,7 +34,7 @@ Material:
     - _Metallic: 0
     - _MinDistance: 0.01
     - _Occlusion: 0
-    - _ShadowExtraBias: 0
+    - _ShadowExtraBias: -0.1
     - _ShadowLoop: 30
     - _ShadowMinDistance: 0.01
     - _Smoothness: 0.541

@@ -145,7 +145,6 @@ Pass
 
     #pragma vertex Vert
     #pragma fragment Frag
-
     #include "Assets/uRaymarching/Shaders/Include/SRP/DepthOnly.hlsl"
 
     ENDHLSL
