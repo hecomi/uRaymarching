@@ -68,7 +68,8 @@ inline void InitRaymarchObject(out RaymarchInfo ray, float4 positionSS, float3 p
     ray.rayDir = normalize(positionWS - GetCameraPosition());
     ray.projPos = positionSS;
     ray.startPos = positionWS;
-    ray.polyNormal = NormalizeNormalPerPixel(normalWS);
+    ray.polyPos = positionWS;
+    ray.polyNormal = normalize(normalWS);
     ray.maxDistance = GetCameraFarClip();
 
 #ifdef CAMERA_INSIDE_OBJECT
@@ -91,22 +92,17 @@ inline void InitRaymarchParams(inout RaymarchInfo ray, int maxLoop, float minDis
 TEXTURE2D(_CameraDepthTexture);
 SAMPLER(sampler_CameraDepthTexture);
 
-inline void UseCameraDepthTextureForStartPos(inout RaymarchInfo ray, float3 positionWS, float4 positionSS)
+inline void InitRaymarchWithCameraDepthTexture(inout RaymarchInfo ray, float3 positionWS, float4 positionSS)
 {
     float2 uv = positionSS.xy / positionSS.w;
     float depth = SAMPLE_DEPTH_TEXTURE(_CameraDepthTexture, sampler_CameraDepthTexture, uv);
     depth = LinearEyeDepth(depth, _ZBufferParams);
     float dist = depth / dot(ray.rayDir, GetCameraForward());
-    ray.startPos = GetCameraPosition() + ray.rayDir * dist;
-}
-
-inline void UseCameraDepthTextureForMaxDistance(inout RaymarchInfo ray, float4 positionSS)
-{
-    float2 uv = positionSS.xy / positionSS.w;
-    float depth = SAMPLE_DEPTH_TEXTURE(_CameraDepthTexture, sampler_CameraDepthTexture, uv);
-    depth = LinearEyeDepth(depth, _ZBufferParams);
-    float dist = depth / dot(ray.rayDir, GetCameraForward());
+#ifdef USE_CAMERA_DEPTH_TEXTURE_FOR_DEPTH_TEST
     ray.maxDistance = dist;
+#else
+    ray.startPos = GetCameraPosition() + ray.rayDir * dist;
+#endif
 }
 
 #endif
@@ -115,16 +111,11 @@ inline void UseCameraDepthTextureForMaxDistance(inout RaymarchInfo ray, float4 p
     #define INITIALIZE_RAYMARCH_INFO(ray, i, loop, minDistance) \
         InitRaymarchFullScreen(ray, i.projPos); \
         InitRaymarchParams(ray, loop, minDistance);
-#elif defined(USE_CAMERA_DEPTH_TEXTURE_FOR_DEPTH_TEST)
+#elif defined(USE_CAMERA_DEPTH_TEXTURE_FOR_DEPTH_TEST) || defined(USE_CAMERA_DEPTH_TEXTURE_FOR_START_POS)
     #define INITIALIZE_RAYMARCH_INFO(ray, i, loop, minDistance) \
         InitRaymarchObject(ray, i.positionSS, i.positionWS, i.normalWS); \
         InitRaymarchParams(ray, loop, minDistance); \
-        UseCameraDepthTextureForMaxDistance(ray, i.positionSS);
-#elif defined(USE_CAMERA_DEPTH_TEXTURE_FOR_START_POS)
-    #define INITIALIZE_RAYMARCH_INFO(ray, i, loop, minDistance) \
-        InitRaymarchObject(ray, i.positionSS, i.positionWS, i.normalWS); \
-        InitRaymarchParams(ray, loop, minDistance); \
-        UseCameraDepthTextureForStartPos(ray, i.positionWS, i.positionSS);
+        InitRaymarchWithCameraDepthTexture(ray, i.positionWS, i.positionSS);
 #else
     #define INITIALIZE_RAYMARCH_INFO(ray, i, loop, minDistance) \
         InitRaymarchObject(ray, i.positionSS, i.positionWS, i.normalWS); \
@@ -175,10 +166,10 @@ void Raymarch(inout RaymarchInfo ray)
     }
 #endif
 
-    float initLength = length(ray.startPos - GetCameraPosition());
-    if (ray.totalLength - initLength < ray.minDistance) {
+    float lengthToPolySurface = length(ray.polyPos - GetCameraPosition());
+    if (ray.totalLength - lengthToPolySurface < ray.minDistance) {
         ray.normal = EncodeNormalWS(ray.polyNormal);
-        ray.depth = EncodeDepthWS(ray.startPos) - 1e-6;
+        ray.depth = EncodeDepthWS(ray.polyPos) - 1e-6;
         ray.endPos = ray.startPos;
     } else {
         float3 normal = GetDistanceFunctionNormal(ray.endPos);

@@ -118,6 +118,7 @@ Pass
     #pragma exclude_renderers d3d11_9x
     #pragma target 2.0
 
+    #define USE_CAMERA_DEPTH_TEXTURE_FOR_START_POS
     #pragma vertex Vert
     #pragma fragment Frag
     #include "Assets/uRaymarching/Shaders/Include/SRP/ForwardLit.hlsl"
