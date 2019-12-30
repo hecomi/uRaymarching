@@ -37,7 +37,7 @@ Material:
     - _ShadowExtraBias: -0.1
     - _ShadowLoop: 30
     - _ShadowMinDistance: 0.01
-    - _Smoothness: 0.541
+    - _Smoothness: 0.839
     - _ZWrite: 1
     m_Colors:
     - _BaseColor: {r: 1, g: 1, b: 1, a: 1}

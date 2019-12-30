@@ -58,7 +58,7 @@ HLSLINCLUDE
 
 inline float DistanceFunction(float3 pos)
 {
-    float t = 0;//_Time.x;
+    float t = _Time.x;
     float a = 6 * PI * t;
     float s = pow(sin(a), 2.0);
     float d1 = Sphere(pos, 0.75);
