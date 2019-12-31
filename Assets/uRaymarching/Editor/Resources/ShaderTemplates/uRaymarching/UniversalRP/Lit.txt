@@ -67,10 +67,6 @@ HLSLINCLUDE
 #define CAMERA_INSIDE_OBJECT
 @endif
 
-@if UseRaymarchingDepth : true
-#define USE_RAYMARCHING_DEPTH
-@endif
-
 #define DISTANCE_FUNCTION DistanceFunction
 #define POST_EFFECT PostEffect
 
@@ -145,11 +141,11 @@ Pass
     #pragma exclude_renderers d3d11_9x
     #pragma target 2.0
 
-@if DepthTestWithDepthTexture : false
-    #define USE_CAMERA_DEPTH_TEXTURE_FOR_DEPTH_TEST
+@if RayStopsAtDepthTexture : false
+    #define RAY_STOPS_AT_DEPTH_TEXTURE
 @endif
-@if StartFromDepthTexture : false
-    #define USE_CAMERA_DEPTH_TEXTURE_FOR_START_POS
+@if RayStartsFromDepthTexture : false
+    #define RAY_STARTS_FROM_DEPTH_TEXTURE
 @endif
 
     #pragma vertex Vert

@@ -35,9 +35,7 @@ struct Varyings
 struct FragOutput
 {
     float4 color : SV_Target;
-#ifdef USE_RAYMARCHING_DEPTH
     float depth : SV_Depth;
-#endif
 };
 
 Varyings Vert(Attributes input)
@@ -114,9 +112,7 @@ FragOutput Frag(Varyings input)
 
     FragOutput o;
     o.color = color;
-#ifdef USE_RAYMARCHING_DEPTH
     o.depth = ray.depth;
-#endif
 
     return o;
 }

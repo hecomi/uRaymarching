@@ -48,9 +48,9 @@ HLSLINCLUDE
 #define USE_RAYMARCHING_DEPTH
 
 #include "Packages/com.unity.render-pipelines.universal/Shaders/UnlitInput.hlsl"
-#include "Assets/uRaymarching/Shaders/Include/SRP/Primitives.hlsl"
-#include "Assets/uRaymarching/Shaders/Include/SRP/Math.hlsl"
-#include "Assets/uRaymarching/Shaders/Include/SRP/Structs.hlsl"
+#include "Assets/uRaymarching/Shaders/Include/UniversalRP/Primitives.hlsl"
+#include "Assets/uRaymarching/Shaders/Include/UniversalRP/Math.hlsl"
+#include "Assets/uRaymarching/Shaders/Include/UniversalRP/Structs.hlsl"
 
 inline float DistanceFunction(float3 pos)
 {
