@@ -7,9 +7,9 @@ namespace Raymarching
 
 public static class Utils
 {
-    public static string GetLegacyShaderIncludeDirPath()
+    public static string GetShaderDirPath(string shaderName)
     {
-        var shader = Shader.Find("Hidden/Raymarching/GetPathFromScript");
+        var shader = Shader.Find(shaderName);
         var shaderPath = AssetDatabase.GetAssetPath(shader);
         try
         {

@@ -9,9 +9,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 178591dbdc9ac4bd1adb8fbd3479f8b9, type: 3}
-  m_Name: uRaymarching Default Constants
+  m_Script: {fileID: 11500000, guid: ec859caf47b8f42cbaaa67f7785030e1, type: 3}
+  m_Name: uRaymarching_Default_Constants_Legacy
   m_EditorClassIdentifier: 
   values:
   - name: RaymarchingShaderDirectory
     value: Assets/uRaymarching/Shaders/Include/Legacy
+  shaderName: Hidden/Raymarching/Legacy/GetPathFromScript

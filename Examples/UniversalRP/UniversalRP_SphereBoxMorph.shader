@@ -1,10 +1,13 @@
-﻿Shader "Raymarching/URP/Unlit"
+Shader "Raymarching/UniversalRP_SphereBoxMorph"
 {
 
 Properties
 {
     [Header(Base)]
-    _Color("Color", Color) = (1.0, 1.0, 1.0, 1.0)
+    [MainColor] _BaseColor("Color", Color) = (0.5, 0.5, 0.5, 1)
+    [HideInInspector][MainTexture] _BaseMap("Albedo", 2D) = "white" {}
+    [Gamma] _Metallic("Metallic", Range(0.0, 1.0)) = 0.5
+    _Smoothness("Smoothness", Range(0.0, 1.0)) = 0.5
 
     [Header(Pass)]
     [Enum(UnityEngine.Rendering.CullMode)] _Cull("Culling", Int) = 2
@@ -18,11 +21,10 @@ Properties
     _DistanceMultiplier("Distance Multiplier", Range(0.001, 2.0)) = 1.0
     _ShadowLoop("Shadow Loop", Range(1, 100)) = 10
     _ShadowMinDistance("Shadow Minimum Distance", Range(0.001, 0.1)) = 0.01
-    _ShadowExtraBias("Shadow Extra Bias", Range(0.0, 0.1)) = 0.01
+    _ShadowExtraBias("Shadow Extra Bias", Range(-1.0, 1.0)) = 0.01
 
 // @block Properties
-[Header(Additional Properties)]
-_Alpha("Alpha", Range(0.0, 1.0)) = 0.5
+// _Color2("Color2", Color) = (1.0, 1.0, 1.0, 1.0)
 // @endblock
 }
 
@@ -31,27 +33,30 @@ SubShader
 
 Tags 
 { 
-    "RenderType" = "Opaque" 
+    "RenderType" = "Opaque"
     "Queue" = "Geometry"
     "IgnoreProjector" = "True" 
     "RenderPipeline" = "UniversalPipeline" 
     "DisableBatching" = "True"
 }
 
-LOD 100
+LOD 300
 
 HLSLINCLUDE
 
-#define DISTANCE_FUNCTION DistanceFunction
-#define POST_EFFECT PostEffect
 #define OBJECT_SHAPE_CUBE
+
 #define USE_RAYMARCHING_DEPTH
 
-#include "Packages/com.unity.render-pipelines.universal/Shaders/UnlitInput.hlsl"
+#define DISTANCE_FUNCTION DistanceFunction
+#define POST_EFFECT PostEffect
+
+#include "Packages/com.unity.render-pipelines.universal/Shaders/LitInput.hlsl"
 #include "Assets/uRaymarching/Shaders/Include/SRP/Primitives.hlsl"
 #include "Assets/uRaymarching/Shaders/Include/SRP/Math.hlsl"
 #include "Assets/uRaymarching/Shaders/Include/SRP/Structs.hlsl"
 
+// @block DistanceFunction
 inline float DistanceFunction(float3 pos)
 {
     float t = _Time.x;
@@ -64,21 +69,22 @@ inline float DistanceFunction(float3 pos)
         0.1 / length(pos * 2.0));
     return lerp(d1, d2, s);
 }
+// @endblock
 
-#define PostEffectOutput float4
+#define PostEffectOutput SurfaceData
 
+// @block PostEffect
 inline void PostEffect(RaymarchInfo ray, inout PostEffectOutput o)
 {
-    float ao = 1.0 - pow(1.0 * ray.loop / ray.maxLoop, 2);
-    o.rgb *= ao;
-    o.a *= pow(ao, 3);
 }
+// @endblock
 
 ENDHLSL
 
 Pass
 {
-    Name "Unlit"
+    Name "ForwardLit"
+    Tags { "LightMode" = "UniversalForward" }
 
     Blend [_BlendSrc] [_BlendDst]
     ZWrite [_ZWrite]
@@ -86,16 +92,37 @@ Pass
 
     HLSLPROGRAM
 
-    #define USE_CAMERA_DEPTH_TEXTURE_FOR_START_POS
+    #pragma shader_feature _NORMALMAP
+    #pragma shader_feature _ALPHATEST_ON
+    #pragma shader_feature _ALPHAPREMULTIPLY_ON
+    #pragma shader_feature _EMISSION
+    #pragma shader_feature _METALLICSPECGLOSSMAP
+    #pragma shader_feature _SMOOTHNESS_TEXTURE_ALBEDO_CHANNEL_A
+    #pragma shader_feature _OCCLUSIONMAP
+    #pragma shader_feature _SPECULARHIGHLIGHTS_OFF
+    #pragma shader_feature _ENVIRONMENTREFLECTIONS_OFF
+    #pragma shader_feature _SPECULAR_SETUP
+    #pragma shader_feature _RECEIVE_SHADOWS_OFF
+
+    #pragma multi_compile _ _MAIN_LIGHT_SHADOWS
+    #pragma multi_compile _ _MAIN_LIGHT_SHADOWS_CASCADE
+    #pragma multi_compile _ _ADDITIONAL_LIGHTS_VERTEX _ADDITIONAL_LIGHTS
+    #pragma multi_compile _ _ADDITIONAL_LIGHT_SHADOWS
+    #pragma multi_compile _ _SHADOWS_SOFT
+    #pragma multi_compile _ _MIXED_LIGHTING_SUBTRACTIVE
+
+    #pragma multi_compile _ DIRLIGHTMAP_COMBINED
+    #pragma multi_compile _ LIGHTMAP_ON
+    #pragma multi_compile_fog
+    #pragma multi_compile_instancing
 
     #pragma prefer_hlslcc gles
     #pragma exclude_renderers d3d11_9x
+    #pragma target 2.0
+
     #pragma vertex Vert
     #pragma fragment Frag
-    #pragma shader_feature _ALPHAPREMULTIPLY_ON
-    #pragma multi_compile_fog
-    #pragma multi_compile_instancing
-    #include "Assets/uRaymarching/Shaders/Include/UniversalRP/ForwardUnlit.hlsl"
+    #include "Assets/uRaymarching/Shaders/Include/UniversalRP/ForwardLit.hlsl"
 
     ENDHLSL
 }
@@ -111,14 +138,15 @@ Pass
 
     HLSLPROGRAM
 
-    #pragma prefer_hlslcc gles
-    #pragma exclude_renderers d3d11_9x
-    #pragma target 2.0
-    #pragma vertex Vert
-    #pragma fragment Frag
     #pragma shader_feature _ALPHATEST_ON
     #pragma multi_compile_instancing
 
+    #pragma prefer_hlslcc gles
+    #pragma exclude_renderers d3d11_9x
+    #pragma target 2.0
+
+    #pragma vertex Vert
+    #pragma fragment Frag
     #include "Assets/uRaymarching/Shaders/Include/UniversalRP/DepthOnly.hlsl"
 
     ENDHLSL
@@ -135,13 +163,15 @@ Pass
 
     HLSLPROGRAM
 
+    #pragma shader_feature _SMOOTHNESS_TEXTURE_ALBEDO_CHANNEL_A
+    #pragma multi_compile_instancing
+
     #pragma prefer_hlslcc gles
     #pragma exclude_renderers d3d11_9x
     #pragma target 2.0
+
     #pragma vertex Vert
     #pragma fragment Frag
-    #pragma multi_compile_instancing
-    #pragma shader_feature _SMOOTHNESS_TEXTURE_ALBEDO_CHANNEL_A
     #include "Assets/uRaymarching/Shaders/Include/UniversalRP/ShadowCaster.hlsl"
 
     ENDHLSL
@@ -150,5 +180,6 @@ Pass
 }
 
 FallBack "Hidden/Universal Render Pipeline/FallbackError"
+CustomEditor "uShaderTemplate.MaterialEditor"
 
 }
