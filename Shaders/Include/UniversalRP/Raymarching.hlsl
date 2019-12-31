@@ -87,7 +87,7 @@ inline void InitRaymarchParams(inout RaymarchInfo ray, int maxLoop, float minDis
     ray.minDistance = minDistance;
 }
 
-#if defined(USE_CAMERA_DEPTH_TEXTURE_FOR_DEPTH_TEST) || defined(USE_CAMERA_DEPTH_TEXTURE_FOR_START_POS)
+#if defined(RAY_STOPS_AT_DEPTH_TEXTURE) || defined(RAY_STARTS_FROM_DEPTH_TEXTURE)
 
 TEXTURE2D(_CameraDepthTexture);
 SAMPLER(sampler_CameraDepthTexture);
@@ -98,7 +98,7 @@ inline void InitRaymarchWithCameraDepthTexture(inout RaymarchInfo ray, float3 po
     float depth = SAMPLE_DEPTH_TEXTURE(_CameraDepthTexture, sampler_CameraDepthTexture, uv);
     depth = LinearEyeDepth(depth, _ZBufferParams);
     float dist = depth / dot(ray.rayDir, GetCameraForward());
-#ifdef USE_CAMERA_DEPTH_TEXTURE_FOR_DEPTH_TEST
+#ifdef RAY_STOPS_AT_DEPTH_TEXTURE
     ray.maxDistance = dist;
 #else
     ray.startPos = GetCameraPosition() + ray.rayDir * dist;
@@ -111,7 +111,7 @@ inline void InitRaymarchWithCameraDepthTexture(inout RaymarchInfo ray, float3 po
     #define INITIALIZE_RAYMARCH_INFO(ray, i, loop, minDistance) \
         InitRaymarchFullScreen(ray, i.projPos); \
         InitRaymarchParams(ray, loop, minDistance);
-#elif defined(USE_CAMERA_DEPTH_TEXTURE_FOR_DEPTH_TEST) || defined(USE_CAMERA_DEPTH_TEXTURE_FOR_START_POS)
+#elif defined(RAY_STOPS_AT_DEPTH_TEXTURE) || defined(RAY_STARTS_FROM_DEPTH_TEXTURE)
     #define INITIALIZE_RAYMARCH_INFO(ray, i, loop, minDistance) \
         InitRaymarchObject(ray, i.positionSS, i.positionWS, i.normalWS); \
         InitRaymarchParams(ray, loop, minDistance); \
