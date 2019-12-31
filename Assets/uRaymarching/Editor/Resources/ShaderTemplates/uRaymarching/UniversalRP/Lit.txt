@@ -1,5 +1,7 @@
-﻿Shader "Raymarching/URP/Lit"
+Shader "Raymarching/<Name>"
 {
+
+@constants uRaymarching/Constants/uRaymarching_Default_Constants_UniversalRP
 
 Properties
 {
@@ -19,15 +21,16 @@ Properties
     _Loop("Loop", Range(1, 100)) = 30
     _MinDistance("Minimum Distance", Range(0.001, 0.1)) = 0.01
     _DistanceMultiplier("Distance Multiplier", Range(0.001, 2.0)) = 1.0
+@if ShadowCaster : true
     _ShadowLoop("Shadow Loop", Range(1, 100)) = 10
     _ShadowMinDistance("Shadow Minimum Distance", Range(0.001, 0.1)) = 0.01
     _ShadowExtraBias("Shadow Extra Bias", Range(-1.0, 1.0)) = 0.01
+@endif
 
-// @block Properties
-[Header(Additional Properties)]
-_Alpha("Alpha", Range(0.0, 1.0)) = 0.5
-_Occlusion("Occlusion", Range(0.0, 1.0)) = 0.5
-// @endblock
+@block Properties
+// [Header(Additional Properties)]
+// _Color2("Color2", Color) = (1.0, 1.0, 1.0, 1.0)
+@endblock
 }
 
 SubShader
@@ -35,27 +38,48 @@ SubShader
 
 Tags 
 { 
-    "RenderType" = "Opaque" 
-    "Queue" = "Geometry"
+    "RenderType" = "<RenderType=Opaque|Transparent|TransparentCutout|Background|Overlay>"
+    "Queue" = "<RenderQueue=Geometry|AlphaTest|Transparent|Background|Overlay|Geometry+1|Geometry-1>"
     "IgnoreProjector" = "True" 
     "RenderPipeline" = "UniversalPipeline" 
     "DisableBatching" = "True"
 }
 
-LOD 300
+LOD <LOD=300>
 
 HLSLINCLUDE
 
+@if FullScreen : false
+#define FULL_SCREEN
+@endif
+
+@if WorldSpace : false
+#define WORLD_SPACE 
+@endif
+
+@if FollowObjectScale : false
+#define OBJECT_SCALE
+@endif
+
+#define OBJECT_SHAPE_<ObjectShape=CUBE|NONE>
+
+@if CameraInsideObject : false
+#define CAMERA_INSIDE_OBJECT
+@endif
+
+@if UseRaymarchingDepth : true
+#define USE_RAYMARCHING_DEPTH
+@endif
+
 #define DISTANCE_FUNCTION DistanceFunction
 #define POST_EFFECT PostEffect
-#define OBJECT_SHAPE_CUBE
-#define USE_RAYMARCHING_DEPTH
 
 #include "Packages/com.unity.render-pipelines.universal/Shaders/LitInput.hlsl"
-#include "Assets/uRaymarching/Shaders/Include/SRP/Primitives.hlsl"
-#include "Assets/uRaymarching/Shaders/Include/SRP/Math.hlsl"
-#include "Assets/uRaymarching/Shaders/Include/SRP/Structs.hlsl"
+#include "<RaymarchingShaderDirectory>/Primitives.hlsl"
+#include "<RaymarchingShaderDirectory>/Math.hlsl"
+#include "<RaymarchingShaderDirectory>/Structs.hlsl"
 
+@block DistanceFunction
 inline float DistanceFunction(float3 pos)
 {
     float t = _Time.x;
@@ -68,14 +92,17 @@ inline float DistanceFunction(float3 pos)
         0.1 / length(pos * 2.0));
     return lerp(d1, d2, s);
 }
+@endblock
 
 #define PostEffectOutput SurfaceData
 
+@block PostEffect
 inline void PostEffect(RaymarchInfo ray, inout PostEffectOutput o)
 {
     float ao = 1.0 - pow(1.0 * ray.loop / ray.maxLoop, 2);
     o.occlusion = ao;
 }
+@endblock
 
 ENDHLSL
 
@@ -118,10 +145,16 @@ Pass
     #pragma exclude_renderers d3d11_9x
     #pragma target 2.0
 
+@if DepthTestWithDepthTexture : false
+    #define USE_CAMERA_DEPTH_TEXTURE_FOR_DEPTH_TEST
+@endif
+@if StartFromDepthTexture : false
     #define USE_CAMERA_DEPTH_TEXTURE_FOR_START_POS
+@endif
+
     #pragma vertex Vert
     #pragma fragment Frag
-    #include "Assets/uRaymarching/Shaders/Include/SRP/ForwardLit.hlsl"
+    #include "<RaymarchingShaderDirectory>/ForwardLit.hlsl"
 
     ENDHLSL
 }
@@ -146,11 +179,12 @@ Pass
 
     #pragma vertex Vert
     #pragma fragment Frag
-    #include "Assets/uRaymarching/Shaders/Include/SRP/DepthOnly.hlsl"
+    #include "<RaymarchingShaderDirectory>/DepthOnly.hlsl"
 
     ENDHLSL
 }
 
+@if ShadowCaster
 Pass
 {
     Name "ShadowCaster"
@@ -171,13 +205,15 @@ Pass
 
     #pragma vertex Vert
     #pragma fragment Frag
-    #include "Assets/uRaymarching/Shaders/Include/SRP/ShadowCaster.hlsl"
+    #include "<RaymarchingShaderDirectory>/ShadowCaster.hlsl"
 
     ENDHLSL
 }
+@endif
 
 }
 
 FallBack "Hidden/Universal Render Pipeline/FallbackError"
+CustomEditor "uShaderTemplate.MaterialEditor"
 
 }

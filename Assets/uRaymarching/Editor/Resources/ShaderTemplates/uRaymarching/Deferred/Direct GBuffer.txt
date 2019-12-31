@@ -1,7 +1,7 @@
 Shader "Raymarching/<Name>"
 {
 
-@constants uRaymarching/Constants/uRaymarching Default Constants
+@constants uRaymarching/Constants/uRaymarching_Default_Constants_Legacy
 
 Properties
 {
