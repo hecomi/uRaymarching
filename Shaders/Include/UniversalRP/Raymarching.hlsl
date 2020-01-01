@@ -61,6 +61,7 @@ inline void InitRaymarchObject(out RaymarchInfo ray, float4 positionSS, float3 p
     float3 cameraNearPlanePos = GetCameraPosition() + GetDistanceFromCameraToNearClipPlane(positionSS) * ray.rayDir;
     if (IsInnerObject(cameraNearPlanePos)) {
         ray.startPos = cameraNearPlanePos;
+        ray.polyPos = ray.startPos;
         ray.polyNormal = -ray.rayDir;
     }
 #endif
