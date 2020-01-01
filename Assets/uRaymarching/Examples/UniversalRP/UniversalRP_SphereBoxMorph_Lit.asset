@@ -64,7 +64,7 @@ MonoBehaviour:
       float a = 6 * PI * t;\n    float s = pow(sin(a), 2.0);\n    float d1 = Sphere(pos,
       0.75);\n    float d2 = RoundBox(\n        Repeat(pos, 0.2),\n        0.1 -
       0.1 * s,\n        0.1 / length(pos * 2.0));\n    return lerp(d1, d2, s);\n}"
-    folded: 0
+    folded: 1
   - key: PostEffect
     value: 'inline void PostEffect(RaymarchInfo ray, inout PostEffectOutput o)
 

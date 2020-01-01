@@ -27,7 +27,7 @@ public static class Editor
     public const string font = "uShaderTemplate/Font/NotoMono-regular";
     public const int fontSize = 12;
     public const bool wordWrap = false;
-    public const int minHeight = 200;
+    public const int height = 200;
 }
 
 public static class Setting
