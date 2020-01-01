@@ -63,7 +63,7 @@ inline float DistanceFunction(float3 pos)
         0.1 - 0.1 * s,
         0.1 / length(pos * 2.0));
     return lerp(d1, d2, s);
-}
+}	
 // @endblock
 
 #define PostEffectOutput SurfaceData
