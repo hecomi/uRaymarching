@@ -49,22 +49,18 @@ LOD <LOD=300>
 
 HLSLINCLUDE
 
-@if FullScreen : false
-#define FULL_SCREEN
-@endif
-
 @if WorldSpace : false
 #define WORLD_SPACE 
 @endif
 
-@if FollowObjectScale : false
+@if ObjectScale : false
 #define OBJECT_SCALE
 @endif
 
 #define OBJECT_SHAPE_<ObjectShape=CUBE|NONE>
 
-@if CameraInsideObject : false
-#define CAMERA_INSIDE_OBJECT
+@if CheckIfInsideObject : false
+#define CHECK_IF_INSIDE_OBJECT
 @endif
 
 #define DISTANCE_FUNCTION DistanceFunction

@@ -19,7 +19,7 @@ MonoBehaviour:
   - key: Name
     value: SphereBoxMorphForwardStandard
   - key: RaymarchingShaderDirectory
-    value: 
+    value: Assets/uRaymarching/Shaders/Include/Legacy
   - key: Culling
     value: Off
   - key: LOD
@@ -108,7 +108,7 @@ MonoBehaviour:
     value: "inline void PostEffect_AddPass(RaymarchInfo ray, inout PostEffectOutput
       o)\n{\n    o.Occlusion *= pow(1.0 - 1.0 * ray.loop / ray.maxLoop, 2.0);\n}"
     folded: 1
-  constants: {fileID: 11400000, guid: 4df15a420345e4af98645ddd9620aa5b, type: 2}
+  constants: {fileID: 11400000, guid: b54b57bcc672e49638fe9b2da609c4df, type: 2}
   basicFolded: 1
   conditionsFolded: 1
   variablesFolded: 1
