@@ -10,27 +10,27 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 3acd6fe57257048db802c1c4c2b75248, type: 3}
-  m_Name: UniversalRP_SphereBoxMorph
+  m_Name: UniversalRP_SphereBoxMorph_Unlit
   m_EditorClassIdentifier: 
-  shaderName: UniversalRP_SphereBoxMorph
-  shaderReference: {fileID: 4800000, guid: c05803c4ba37842bebdebfc4688a7579, type: 3}
-  shaderTemplate: uRaymarching/UniversalRP/Lit
+  shaderName: UniversalRP_SphereBoxMorph_Unlit
+  shaderReference: {fileID: 4800000, guid: 4fecff0e10b5e4afaa2a62be1a6010b7, type: 3}
+  shaderTemplate: uRaymarching/UniversalRP/Unlit
   variables:
   - key: Name
-    value: UniversalRP_SphereBoxMorph
+    value: UniversalRP_SphereBoxMorph_Unlit
   - key: ObjectShape
     value: CUBE
   - key: RaymarchingShaderDirectory
     value: Assets/uRaymarching/Shaders/Include/UniversalRP
   - key: RenderType
-    value: Opaque
+    value: Transparent
   - key: RenderQueue
-    value: Geometry
+    value: Transparent
   - key: LOD
-    value: 300
+    value: 100
   conditions:
   - key: ShadowCaster
-    value: 1
+    value: 0
   - key: FullScreen
     value: 0
   - key: WorldSpace
@@ -51,6 +51,10 @@ MonoBehaviour:
     value: 0
   - key: StartFromDepthTexture
     value: 0
+  - key: RayStopsAtDepthTexture
+    value: 1
+  - key: RayStartsFromDepthTexture
+    value: 0
   blocks:
   - key: Properties
     value: // _Color2("Color2", Color) = (1.0, 1.0, 1.0, 1.0)
@@ -60,17 +64,15 @@ MonoBehaviour:
       float a = 6 * PI * t;\n    float s = pow(sin(a), 2.0);\n    float d1 = Sphere(pos,
       0.75);\n    float d2 = RoundBox(\n        Repeat(pos, 0.2),\n        0.1 -
       0.1 * s,\n        0.1 / length(pos * 2.0));\n    return lerp(d1, d2, s);\n}"
-    folded: 1
+    folded: 0
   - key: PostEffect
-    value: 'inline void PostEffect(RaymarchInfo ray, inout PostEffectOutput o)
-
-      {
-
-      }'
-    folded: 1
+    value: "inline void PostEffect(RaymarchInfo ray, inout PostEffectOutput o)\n{\n   
+      float ao = 1.0 - pow(1.0 * ray.loop / ray.maxLoop, 2);\n    o.rgb *= ao;\n   
+      o.a *= pow(ao, 3);\n}"
+    folded: 0
   constants: {fileID: 11400000, guid: 3fc7bca6894034dec9dc046eade7d602, type: 2}
-  basicFolded: 1
-  conditionsFolded: 1
-  variablesFolded: 1
-  materialsFolded: 1
-  constantsFolded: 1
+  basicFolded: 0
+  conditionsFolded: 0
+  variablesFolded: 0
+  materialsFolded: 0
+  constantsFolded: 0
