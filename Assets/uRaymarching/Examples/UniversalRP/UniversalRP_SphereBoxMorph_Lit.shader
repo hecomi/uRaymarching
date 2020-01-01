@@ -43,6 +43,8 @@ HLSLINCLUDE
 
 #define OBJECT_SHAPE_CUBE
 
+#define CAMERA_INSIDE_OBJECT
+
 #define DISTANCE_FUNCTION DistanceFunction
 #define POST_EFFECT PostEffect
 
