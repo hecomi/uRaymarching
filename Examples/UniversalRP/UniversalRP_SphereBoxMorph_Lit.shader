@@ -19,6 +19,9 @@ Properties
     _Loop("Loop", Range(1, 100)) = 30
     _MinDistance("Minimum Distance", Range(0.001, 0.1)) = 0.01
     _DistanceMultiplier("Distance Multiplier", Range(0.001, 2.0)) = 1.0
+    _ShadowLoop("Shadow Loop", Range(1, 100)) = 10
+    _ShadowMinDistance("Shadow Minimum Distance", Range(0.001, 0.1)) = 0.01
+    _ShadowExtraBias("Shadow Extra Bias", Range(-1.0, 1.0)) = 0.01
 
 // @block Properties
 // _Color2("Color2", Color) = (1.0, 1.0, 1.0, 1.0)
@@ -43,7 +46,7 @@ HLSLINCLUDE
 
 #define OBJECT_SHAPE_CUBE
 
-#define CAMERA_INSIDE_OBJECT
+#define CHECK_IF_INSIDE_OBJECT
 
 #define DISTANCE_FUNCTION DistanceFunction
 #define POST_EFFECT PostEffect
@@ -145,6 +148,31 @@ Pass
     #pragma vertex Vert
     #pragma fragment Frag
     #include "Assets/uRaymarching/Shaders/Include/UniversalRP/DepthOnly.hlsl"
+
+    ENDHLSL
+}
+
+Pass
+{
+    Name "ShadowCaster"
+    Tags { "LightMode" = "ShadowCaster" }
+
+    ZWrite On
+    ZTest LEqual
+    Cull [_Cull]
+
+    HLSLPROGRAM
+
+    #pragma shader_feature _SMOOTHNESS_TEXTURE_ALBEDO_CHANNEL_A
+    #pragma multi_compile_instancing
+
+    #pragma prefer_hlslcc gles
+    #pragma exclude_renderers d3d11_9x
+    #pragma target 2.0
+
+    #pragma vertex Vert
+    #pragma fragment Frag
+    #include "Assets/uRaymarching/Shaders/Include/UniversalRP/ShadowCaster.hlsl"
 
     ENDHLSL
 }

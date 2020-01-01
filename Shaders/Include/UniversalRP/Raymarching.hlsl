@@ -40,26 +40,11 @@ inline bool _ShouldRaymarchFinish(RaymarchInfo ray)
 {
     if (ray.lastDistance < ray.minDistance || ray.totalLength > ray.maxDistance) return true;
 
-#if defined(OBJECT_SHAPE_CUBE) && !defined(FULL_SCREEN)
+#if defined(OBJECT_SHAPE_CUBE)
     if (!IsInnerObject(ray.endPos)) return true;
 #endif
 
     return false;
-}
-
-inline void InitRaymarchFullScreen(out RaymarchInfo ray, float4 positionSS)
-{
-    ray = (RaymarchInfo)0;
-    ray.rayDir = GetCameraDirection(positionSS);
-    ray.projPos = positionSS;
-#if defined(USING_STEREO_MATRICES)
-    float3 cameraPos = unity_StereoWorldSpaceCameraPos[unity_StereoEyeIndex];
-    cameraPos += float3(1., 0, 0) * unity_StereoEyeIndex;
-#else
-    float3 cameraPos = _WorldSpaceCameraPos;
-#endif
-    ray.startPos = cameraPos + GetCameraNearClip() * ray.rayDir;
-    ray.maxDistance = GetCameraFarClip();
 }
 
 inline void InitRaymarchObject(out RaymarchInfo ray, float4 positionSS, float3 positionWS, float3 normalWS)
@@ -72,7 +57,7 @@ inline void InitRaymarchObject(out RaymarchInfo ray, float4 positionSS, float3 p
     ray.polyNormal = normalize(normalWS);
     ray.maxDistance = GetCameraFarClip();
 
-#ifdef CAMERA_INSIDE_OBJECT
+#ifdef CHECK_IF_INSIDE_OBJECT
     float3 cameraNearPlanePos = GetCameraPosition() + GetDistanceFromCameraToNearClipPlane(positionSS) * ray.rayDir;
     if (IsInnerObject(cameraNearPlanePos)) {
         ray.startPos = cameraNearPlanePos;
@@ -107,11 +92,7 @@ inline void InitRaymarchWithCameraDepthTexture(inout RaymarchInfo ray, float3 po
 
 #endif
 
-#if defined(FULL_SCREEN)
-    #define INITIALIZE_RAYMARCH_INFO(ray, i, loop, minDistance) \
-        InitRaymarchFullScreen(ray, i.projPos); \
-        InitRaymarchParams(ray, loop, minDistance);
-#elif defined(RAY_STOPS_AT_DEPTH_TEXTURE) || defined(RAY_STARTS_FROM_DEPTH_TEXTURE)
+#if defined(RAY_STOPS_AT_DEPTH_TEXTURE) || defined(RAY_STARTS_FROM_DEPTH_TEXTURE)
     #define INITIALIZE_RAYMARCH_INFO(ray, i, loop, minDistance) \
         InitRaymarchObject(ray, i.positionSS, i.positionWS, i.normalWS); \
         InitRaymarchParams(ray, loop, minDistance); \
@@ -150,14 +131,7 @@ void Raymarch(inout RaymarchInfo ray)
 {
     if (!_Raymarch(ray)) discard;
 
-#ifdef FULL_SCREEN
-    float3 normal = GetDistanceFunctionNormal(ray.endPos);
-    ray.normal = EncodeNormalWS(normal);
-    ray.depth = EncodeDepthWS(ray.endPos);
-    return;
-#endif
-
-#ifdef CAMERA_INSIDE_OBJECT
+#ifdef CHECK_IF_INSIDE_OBJECT
     if (IsInnerObject(GetCameraPosition())) {
         if (ray.totalLength < GetCameraNearClip()) {
             ray.normal = EncodeNormalWS(-ray.rayDir);
