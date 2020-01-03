@@ -1,15 +1,15 @@
 uRaymarching
 ============
-**uRaymarching** is a raymarching shader templates with [uShaderTemplate](https://github.com/hecomi/uShaderTemplate) (the latest version of uShaderTemplate is included in this asset).
+**uRaymarching** is a raymarching shader templates using [uShaderTemplate](https://github.com/hecomi/uShaderTemplate) (the latest version of uShaderTemplate is included in this asset). The following functions are implemented:
 
-- Create a raymarching object only by writting a distance function
-- Supports both forward and deferred paths
-- Can be mixed with polygon objects
+- Create a raymarching object **only by writing a distance function**
+- Legacy (**Forward** / **Deferred**) and **UniversalRP** are supported
+  - HDRP will be supported in the future
+- Mixed with polygon objects
 - VR ready
 - Standard / Unlit / Transparent
 - Shadows for Directional / Spot / Point lights
-- Object-space rendering
-- Full-screen (only in Legacy pipelines)
+- Object-space and full-screen (full-screen is only in Legacy pipelines)
 
 
 Screenshots

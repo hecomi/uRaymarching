@@ -1,6 +1,11 @@
 uRaymarching - UniversalRP
 ==========================
 
+Requirements
+------------
+- Unity 2019.3.0f3 or later
+
+
 Conditions
 ----------
 - `Shadow Caster`
