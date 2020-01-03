@@ -1,0 +1,78 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3acd6fe57257048db802c1c4c2b75248, type: 3}
+  m_Name: UniversalRP_SphereBoxMorph_Unlit
+  m_EditorClassIdentifier: 
+  shaderName: UniversalRP_SphereBoxMorph_Unlit
+  shaderReference: {fileID: 4800000, guid: 4fecff0e10b5e4afaa2a62be1a6010b7, type: 3}
+  shaderTemplate: uRaymarching/UniversalRP/Unlit
+  variables:
+  - key: Name
+    value: UniversalRP_SphereBoxMorph_Unlit
+  - key: ObjectShape
+    value: CUBE
+  - key: RaymarchingShaderDirectory
+    value: Assets/uRaymarching/Shaders/Include/UniversalRP
+  - key: RenderType
+    value: Transparent
+  - key: RenderQueue
+    value: Transparent
+  - key: LOD
+    value: 100
+  conditions:
+  - key: ShadowCaster
+    value: 0
+  - key: FullScreen
+    value: 0
+  - key: WorldSpace
+    value: 0
+  - key: FollowObjectScale
+    value: 0
+  - key: CameraInsideObject
+    value: 0
+  - key: UseRaymarchingDepth
+    value: 1
+  - key: FallbackToDiffuse
+    value: 1
+  - key: UseCameraDepthTextureForDepthTest
+    value: 0
+  - key: UseCameraDepthTextureForStartPos
+    value: 0
+  - key: DepthTestWithDepthTexture
+    value: 0
+  - key: StartFromDepthTexture
+    value: 0
+  - key: RayStopsAtDepthTexture
+    value: 1
+  - key: RayStartsFromDepthTexture
+    value: 0
+  blocks:
+  - key: Properties
+    value: // _Color2("Color2", Color) = (1.0, 1.0, 1.0, 1.0)
+    folded: 0
+  - key: DistanceFunction
+    value: "inline float DistanceFunction(float3 pos)\n{\n    float t = _Time.x;\n   
+      float a = 6 * PI * t;\n    float s = pow(sin(a), 2.0);\n    float d1 = Sphere(pos,
+      0.75);\n    float d2 = RoundBox(\n        Repeat(pos, 0.2),\n        0.1 -
+      0.1 * s,\n        0.1 / length(pos * 2.0));\n    return lerp(d1, d2, s);\n}"
+    folded: 0
+  - key: PostEffect
+    value: "inline void PostEffect(RaymarchInfo ray, inout PostEffectOutput o)\n{\n   
+      float ao = 1.0 - pow(1.0 * ray.loop / ray.maxLoop, 2);\n    o.rgb *= ao;\n   
+      o.a *= pow(ao, 3);\n}"
+    folded: 0
+  constants: {fileID: 11400000, guid: 3fc7bca6894034dec9dc046eade7d602, type: 2}
+  basicFolded: 0
+  conditionsFolded: 0
+  variablesFolded: 0
+  materialsFolded: 0
+  constantsFolded: 0

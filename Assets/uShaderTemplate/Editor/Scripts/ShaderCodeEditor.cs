@@ -54,9 +54,8 @@ public class ShaderCodeEditor
             GUI.FocusControl(name);
         }
 
-        var minHeight = GUILayout.MinHeight(Common.Editor.minHeight);
-        var maxHeight = GUILayout.MaxHeight(Screen.height);
-        scrollPos_ = EditorGUILayout.BeginScrollView(scrollPos_, minHeight, maxHeight);
+        var height = GUILayout.MinHeight(Common.Editor.height);
+        scrollPos_ = EditorGUILayout.BeginScrollView(scrollPos_, height);
         {
             var style = new GUIStyle(GUI.skin.textArea);
             style.padding = new RectOffset(6, 6, 6, 6);

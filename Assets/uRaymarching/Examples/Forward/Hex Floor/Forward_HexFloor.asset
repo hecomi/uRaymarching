@@ -4,7 +4,8 @@
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
@@ -18,7 +19,7 @@ MonoBehaviour:
   - key: Name
     value: Forward_HexFloor
   - key: RaymarchingShaderDirectory
-    value: Assets/uRaymarching/Shaders/Include
+    value: Assets/uRaymarching/Shaders/Include/Legacy
   - key: Fuga
     value: aaaa
   - key: Piyo
@@ -92,36 +93,40 @@ MonoBehaviour:
     value: 1
   - key: DisableViewCulling
     value: 0
+  - key: UseGrabPass
+    value: 0
   blocks:
   - key: Properties
     value: '[Header(Additional Properties)]
 
-      _TopColor("TopColor", Color) = (1, 1, 1, 0)'
+      _TopColor("TopColor", Color) =
+      (1, 1, 1, 0)'
     folded: 1
   - key: DistanceFunction
     value: "inline float DistanceFunction(float3 pos)\n{\n    // combine even hex
-      tiles and odd hex tiles\n\n    float radius = 0.2;\n    float space = 0.1;\n
-      \   float wave = 0.1;\n    float3 objectScale = GetScale();\n    float height
-      = objectScale.y * 0.5 - wave;\n    float3 scale = objectScale * 0.5;\n\n    float
+      tiles and odd hex tiles\n\n    float radius = 0.2;\n    float space = 0.1;\n  
+      float wave = 0.1;\n    float3 objectScale = GetScale();\n    float height =
+      objectScale.y * 0.5 - wave;\n    float3 scale = objectScale * 0.5;\n\n    float
       pitch = radius * 2 + space;\n    float3 offset = float3(pitch * 0.5, 0.0, pitch
-      * 0.866);\n    float3 loop = float3(offset.x * 2, 1.0, offset.z * 2);\n\t\n
-      \   float3 p1 = pos;\n    float3 p2 = pos + offset;\n\n    // calculate indices\n
-      \   float2 pi1 = floor(p1 / loop).xz;\n    float2 pi2 = floor(p2 / loop).xz;\n
-      \   pi1.y = pi1.y * 2 + 1;\n    pi2.y = pi2.y * 2;\n\n    p1 = Repeat(p1, loop);\n
-      \   p2 = Repeat(p2, loop);\n\n    // draw hexagonal prisms with random heights\n
-      \   float dy1 = wave * sin(10 * Rand(pi1) + 5 * PI * _Time.x);\n    float dy2
-      = wave * sin(10 * Rand(pi2) + 5 * PI * _Time.x);\n    float d1 = HexagonalPrismY(float3(p1.x,
+      * 0.866);\n    float3 loop = float3(offset.x * 2, 1.0, offset.z * 2);\n\t\n  
+      float3 p1 = pos;\n    float3 p2 = pos + offset;\n\n    // calculate indices\n  
+      float2 pi1 = floor(p1 / loop).xz;\n    float2 pi2 = floor(p2 / loop).xz;\n  
+      pi1.y = pi1.y * 2 + 1;\n    pi2.y = pi2.y * 2;\n\n    p1 = Repeat(p1, loop);\n  
+      p2 = Repeat(p2, loop);\n\n    // draw hexagonal prisms with random heights\n  
+      float dy1 = wave * sin(10 * Rand(pi1) + 5 * PI * _Time.x);\n    float dy2 =
+      wave * sin(10 * Rand(pi2) + 5 * PI * _Time.x);\n    float d1 = HexagonalPrismY(float3(p1.x,
       pos.y + dy1, p1.z), float2(radius, height));\n    float d2 = HexagonalPrismY(float3(p2.x,
-      pos.y + dy2, p2.z), float2(radius, height));\n\n    // maximum indices\n    loop.z
-      *= 0.5;\n    float2 mpi1 = floor((scale.xz + float2(space * 0.5,    radius))
-      / loop.xz);\n    float2 mpi2 = floor((scale.xz + float2(radius + space, radius))
-      / loop.xz);\n\n    // remove partial hexagonal prisms\n    // if (pi1.x >= mpi1.x
-      || pi1.x <  -mpi1.x) d1 = max(d1, space);\n    // if (pi1.y >= mpi1.y || pi1.y
-      <= -mpi1.y) d1 = max(d1, space);\n    float o1 = any(\n        step(mpi1.x,
-      pi1.x) +\n        step(pi1.x + 1, -mpi1.x) +\n        step(mpi1.y, abs(pi1.y)));\n
-      \   d1 = o1 * max(d1, 0.1) + (1 - o1) * d1;\n\n    //  if (!all(max(mpi2 - abs(pi2),
-      0.0))) d2 = max(d2, space);\n    float o2 = any(step(mpi2, abs(pi2)));\n    d2
-      = o2 * max(d2, 0.1) + (1 - o2) * d2;\n\n    // combine\n    return min(d1, d2);\n}"
+      pos.y + dy2, p2.z), float2(radius, height));\n\n    // maximum indices\n   
+      loop.z *= 0.5;\n    float2 mpi1 = floor((scale.xz + float2(space * 0.5,   
+      radius)) / loop.xz);\n    float2 mpi2 = floor((scale.xz + float2(radius + space,
+      radius)) / loop.xz);\n\n    // remove partial hexagonal prisms\n    // if (pi1.x
+      >= mpi1.x || pi1.x <  -mpi1.x) d1 = max(d1, space);\n    // if (pi1.y >= mpi1.y
+      || pi1.y <= -mpi1.y) d1 = max(d1, space);\n    float o1 = any(\n        step(mpi1.x,
+      pi1.x) +\n        step(pi1.x + 1, -mpi1.x) +\n        step(mpi1.y, abs(pi1.y)));\n  
+      d1 = o1 * max(d1, 0.1) + (1 - o1) * d1;\n\n    //  if (!all(max(mpi2 - abs(pi2),
+      0.0))) d2 = max(d2, space);\n    float o2 = any(step(mpi2, abs(pi2)));\n   
+      d2 = o2 * max(d2, 0.1) + (1 - o2) * d2;\n\n    // combine\n    return min(d1,
+      d2);\n}"
     folded: 1
   - key: PostEffect
     value: "float4 _TopColor;\n\ninline void PostEffect(RaymarchInfo ray, inout PostEffectOutput
@@ -131,13 +136,15 @@ MonoBehaviour:
   - key: SurfaceFunction
     value: 'fixed4 c = tex2D (_MainTex, IN.uv_MainTex) * _Color;
 
-      o.Albedo = c.rgb;
+      o.Albedo
+      = c.rgb;
 
       o.Metallic = _Metallic;
 
       o.Smoothness = _Glossiness;
 
-      o.Alpha = c.a;
+      o.Alpha
+      = c.a;
 
       o.Normal = UnpackNormal(tex2D(_NormalTex, IN.uv_MainTex));'
     folded: 0
@@ -146,4 +153,4 @@ MonoBehaviour:
   conditionsFolded: 1
   variablesFolded: 1
   materialsFolded: 1
-  constantsFolded: 0
+  constantsFolded: 1

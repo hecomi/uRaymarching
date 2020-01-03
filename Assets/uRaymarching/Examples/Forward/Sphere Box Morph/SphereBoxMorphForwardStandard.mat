@@ -5,7 +5,8 @@ Material:
   serializedVersion: 6
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
   m_Name: SphereBoxMorphForwardStandard
   m_Shader: {fileID: 4800000, guid: 980f3e7cca17a4242940c01a08d42ce3, type: 3}
   m_ShaderKeywords: _ZWRITE_ON
@@ -22,6 +23,7 @@ Material:
     - _BlendDst: 10
     - _BlendSrc: 5
     - _Cull: 0
+    - _DistanceMultiplier: 1
     - _Glossiness: 0.8
     - _Loop: 50
     - _Metallic: 0

@@ -46,8 +46,8 @@ public class CodeEditor
         // IMPORTANT: 
         // Sadly, we cannot use TextEditor with (EditorGUILayout|EditorGUI).TextArea()... X(
         // And GUILayout.TextArea() cannot handle TAB key... ;_;
-        // GUI.TextArea needs a lot of tasks to implement absic functions... T_T
-        var editedCode = EditorGUILayout.TextArea(code, backStyle, GUILayout.ExpandHeight(true));
+        // GUI.TextArea needs a lot of tasks to implement basic functions... T_T
+        var editedCode = EditorGUILayout.TextArea(code, backStyle, options);
 
         // So, this does not work...
         // var editor = GUIUtility.GetStateObject(typeof(TextEditor), GUIUtility.keyboardControl) as TextEditor;

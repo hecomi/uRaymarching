@@ -318,13 +318,23 @@ public class GeneratorEditor : Editor
     {
         EditorGUILayout.BeginHorizontal();
         {
-            var buttonFontSize = GUI.skin.label.fontSize;
-            var buttonPadding = new RectOffset(12, 12, 6, 6);
-
             GUILayout.FlexibleSpace();
+
             var style = new GUIStyle(EditorStyles.miniButtonLeft);
+
+            var buttonFontSize = GUI.skin.label.fontSize;
+#if UNITY_2019_3_OR_NEWER
+            var buttonHeight = style.fixedHeight + 6;
+            var buttonPadding = new RectOffset(6, 6, 0, 0);
+#else
+            var buttonHeight = style.fixedHeight;
+            var buttonPadding = new RectOffset(12, 12, 6, 6);
+#endif
+
             style.fontSize = buttonFontSize;
             style.padding = buttonPadding;
+            style.fixedHeight = buttonHeight;
+
             if (GUILayout.Button("Export (Ctrl+R)", style))
             {
                 ExportShaderWithErrorCheck();
@@ -333,22 +343,18 @@ public class GeneratorEditor : Editor
             style = new GUIStyle(EditorStyles.miniButtonMid);
             style.fontSize = buttonFontSize;
             style.padding = buttonPadding;
+            style.fixedHeight = buttonHeight;
+
             if (GUILayout.Button("Create Material", style))
             {
                 CreateMaterial();
             }
 
-            style = new GUIStyle(EditorStyles.miniButtonMid);
-            style.fontSize = buttonFontSize;
-            style.padding = buttonPadding;
             if (GUILayout.Button("Reset to Default", style))
             {
                 ResetToDefault();
             }
 
-            style = new GUIStyle(EditorStyles.miniButtonMid);
-            style.fontSize = buttonFontSize;
-            style.padding = buttonPadding;
             if (GUILayout.Button("Update Template", style))
             {
                 OnTemplateChanged();
@@ -357,6 +363,8 @@ public class GeneratorEditor : Editor
             style = new GUIStyle(EditorStyles.miniButtonRight);
             style.fontSize = buttonFontSize;
             style.padding = buttonPadding;
+            style.fixedHeight = buttonHeight;
+
             if (GUILayout.Button("Reconvert All", style))
             {
                 ReconvertAll();
