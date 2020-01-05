@@ -67,6 +67,7 @@ HLSLINCLUDE
 #include "<RaymarchingShaderDirectory>/Primitives.hlsl"
 #include "<RaymarchingShaderDirectory>/Math.hlsl"
 #include "<RaymarchingShaderDirectory>/Structs.hlsl"
+#include "<RaymarchingShaderDirectory>/Utils.hlsl"
 
 @block DistanceFunction
 inline float DistanceFunction(float3 pos)

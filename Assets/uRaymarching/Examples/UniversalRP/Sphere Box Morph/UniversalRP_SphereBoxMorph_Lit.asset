@@ -38,7 +38,7 @@ MonoBehaviour:
   - key: FollowObjectScale
     value: 0
   - key: CameraInsideObject
-    value: 1
+    value: 0
   - key: UseRaymarchingDepth
     value: 1
   - key: FallbackToDiffuse
@@ -55,6 +55,10 @@ MonoBehaviour:
     value: 0
   - key: RayStartsFromDepthTexture
     value: 0
+  - key: ObjectScale
+    value: 0
+  - key: CheckIfInsideObject
+    value: 1
   blocks:
   - key: Properties
     value: // _Color2("Color2", Color) = (1.0, 1.0, 1.0, 1.0)
@@ -64,7 +68,7 @@ MonoBehaviour:
       float a = 6 * PI * t;\n    float s = pow(sin(a), 2.0);\n    float d1 = Sphere(pos,
       0.75);\n    float d2 = RoundBox(\n        Repeat(pos, 0.2),\n        0.1 -
       0.1 * s,\n        0.1 / length(pos * 2.0));\n    return lerp(d1, d2, s);\n}\t"
-    folded: 0
+    folded: 1
   - key: PostEffect
     value: 'inline void PostEffect(RaymarchInfo ray, inout PostEffectOutput o)
 
@@ -76,5 +80,5 @@ MonoBehaviour:
   basicFolded: 1
   conditionsFolded: 1
   variablesFolded: 1
-  materialsFolded: 0
+  materialsFolded: 1
   constantsFolded: 0
