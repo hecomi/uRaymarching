@@ -30,10 +30,10 @@ Material:
     - _DistanceMultiplier: 1
     - _Loop: 30
     - _Metallic: 0
-    - _MinDistance: 0.01
+    - _MinDistance: 0.0037
     - _ShadowExtraBias: 0.01
     - _ShadowLoop: 10
-    - _ShadowMinDistance: 0.01
+    - _ShadowMinDistance: 0.007
     - _Smoothness: 0.8
     - _ZWrite: 1
     m_Colors:
