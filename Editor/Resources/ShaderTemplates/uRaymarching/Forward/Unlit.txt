@@ -25,6 +25,7 @@ Properties
     _ShadowMinDistance("Shadow Minimum Distance", Range(0.001, 0.1)) = 0.01
     _ShadowExtraBias("Shadow Extra Bias", Range(0.0, 0.1)) = 0.01
 @endif
+    [PowerSlider(10.0)] _NormalDelta("NormalDelta", Range(0.00001, 0.1)) = 0.0001
 
 @block Properties
 // _Color2("Color2", Color) = (1.0, 1.0, 1.0, 1.0)

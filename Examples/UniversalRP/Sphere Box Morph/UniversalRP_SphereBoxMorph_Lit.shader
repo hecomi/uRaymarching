@@ -22,6 +22,7 @@ Properties
     _ShadowLoop("Shadow Loop", Range(1, 100)) = 10
     _ShadowMinDistance("Shadow Minimum Distance", Range(0.001, 0.1)) = 0.01
     _ShadowExtraBias("Shadow Extra Bias", Range(-1.0, 1.0)) = 0.01
+    [PowerSlider(10.0)] _NormalDelta("NormalDelta", Range(0.00001, 0.1)) = 0.0001
 
 // @block Properties
 // _Color2("Color2", Color) = (1.0, 1.0, 1.0, 1.0)
@@ -52,9 +53,10 @@ HLSLINCLUDE
 #define POST_EFFECT PostEffect
 
 #include "Packages/com.unity.render-pipelines.universal/Shaders/LitInput.hlsl"
-#include "Assets/uRaymarching/Shaders/Include/UniversalRP/Primitives.hlsl"
-#include "Assets/uRaymarching/Shaders/Include/UniversalRP/Math.hlsl"
-#include "Assets/uRaymarching/Shaders/Include/UniversalRP/Structs.hlsl"
+#include "Assets\uRaymarching\Shaders\Include\UniversalRP/Primitives.hlsl"
+#include "Assets\uRaymarching\Shaders\Include\UniversalRP/Math.hlsl"
+#include "Assets\uRaymarching\Shaders\Include\UniversalRP/Structs.hlsl"
+#include "Assets\uRaymarching\Shaders\Include\UniversalRP/Utils.hlsl"
 
 // @block DistanceFunction
 inline float DistanceFunction(float3 pos)
@@ -122,7 +124,7 @@ Pass
 
     #pragma vertex Vert
     #pragma fragment Frag
-    #include "Assets/uRaymarching/Shaders/Include/UniversalRP/ForwardLit.hlsl"
+    #include "Assets\uRaymarching\Shaders\Include\UniversalRP/ForwardLit.hlsl"
 
     ENDHLSL
 }
@@ -147,7 +149,7 @@ Pass
 
     #pragma vertex Vert
     #pragma fragment Frag
-    #include "Assets/uRaymarching/Shaders/Include/UniversalRP/DepthOnly.hlsl"
+    #include "Assets\uRaymarching\Shaders\Include\UniversalRP/DepthOnly.hlsl"
 
     ENDHLSL
 }
@@ -172,7 +174,7 @@ Pass
 
     #pragma vertex Vert
     #pragma fragment Frag
-    #include "Assets/uRaymarching/Shaders/Include/UniversalRP/ShadowCaster.hlsl"
+    #include "Assets\uRaymarching\Shaders\Include\UniversalRP/ShadowCaster.hlsl"
 
     ENDHLSL
 }

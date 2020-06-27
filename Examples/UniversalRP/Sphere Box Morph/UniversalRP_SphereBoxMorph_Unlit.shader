@@ -17,6 +17,8 @@ Properties
     _MinDistance("Minimum Distance", Range(0.001, 0.1)) = 0.01
     _DistanceMultiplier("Distance Multiplier", Range(0.001, 2.0)) = 1.0
 
+    [PowerSlider(10.0)] _NormalDelta("NormalDelta", Range(0.00001, 0.1)) = 0.0001
+
 // @block Properties
 // _Color2("Color2", Color) = (1.0, 1.0, 1.0, 1.0)
 // @endblock
@@ -44,9 +46,10 @@ HLSLINCLUDE
 #define POST_EFFECT PostEffect
 
 #include "Packages/com.unity.render-pipelines.universal/Shaders/LitInput.hlsl"
-#include "Assets/uRaymarching/Shaders/Include/UniversalRP/Primitives.hlsl"
-#include "Assets/uRaymarching/Shaders/Include/UniversalRP/Math.hlsl"
-#include "Assets/uRaymarching/Shaders/Include/UniversalRP/Structs.hlsl"
+#include "Assets\uRaymarching\Shaders\Include\UniversalRP/Primitives.hlsl"
+#include "Assets\uRaymarching\Shaders\Include\UniversalRP/Math.hlsl"
+#include "Assets\uRaymarching\Shaders\Include\UniversalRP/Structs.hlsl"
+#include "Assets\uRaymarching\Shaders\Include\UniversalRP/Utils.hlsl"
 
 // @block DistanceFunction
 inline float DistanceFunction(float3 pos)
@@ -97,7 +100,7 @@ Pass
 
     #pragma vertex Vert
     #pragma fragment Frag
-    #include "Assets/uRaymarching/Shaders/Include/UniversalRP/ForwardUnlit.hlsl"
+    #include "Assets\uRaymarching\Shaders\Include\UniversalRP/ForwardUnlit.hlsl"
 
     ENDHLSL
 }
@@ -122,7 +125,7 @@ Pass
 
     #pragma vertex Vert
     #pragma fragment Frag
-    #include "Assets/uRaymarching/Shaders/Include/UniversalRP/DepthOnly.hlsl"
+    #include "Assets\uRaymarching\Shaders\Include\UniversalRP/DepthOnly.hlsl"
 
     ENDHLSL
 }

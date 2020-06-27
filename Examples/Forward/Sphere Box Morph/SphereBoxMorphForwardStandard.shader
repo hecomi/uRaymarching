@@ -20,6 +20,7 @@ Properties
     _ShadowLoop("Shadow Loop", Range(1, 100)) = 30
     _ShadowMinDistance("Shadow Minimum Distance", Range(0.001, 0.1)) = 0.01
     _ShadowExtraBias("Shadow Extra Bias", Range(0.0, 0.1)) = 0.0
+    [PowerSlider(10.0)] _NormalDelta("NormalDelta", Range(0.00001, 0.1)) = 0.0001
 
 // @block Properties
 // _Color("Color", Color) = (1.0, 1.0, 1.0, 1.0)
@@ -52,7 +53,7 @@ CGINCLUDE
 #define PostEffectOutput SurfaceOutputStandard
 #define POST_EFFECT PostEffect
 
-#include "Assets/uRaymarching/Shaders/Include/Legacy/Common.cginc"
+#include "Assets\uRaymarching\Shaders\Include\Legacy/Common.cginc"
 
 // @block DistanceFunction
 inline float DistanceFunction(float3 pos)
@@ -85,7 +86,7 @@ Pass
     ZWrite [_ZWrite]
 
     CGPROGRAM
-    #include "Assets/uRaymarching/Shaders/Include/Legacy/ForwardBaseStandard.cginc"
+    #include "Assets\uRaymarching\Shaders\Include\Legacy/ForwardBaseStandard.cginc"
     #pragma target 3.0
     #pragma vertex Vert
     #pragma fragment Frag
@@ -102,7 +103,7 @@ Pass
     Blend One One
 
     CGPROGRAM
-    #include "Assets/uRaymarching/Shaders/Include/Legacy/ForwardAddStandard.cginc"
+    #include "Assets\uRaymarching\Shaders\Include\Legacy/ForwardAddStandard.cginc"
     #pragma target 3.0
     #pragma vertex Vert
     #pragma fragment Frag
@@ -118,7 +119,7 @@ Pass
     Tags { "LightMode" = "ShadowCaster" }
 
     CGPROGRAM
-    #include "Assets/uRaymarching/Shaders/Include/Legacy/ShadowCaster.cginc"
+    #include "Assets\uRaymarching\Shaders\Include\Legacy/ShadowCaster.cginc"
     #pragma target 3.0
     #pragma vertex Vert
     #pragma fragment Frag
