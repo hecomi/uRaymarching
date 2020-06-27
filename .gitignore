@@ -69,6 +69,9 @@ crashlytics-build.properties
 .vs
 .vscode
 
+# HLSL Tools for Unity
+shadertoolsconfig.json
+
 # For This Project
 Assets/3rd\ Parties/
 Wiki
