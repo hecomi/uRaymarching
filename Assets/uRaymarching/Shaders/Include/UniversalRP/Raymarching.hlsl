@@ -27,9 +27,11 @@ inline float _DistanceFunction(float3 pos)
 #endif
 }
 
+float _NormalDelta;
+
 inline float3 GetDistanceFunctionNormal(float3 pos)
 {
-    const float d = 1e-4;
+    const float d = _NormalDelta;
     return normalize(float3(
         _DistanceFunction(pos + float3(  d, 0.0, 0.0)) - _DistanceFunction(pos),
         _DistanceFunction(pos + float3(0.0,   d, 0.0)) - _DistanceFunction(pos),

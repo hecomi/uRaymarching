@@ -1,7 +1,5 @@
-Shader "Raymarching/<Name>"
+Shader "Raymarching/UniversalRP_SphereBoxMorph"
 {
-
-@constants uRaymarching/Constants/uRaymarching_Default_Constants_Legacy
 
 Properties
 {
@@ -17,16 +15,14 @@ Properties
     [IntRange] _Loop("Loop", Range(1, 100)) = 30
     _MinDistance("Minimum Distance", Range(0.001, 0.1)) = 0.01
     _DistanceMultiplier("Distance Multiplier", Range(0.001, 2.0)) = 1.0
-@if ShadowCaster : true
     [IntRange] _ShadowLoop("Shadow Loop", Range(1, 100)) = 10
     _ShadowMinDistance("Shadow Minimum Distance", Range(0.001, 0.1)) = 0.01
     _ShadowExtraBias("Shadow Extra Bias", Range(0.0, 0.1)) = 0.01
-@endif
     [PowerSlider(10.0)] _NormalDelta("NormalDelta", Range(0.00001, 0.1)) = 0.0001
 
-@block Properties
+// @block Properties
 // _Color2("Color2", Color) = (1.0, 1.0, 1.0, 1.0)
-@endblock
+// @endblock
 }
 
 SubShader
@@ -42,46 +38,28 @@ Cull [_Cull]
 
 CGINCLUDE
 
-@if FullScreen : false
-#define FULL_SCREEN
-@endif
+#define OBJECT_SHAPE_CUBE
 
-@if WorldSpace : false
-#define WORLD_SPACE
-@endif
-
-@if FollowObjectScale : false
-#define OBJECT_SCALE
-@endif
-
-#define OBJECT_SHAPE_<ObjectShape=CUBE|NONE>
-
-@if CameraInsideObject : false
-#define CAMERA_INSIDE_OBJECT
-@endif
-
-@if UseRaymarchingDepth : true
 #define USE_RAYMARCHING_DEPTH
-@endif
 
 #define DISTANCE_FUNCTION DistanceFunction
 #define POST_EFFECT PostEffect
 #define PostEffectOutput GBufferOut
 
-#include "<RaymarchingShaderDirectory>/Common.cginc"
+#include "Assets\uRaymarching\Shaders\Include\Legacy/Common.cginc"
 
-@block DistanceFunction
+// @block DistanceFunction
 inline float DistanceFunction(float3 pos)
 {
     return Sphere(pos, 0.5);
 }
-@endblock
+// @endblock
 
-@block PostEffect
+// @block PostEffect
 inline void PostEffect(RaymarchInfo ray, inout PostEffectOutput o)
 {
 }
-@endblock
+// @endblock
 
 ENDCG
 
@@ -97,7 +75,7 @@ Pass
     }
 
     CGPROGRAM
-    #include "<RaymarchingShaderDirectory>/DeferredDirect.cginc"
+    #include "Assets\uRaymarching\Shaders\Include\Legacy/DeferredDirect.cginc"
     #pragma target 3.0
     #pragma vertex Vert
     #pragma fragment Frag
@@ -107,13 +85,12 @@ Pass
     ENDCG
 }
 
-@if ShadowCaster
 Pass
 {
     Tags { "LightMode" = "ShadowCaster" }
 
     CGPROGRAM
-    #include "<RaymarchingShaderDirectory>/ShadowCaster.cginc"
+    #include "Assets\uRaymarching\Shaders\Include\Legacy/ShadowCaster.cginc"
     #pragma target 3.0
     #pragma vertex Vert
     #pragma fragment Frag
@@ -121,15 +98,10 @@ Pass
     #pragma multi_compile_shadowcaster
     ENDCG
 }
-@endif
 
 }
 
-@if FallbackToDiffuse : true
 Fallback "Diffuse"
-@else
-Fallback Off
-@endif
 
 CustomEditor "uShaderTemplate.MaterialEditor"
 
