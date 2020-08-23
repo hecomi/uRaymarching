@@ -1,7 +1,7 @@
 ﻿#ifndef CAMERA_CGINC
 #define CAMERA_CGINC
 
-inline float3 GetCameraPosition()    { return _WorldSpaceCameraPos;      }
+inline float3 GetCameraPosition()    { return UNITY_MATRIX_I_V._m03_m13_m23; }
 inline float3 GetCameraForward()     { return -UNITY_MATRIX_V[2].xyz;    }
 inline float3 GetCameraUp()          { return UNITY_MATRIX_V[1].xyz;     }
 inline float3 GetCameraRight()       { return UNITY_MATRIX_V[0].xyz;     }
