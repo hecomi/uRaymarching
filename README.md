@@ -1,6 +1,6 @@
 uRaymarching
 ============
-**uRaymarching** is a raymarching shader templates using [uShaderTemplate](https://github.com/hecomi/uShaderTemplate) (the latest version of uShaderTemplate is included in this asset). The following functions are implemented:
+**uRaymarching** is a raymarching shader templates using [uShaderTemplate](https://github.com/hecomi/uShaderTemplate). The following functions are implemented:
 
 - Create a raymarching object **only by writing a distance function**
 - Legacy (**Forward** / **Deferred**) and **UniversalRP** are supported
@@ -26,7 +26,10 @@ Check more examples here:
 
 Install
 -------
-Please download the latest version of .unitypackage from the [Releases](https://github.com/hecomi/uRaymarching/releases) page and extract it in your project.
+Please add `https://github.com/hecomi/uRaymarching.git#upm` to Package Manager.
+
+Alternatively, you can download the latest version of .unitypackage from the [Releases](https://github.com/hecomi/uRaymarching/releases) page.
+In this case, please also download the latest version of [uShaderTemplate](https://github.com/hecomi/uShaderTemplate/releases).
 
 
 How to use
