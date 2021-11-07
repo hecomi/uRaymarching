@@ -1,0 +1,26 @@
+name: Update-UPM-Branch
+
+on:
+  push:
+    tags:
+      - v*
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+
+      - name: Tag name
+        id: tag
+        run: echo ::set-output name=name::${GITHUB_REF#refs/tags/v}
+
+      - name: Create UPM Branches
+        uses: hecomi/create-upm-branch-action@main
+        with:
+          git-tag: ${{ steps.tag.outputs.name }}
+          pkg-root-dir-path: Assets/uRaymarching
+          samples-dir: Examples
