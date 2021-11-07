@@ -1,0 +1,19 @@
+{
+    "name": "uRaymarching.Editor",
+    "rootNamespace": "",
+    "references": [
+        "GUID:e42c32962c76a89428a9b0ba860e61f1",
+        "GUID:a0c568dd17c433c488d48cb56a032e0b"
+    ],
+    "includePlatforms": [
+        "Editor"
+    ],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

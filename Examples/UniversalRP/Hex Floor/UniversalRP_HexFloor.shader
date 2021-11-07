@@ -22,6 +22,7 @@ Properties
     _ShadowLoop("Shadow Loop", Range(1, 100)) = 10
     _ShadowMinDistance("Shadow Minimum Distance", Range(0.001, 0.1)) = 0.01
     _ShadowExtraBias("Shadow Extra Bias", Range(-1.0, 1.0)) = 0.01
+    [PowerSlider(10.0)] _NormalDelta("NormalDelta", Range(0.00001, 0.1)) = 0.0001
 
 // @block Properties
 [Header(Additional Properties)]
@@ -51,10 +52,10 @@ HLSLINCLUDE
 #define POST_EFFECT PostEffect
 
 #include "Packages/com.unity.render-pipelines.universal/Shaders/LitInput.hlsl"
-#include "Assets/uRaymarching/Shaders/Include/UniversalRP/Primitives.hlsl"
-#include "Assets/uRaymarching/Shaders/Include/UniversalRP/Math.hlsl"
-#include "Assets/uRaymarching/Shaders/Include/UniversalRP/Structs.hlsl"
-#include "Assets/uRaymarching/Shaders/Include/UniversalRP/Utils.hlsl"
+#include "Assets\uRaymarching\Shaders\Include\UniversalRP/Primitives.hlsl"
+#include "Assets\uRaymarching\Shaders\Include\UniversalRP/Math.hlsl"
+#include "Assets\uRaymarching\Shaders\Include\UniversalRP/Structs.hlsl"
+#include "Assets\uRaymarching\Shaders\Include\UniversalRP/Utils.hlsl"
 
 // @block DistanceFunction
 inline float DistanceFunction(float3 pos)
@@ -63,7 +64,7 @@ inline float DistanceFunction(float3 pos)
 
     float radius = 0.2;
     float space = 0.1;
-   float wave = 0.1;
+    float wave = 0.1;
     float3 objectScale = GetScale();
     float height = objectScale.y * 0.5 - wave;
     float3 scale = objectScale * 0.5;
@@ -72,17 +73,17 @@ inline float DistanceFunction(float3 pos)
     float3 offset = float3(pitch * 0.5, 0.0, pitch * 0.866);
     float3 loop = float3(offset.x * 2, 1.0, offset.z * 2);
 	
-   float3 p1 = pos;
+    float3 p1 = pos;
     float3 p2 = pos + offset;
 
     // calculate indices
-   float2 pi1 = floor(p1 / loop).xz;
+    float2 pi1 = floor(p1 / loop).xz;
     float2 pi2 = floor(p2 / loop).xz;
-   pi1.y = pi1.y * 2 + 1;
+    pi1.y = pi1.y * 2 + 1;
     pi2.y = pi2.y * 2;
 
     p1 = Repeat(p1, loop);
-   p2 = Repeat(p2, loop);
+    p2 = Repeat(p2, loop);
 
     // draw hexagonal prisms with random heights
    float dy1 = wave * sin(10 * Rand(pi1) + 5 * PI * _Time.x);
@@ -102,7 +103,7 @@ inline float DistanceFunction(float3 pos)
         step(mpi1.x, pi1.x) +
         step(pi1.x + 1, -mpi1.x) +
         step(mpi1.y, abs(pi1.y)));
-   d1 = o1 * max(d1, 0.1) + (1 - o1) * d1;
+    d1 = o1 * max(d1, 0.1) + (1 - o1) * d1;
 
     //  if (!all(max(mpi2 - abs(pi2), 0.0))) d2 = max(d2, space);
     float o2 = any(step(mpi2, abs(pi2)));
@@ -170,7 +171,7 @@ Pass
 
     #pragma vertex Vert
     #pragma fragment Frag
-    #include "Assets/uRaymarching/Shaders/Include/UniversalRP/ForwardLit.hlsl"
+    #include "Assets\uRaymarching\Shaders\Include\UniversalRP/ForwardLit.hlsl"
 
     ENDHLSL
 }
@@ -195,7 +196,7 @@ Pass
 
     #pragma vertex Vert
     #pragma fragment Frag
-    #include "Assets/uRaymarching/Shaders/Include/UniversalRP/DepthOnly.hlsl"
+    #include "Assets\uRaymarching\Shaders\Include\UniversalRP/DepthOnly.hlsl"
 
     ENDHLSL
 }
@@ -220,7 +221,7 @@ Pass
 
     #pragma vertex Vert
     #pragma fragment Frag
-    #include "Assets/uRaymarching/Shaders/Include/UniversalRP/ShadowCaster.hlsl"
+    #include "Assets\uRaymarching\Shaders\Include\UniversalRP/ShadowCaster.hlsl"
 
     ENDHLSL
 }
