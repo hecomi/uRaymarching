@@ -31,10 +31,13 @@ Material:
     - _Loop: 30
     - _Metallic: 0.5
     - _MinDistance: 0.01
+    - _NormalDelta: 0.0001
     - _ShadowExtraBias: 0.01
     - _ShadowLoop: 10
     - _ShadowMinDistance: 0.01
     - _Smoothness: 0.5
     - _ZWrite: 1
     m_Colors:
-    - _BaseColor: {r: 0.5, g: 0.5, b: 0.5, a: 1}
+    - _BaseColor: {r: 0.046457764, g: 0.43906042, b: 0.509434, a: 1}
+    - _TopColor: {r: 0.5141461, g: 1, b: 0, a: 0}
+  m_BuildTextureStacks: []

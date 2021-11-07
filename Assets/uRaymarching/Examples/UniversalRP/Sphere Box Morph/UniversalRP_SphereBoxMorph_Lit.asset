@@ -21,7 +21,7 @@ MonoBehaviour:
   - key: ObjectShape
     value: CUBE
   - key: RaymarchingShaderDirectory
-    value: Assets/uRaymarching/Shaders/Include/UniversalRP
+    value: Assets\uRaymarching\Shaders\Include\UniversalRP
   - key: RenderType
     value: Opaque
   - key: RenderQueue

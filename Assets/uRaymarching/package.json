@@ -1,0 +1,42 @@
+{
+    "name": "com.hecomi.uraymarching",
+    "version": "2.2.0",
+    "displayName": "uRaymarching",
+    "description": "Raymarching Shader Generator in Unity",
+    "author": {
+        "name": "hecomi",
+        "url": "https://tips.hecomi.com"
+    },
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/hecomi/uRaymarching"
+    },
+    "keywords": [
+        "unity",
+        "raymarch",
+        "raymarching"
+    ],
+    "license": "MIT License",
+    "samples": [
+        {
+            "displayName": "Common",
+            "description": "This is commonly required for all samples.",
+            "path": "Samples~/Common"
+        },
+        {
+            "displayName": "Forward",
+            "description": "Samples for the legacy Forward rendering pipeline.",
+            "path": "Samples~/Forward"
+        },
+        {
+            "displayName": "Deferred",
+            "description": "Samples for the legacy Deferred rendering pipeline.",
+            "path": "Samples~/Deferred"
+        },
+        {
+            "displayName": "UniversalRP",
+            "description": "Samples for the URP.",
+            "path": "Samples~/UniversalRP"
+        }
+    ]
+}
