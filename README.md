@@ -14,27 +14,31 @@ uRaymarching
 
 Screenshots
 -----------
-
 The following shapes are rendered in a 12-polygon cube.
 
 <img src="https://raw.githubusercontent.com/wiki/hecomi/uRaymarching/hex_floor.gif" width="720" />
 <img src="https://raw.githubusercontent.com/wiki/hecomi/uRaymarching/morph.gif" width="720" />
 
 Check more examples here:
+
 - [https://github.com/hecomi/uRaymarchingExamples](https://github.com/hecomi/uRaymarchingExamples)
 
 
 Install
 -------
-Please add `https://github.com/hecomi/uRaymarching.git#upm` to Package Manager.
+Please add the following git URLs to Package Manager.
 
-Alternatively, you can download the latest version of .unitypackage from the [Releases](https://github.com/hecomi/uRaymarching/releases) page.
-In this case, please also download the latest version of [uShaderTemplate](https://github.com/hecomi/uShaderTemplate/releases).
+- `https://github.com/hecomi/uShaderTemplate.git#upm`
+- `https://github.com/hecomi/uRaymarching.git#upm`
+
+Alternatively, you can download the latest version of .unitypackage from the following release pages.
+
+- [uShaderTemplate](https://github.com/hecomi/uShaderTemplate/releases).
+- [uRaymarching](https://github.com/hecomi/uRaymarching/releases)
 
 
 How to use
 ----------
-
 1. Select *Create > Shader > uShaderTemplate > Generator* in the Project view.
 2. Input *Shader Name* and select *Shader Template* from Inspector.
 3. Edit items in *Conditions*, *Variables*, *Properties*, *Distance Function*, and *Post Effect*.
