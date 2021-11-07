@@ -11,10 +11,8 @@
         "type": "git",
         "url": "https://github.com/hecomi/uRaymarching"
     },
-    {
-        "dependencies": {
-            "com.hecomi.ushadertemplate": "https://github.com/hecomi/uShaderTemplate.git#upm"
-        }
+    "dependencies": {
+        "com.hecomi.ushadertemplate": "https://github.com/hecomi/uShaderTemplate.git#upm"
     },
     "keywords": [
         "unity",
