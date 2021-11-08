@@ -1,5 +1,8 @@
 ﻿using UnityEngine;
 
+namespace uRaymarching
+{
+
 public class DebugCamera : MonoBehaviour
 {
     [SerializeField] float speedXY         = 1f;
@@ -75,4 +78,6 @@ public class DebugCamera : MonoBehaviour
         transform.position = Vector3.Lerp(transform.position, targetPos_, 0.5f);
         transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.Euler(targetEuler_), 0.5f);
     }
+}
+
 }
