@@ -1,5 +1,8 @@
 ﻿using UnityEngine;
 
+namespace uRaymarching
+{
+
 public class MoveAndRotateObject : MonoBehaviour
 {
     [SerializeField] float speed = 180;
@@ -23,4 +26,6 @@ public class MoveAndRotateObject : MonoBehaviour
             scale.y * Mathf.Cos(Time.time * Mathf.PI * 0.2f),
             scale.z * Mathf.Cos(Time.time * Mathf.PI * 0.3f));
     }
+}
+
 }
