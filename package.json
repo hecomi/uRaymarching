@@ -12,7 +12,7 @@
         "url": "https://github.com/hecomi/uRaymarching"
     },
     "dependencies": {
-        "com.hecomi.ushadertemplate": "^1.0.0"
+        "com.hecomi.ushadertemplate": "^1.0.1"
     },
     "keywords": [
         "unity",
