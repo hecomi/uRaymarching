@@ -1,8 +1,0 @@
-{
-  "hlsl.preprocessorDefinitions": {
-  },
-  "hlsl.additionalIncludeDirectories": [
-    ".",
-    "D:\\Applications\\2019.3.0f3\\Editor\\Data\\CGIncludes",
-  ]
-}
