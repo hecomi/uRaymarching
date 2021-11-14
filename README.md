@@ -26,16 +26,20 @@ Check more examples here:
 
 Install
 -------
-Please add the following git URLs to Package Manager.
 
-- `https://github.com/hecomi/uShaderTemplate.git#upm`
-- `https://github.com/hecomi/uRaymarching.git#upm`
-
-Alternatively, you can download the latest version of .unitypackage from the following release pages.
-
-- [uShaderTemplate](https://github.com/hecomi/uShaderTemplate/releases).
-- [uRaymarching](https://github.com/hecomi/uRaymarching/releases)
-
+- Unity Package
+  - Download the following .unitypackage-s.
+    - [uShaderTemplate](https://github.com/hecomi/uShaderTemplate/releases).
+    - [uRaymarching](https://github.com/hecomi/uRaymarching/releases)
+- Git URL (UPM)
+  - Add the following git URLs to Package Manager.
+    - `https://github.com/hecomi/uShaderTemplate.git#upm`
+    - `https://github.com/hecomi/uRaymarching.git#upm`
+- Scoped Registry (UPM)
+  - Add a scoped registry to your project.
+    - URL: `https://registry.npmjs.com`
+    - Scope: `com.hecomi`
+  - Install uRaymarching in Package Manager. 
 
 How to use
 ----------
