@@ -23,7 +23,7 @@ MonoBehaviour:
   - key: ObjectShape
     value: NONE
   - key: RaymarchingShaderDirectory
-    value: Assets/uRaymarching/Shaders/Include/Legacy
+    value: Assets\uRaymarching\Runtime\Shaders\Include\Legacy
   - key: RenderType
     value: Opaque
   - key: RenderQueue

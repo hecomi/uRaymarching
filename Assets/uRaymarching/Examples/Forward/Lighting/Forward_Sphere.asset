@@ -4,7 +4,8 @@
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
@@ -20,7 +21,7 @@ MonoBehaviour:
   - key: ObjectShape
     value: CUBE
   - key: RaymarchingShaderDirectory
-    value: Assets/uRaymarching/Shaders/Include
+    value: Assets\uRaymarching\Runtime\Shaders\Include\Legacy
   - key: RenderType
     value: Opaque
   - key: RenderQueue
@@ -59,7 +60,8 @@ MonoBehaviour:
     value: // _Color2("Color2", Color) = (1.0, 1.0, 1.0, 1.0)
     folded: 1
   - key: DistanceFunction
-    value: "inline float DistanceFunction(float3 pos)\n{\n    return Sphere(pos, 0.5);\n}"
+    value: "inline float DistanceFunction(float3 pos)\n{\n    return Sphere(pos,
+      0.5);\n}"
     folded: 1
   - key: PostEffect
     value: 'inline void PostEffect(RaymarchInfo ray, inout PostEffectOutput o)
@@ -68,7 +70,7 @@ MonoBehaviour:
 
       }'
     folded: 0
-  constants: {fileID: 11400000, guid: 4df15a420345e4af98645ddd9620aa5b, type: 2}
+  constants: {fileID: 11400000, guid: b54b57bcc672e49638fe9b2da609c4df, type: 2}
   basicFolded: 1
   conditionsFolded: 1
   variablesFolded: 1

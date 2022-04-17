@@ -49,20 +49,16 @@ CGINCLUDE
 #define POST_EFFECT PostEffect
 #define PostEffectOutput float4
 
-#include "Assets\uRaymarching\Shaders\Include\Legacy/Common.cginc"
+#include "Assets\uRaymarching\Runtime\Shaders\Include\Legacy/Common.cginc"
 
 // @block DistanceFunction
 inline float DistanceFunction(float3 pos)
 {
-    float t = _Time.x;
-   float a = 6 * PI * t;
-    float s = pow(sin(a), 2.0);
-    float d1 = Sphere(pos, 0.75);
-    float d2 = RoundBox(
-        Repeat(pos, 0.2),
-        0.1 - 0.1 * s,
-        0.1 / length(pos * 2.0));
-    return lerp(d1, d2, s);
+    float r = abs(sin(2 * PI * _Time.y / 2.0));
+    float d1 = RoundBox(Repeat(pos, float3(6, 6, 6)), 1 - r, r);
+    float d2 = Sphere(pos, 3.0);
+    float d3 = Plane(pos - float3(0, -3, 0), float3(0, 1, 0));
+    return SmoothMin(SmoothMin(d1, d2, 1.0), d3, 1.0);
 }
 // @endblock
 
@@ -87,7 +83,7 @@ Pass
     ZWrite [_ZWrite]
 
     CGPROGRAM
-    #include "Assets\uRaymarching\Shaders\Include\Legacy/ForwardBaseUnlit.cginc"
+    #include "Assets\uRaymarching\Runtime\Shaders\Include\Legacy/ForwardBaseUnlit.cginc"
     #pragma target 3.0
     #pragma vertex Vert
     #pragma fragment Frag
@@ -102,7 +98,7 @@ Pass
     Tags { "LightMode" = "ShadowCaster" }
 
     CGPROGRAM
-    #include "Assets\uRaymarching\Shaders\Include\Legacy/ShadowCaster.cginc"
+    #include "Assets\uRaymarching\Runtime\Shaders\Include\Legacy/ShadowCaster.cginc"
     #pragma target 3.0
     #pragma vertex Vert
     #pragma fragment Frag

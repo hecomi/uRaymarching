@@ -48,7 +48,7 @@ CGINCLUDE
 #define POST_EFFECT PostEffect
 #define PostEffectOutput SurfaceOutputStandard
 
-#include "Assets\uRaymarching\Shaders\Include\Legacy/Common.cginc"
+#include "Assets\uRaymarching\Runtime\Shaders\Include\Legacy/Common.cginc"
 
 // @block DistanceFunction
 inline float DistanceFunction(float3 pos)
@@ -57,7 +57,7 @@ inline float DistanceFunction(float3 pos)
 
     float radius = 0.2;
     float space = 0.1;
-    float wave = 0.1;
+   float wave = 0.1;
     float3 objectScale = GetScale();
     float height = objectScale.y * 0.5 - wave;
     float3 scale = objectScale * 0.5;
@@ -66,20 +66,20 @@ inline float DistanceFunction(float3 pos)
     float3 offset = float3(pitch * 0.5, 0.0, pitch * 0.866);
     float3 loop = float3(offset.x * 2, 1.0, offset.z * 2);
 	
-    float3 p1 = pos;
+   float3 p1 = pos;
     float3 p2 = pos + offset;
 
     // calculate indices
-    float2 pi1 = floor(p1 / loop).xz;
+   float2 pi1 = floor(p1 / loop).xz;
     float2 pi2 = floor(p2 / loop).xz;
-    pi1.y = pi1.y * 2 + 1;
+   pi1.y = pi1.y * 2 + 1;
     pi2.y = pi2.y * 2;
 
     p1 = Repeat(p1, loop);
-    p2 = Repeat(p2, loop);
+   p2 = Repeat(p2, loop);
 
     // draw hexagonal prisms with random heights
-    float dy1 = wave * sin(10 * Rand(pi1) + 5 * PI * _Time.x);
+   float dy1 = wave * sin(10 * Rand(pi1) + 5 * PI * _Time.x);
     float dy2 = wave * sin(10 * Rand(pi2) + 5 * PI * _Time.x);
     float d1 = HexagonalPrismY(float3(p1.x, pos.y + dy1, p1.z), float2(radius, height));
     float d2 = HexagonalPrismY(float3(p2.x, pos.y + dy2, p2.z), float2(radius, height));
@@ -96,7 +96,7 @@ inline float DistanceFunction(float3 pos)
         step(mpi1.x, pi1.x) +
         step(pi1.x + 1, -mpi1.x) +
         step(mpi1.y, abs(pi1.y)));
-    d1 = o1 * max(d1, 0.1) + (1 - o1) * d1;
+   d1 = o1 * max(d1, 0.1) + (1 - o1) * d1;
 
     //  if (!all(max(mpi2 - abs(pi2), 0.0))) d2 = max(d2, space);
     float o2 = any(step(mpi2, abs(pi2)));
@@ -132,7 +132,7 @@ Pass
     }
 
     CGPROGRAM
-    #include "Assets\uRaymarching\Shaders\Include\Legacy/DeferredStandard.cginc"
+    #include "Assets\uRaymarching\Runtime\Shaders\Include\Legacy/DeferredStandard.cginc"
     #pragma target 3.0
     #pragma vertex Vert
     #pragma fragment Frag
@@ -147,7 +147,7 @@ Pass
     Tags { "LightMode" = "ShadowCaster" }
 
     CGPROGRAM
-    #include "Assets\uRaymarching\Shaders\Include\Legacy/ShadowCaster.cginc"
+    #include "Assets\uRaymarching\Runtime\Shaders\Include\Legacy/ShadowCaster.cginc"
     #pragma target 3.0
     #pragma vertex Vert
     #pragma fragment Frag

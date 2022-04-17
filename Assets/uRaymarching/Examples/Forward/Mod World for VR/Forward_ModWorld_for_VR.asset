@@ -4,7 +4,8 @@
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
@@ -22,7 +23,7 @@ MonoBehaviour:
   - key: ObjectShape
     value: NONE
   - key: RaymarchingShaderDirectory
-    value: Assets/uRaymarching/Shaders/Include
+    value: Assets\uRaymarching\Runtime\Shaders\Include\Legacy
   - key: RenderType
     value: Opaque
   - key: RenderQueue
@@ -54,6 +55,8 @@ MonoBehaviour:
     value: 0
   - key: DisableViewCulling
     value: 1
+  - key: UseGrabPass
+    value: 0
   blocks:
   - key: Properties
     value: '[Header(Additional Parameters)]
@@ -69,11 +72,11 @@ MonoBehaviour:
     folded: 1
   - key: PostEffect
     value: "sampler2D _Grid;\nfloat4 _Grid_ST;\n\ninline void PostEffect(RaymarchInfo
-      ray, inout PostEffectOutput o)\n{\n    float ao = 1.0 - 1.0 * ray.loop / ray.maxLoop;\n
-      \   o.Emission += tex2D(_Grid, ray.endPos.xy * _Grid_ST.xy + _Grid_ST.zw) *
-      ao;\n    o.Occlusion *= ao;\n}"
+      ray, inout PostEffectOutput o)\n{\n    float ao = 1.0 - 1.0 * ray.loop / ray.maxLoop;\n  
+      o.Emission += tex2D(_Grid, ray.endPos.xy * _Grid_ST.xy + _Grid_ST.zw) * ao;\n   
+      o.Occlusion *= ao;\n}"
     folded: 1
-  constants: {fileID: 11400000, guid: 4df15a420345e4af98645ddd9620aa5b, type: 2}
+  constants: {fileID: 11400000, guid: b54b57bcc672e49638fe9b2da609c4df, type: 2}
   basicFolded: 1
   conditionsFolded: 1
   variablesFolded: 1

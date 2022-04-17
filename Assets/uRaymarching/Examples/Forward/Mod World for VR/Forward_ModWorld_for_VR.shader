@@ -56,7 +56,7 @@ CGINCLUDE
 #define PostEffectOutput SurfaceOutputStandard
 #define POST_EFFECT PostEffect
 
-#include "Assets\uRaymarching\Shaders\Include\Legacy/Common.cginc"
+#include "Assets\uRaymarching\Runtime\Shaders\Include\Legacy/Common.cginc"
 
 // @block DistanceFunction
 inline float DistanceFunction(float3 pos)
@@ -76,7 +76,7 @@ float4 _Grid_ST;
 inline void PostEffect(RaymarchInfo ray, inout PostEffectOutput o)
 {
     float ao = 1.0 - 1.0 * ray.loop / ray.maxLoop;
-    o.Emission += tex2D(_Grid, ray.endPos.xy * _Grid_ST.xy + _Grid_ST.zw) * ao;
+   o.Emission += tex2D(_Grid, ray.endPos.xy * _Grid_ST.xy + _Grid_ST.zw) * ao;
     o.Occlusion *= ao;
 }
 // @endblock
@@ -90,7 +90,7 @@ Pass
     ZWrite [_ZWrite]
 
     CGPROGRAM
-    #include "Assets\uRaymarching\Shaders\Include\Legacy/ForwardBaseStandard.cginc"
+    #include "Assets\uRaymarching\Runtime\Shaders\Include\Legacy/ForwardBaseStandard.cginc"
     #pragma target 3.0
     #pragma vertex Vert
     #pragma fragment Frag
@@ -107,7 +107,7 @@ Pass
     Blend One One
 
     CGPROGRAM
-    #include "Assets\uRaymarching\Shaders\Include\Legacy/ForwardAddStandard.cginc"
+    #include "Assets\uRaymarching\Runtime\Shaders\Include\Legacy/ForwardAddStandard.cginc"
     #pragma target 3.0
     #pragma vertex Vert
     #pragma fragment Frag
@@ -123,7 +123,7 @@ Pass
     Tags { "LightMode" = "ShadowCaster" }
 
     CGPROGRAM
-    #include "Assets\uRaymarching\Shaders\Include\Legacy/ShadowCaster.cginc"
+    #include "Assets\uRaymarching\Runtime\Shaders\Include\Legacy/ShadowCaster.cginc"
     #pragma target 3.0
     #pragma vertex Vert
     #pragma fragment Frag
