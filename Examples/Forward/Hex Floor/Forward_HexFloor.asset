@@ -19,7 +19,7 @@ MonoBehaviour:
   - key: Name
     value: Forward_HexFloor
   - key: RaymarchingShaderDirectory
-    value: Assets/uRaymarching/Shaders/Include/Legacy
+    value: Assets\uRaymarching\Runtime\Shaders\Include\Legacy
   - key: Fuga
     value: aaaa
   - key: Piyo
@@ -148,7 +148,7 @@ MonoBehaviour:
 
       o.Normal = UnpackNormal(tex2D(_NormalTex, IN.uv_MainTex));'
     folded: 0
-  constants: {fileID: 11400000, guid: 4df15a420345e4af98645ddd9620aa5b, type: 2}
+  constants: {fileID: 11400000, guid: b54b57bcc672e49638fe9b2da609c4df, type: 2}
   basicFolded: 1
   conditionsFolded: 1
   variablesFolded: 1

@@ -54,7 +54,7 @@ CGINCLUDE
 #define POST_EFFECT PostEffect
 #define PostEffectOutput SurfaceOutputStandard
 
-#include "Assets\uRaymarching\Shaders\Include\Legacy/Common.cginc"
+#include "Assets\uRaymarching\Runtime\Shaders\Include\Legacy/Common.cginc"
 
 // @block DistanceFunction
 inline float DistanceFunction(float3 pos)
@@ -75,7 +75,7 @@ inline void PostEffect(RaymarchInfo ray, inout PostEffectOutput o)
 {
     o.Emission += tex2D(_Grid, ray.endPos.xy * _Grid_ST.xy + _Grid_ST.zw);
     float ao = 1.0 - 1.0 * ray.loop / ray.maxLoop;
-    o.Occlusion *= ao;
+   o.Occlusion *= ao;
     o.Emission *= ao;
 }
 // @endblock
@@ -94,7 +94,7 @@ Pass
     }
 
     CGPROGRAM
-    #include "Assets\uRaymarching\Shaders\Include\Legacy/DeferredStandard.cginc"
+    #include "Assets\uRaymarching\Runtime\Shaders\Include\Legacy/DeferredStandard.cginc"
     #pragma target 3.0
     #pragma vertex Vert
     #pragma fragment Frag
