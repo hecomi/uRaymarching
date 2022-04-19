@@ -49,7 +49,7 @@ CGINCLUDE
 #define POST_EFFECT PostEffect
 #define PostEffectOutput float4
 
-#include "Assets\uRaymarching\Runtime\Shaders\Include\Legacy/Common.cginc"
+#include "Assets/uRaymarching/Runtime/Shaders/Include/Legacy/Common.cginc"
 
 // @block DistanceFunction
 inline float DistanceFunction(float3 pos)
@@ -83,7 +83,7 @@ Pass
     ZWrite [_ZWrite]
 
     CGPROGRAM
-    #include "Assets\uRaymarching\Runtime\Shaders\Include\Legacy/ForwardBaseUnlit.cginc"
+    #include "Assets/uRaymarching/Runtime/Shaders/Include/Legacy/ForwardBaseUnlit.cginc"
     #pragma target 3.0
     #pragma vertex Vert
     #pragma fragment Frag
@@ -98,7 +98,7 @@ Pass
     Tags { "LightMode" = "ShadowCaster" }
 
     CGPROGRAM
-    #include "Assets\uRaymarching\Runtime\Shaders\Include\Legacy/ShadowCaster.cginc"
+    #include "Assets/uRaymarching/Runtime/Shaders/Include/Legacy/ShadowCaster.cginc"
     #pragma target 3.0
     #pragma vertex Vert
     #pragma fragment Frag
