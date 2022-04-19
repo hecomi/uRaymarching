@@ -46,10 +46,10 @@ HLSLINCLUDE
 #define POST_EFFECT PostEffect
 
 #include "Packages/com.unity.render-pipelines.universal/Shaders/LitInput.hlsl"
-#include "Assets\uRaymarching\Runtime\Shaders\Include\UniversalRP/Primitives.hlsl"
-#include "Assets\uRaymarching\Runtime\Shaders\Include\UniversalRP/Math.hlsl"
-#include "Assets\uRaymarching\Runtime\Shaders\Include\UniversalRP/Structs.hlsl"
-#include "Assets\uRaymarching\Runtime\Shaders\Include\UniversalRP/Utils.hlsl"
+#include "Assets/uRaymarching/Runtime/Shaders/Include/UniversalRP/Primitives.hlsl"
+#include "Assets/uRaymarching/Runtime/Shaders/Include/UniversalRP/Math.hlsl"
+#include "Assets/uRaymarching/Runtime/Shaders/Include/UniversalRP/Structs.hlsl"
+#include "Assets/uRaymarching/Runtime/Shaders/Include/UniversalRP/Utils.hlsl"
 
 // @block DistanceFunction
 inline float DistanceFunction(float3 pos)
@@ -100,7 +100,7 @@ Pass
 
     #pragma vertex Vert
     #pragma fragment Frag
-    #include "Assets\uRaymarching\Runtime\Shaders\Include\UniversalRP/ForwardUnlit.hlsl"
+    #include "Assets/uRaymarching/Runtime/Shaders/Include/UniversalRP/ForwardUnlit.hlsl"
 
     ENDHLSL
 }
@@ -125,7 +125,7 @@ Pass
 
     #pragma vertex Vert
     #pragma fragment Frag
-    #include "Assets\uRaymarching\Runtime\Shaders\Include\UniversalRP/DepthOnly.hlsl"
+    #include "Assets/uRaymarching/Runtime/Shaders/Include/UniversalRP/DepthOnly.hlsl"
 
     ENDHLSL
 }
