@@ -91,6 +91,20 @@ FragOutput Frag(Varyings input)
     #endif
 #endif
 
+    inputData.normalizedScreenSpaceUV = GetNormalizedScreenSpaceUV(input.positionCS);
+    inputData.shadowMask = SAMPLE_SHADOWMASK(input.staticLightmapUV);
+
+#if defined(DEBUG_DISPLAY)
+    #if defined(DYNAMICLIGHTMAP_ON)
+    inputData.dynamicLightmapUV = input.dynamicLightmapUV;
+    #endif
+    #if defined(LIGHTMAP_ON)
+    inputData.staticLightmapUV = input.staticLightmapUV;
+    #else
+    inputData.vertexSH = input.vertexSH;
+    #endif
+#endif
+
     SurfaceData surfaceData = (SurfaceData)0;;
     InitializeStandardLitSurfaceData(float2(0, 0), surfaceData);
 
@@ -98,17 +112,13 @@ FragOutput Frag(Varyings input)
     POST_EFFECT(ray, surfaceData);
 #endif
 
-    half4 color = UniversalFragmentPBR(
-        inputData, 
-        surfaceData.albedo, 
-        surfaceData.metallic, 
-        surfaceData.specular, 
-        surfaceData.smoothness, 
-        surfaceData.occlusion, 
-        surfaceData.emission, 
-        surfaceData.alpha);
+#ifdef _DBUFFER
+    ApplyDecalToSurfaceData(input.positionCS, surfaceData, inputData);
+#endif
 
+    half4 color = UniversalFragmentPBR(inputData, surfaceData);
     color.rgb = MixFog(color.rgb, inputData.fogCoord);
+    color.a = OutputAlpha(color.a, _Surface);
 
     FragOutput o;
     o.color = color;
