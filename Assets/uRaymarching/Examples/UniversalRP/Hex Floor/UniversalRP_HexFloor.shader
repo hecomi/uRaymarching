@@ -203,6 +203,30 @@ Pass
 
 Pass
 {
+    Name "DepthNormals"
+    Tags { "LightMode" = "DepthNormals" }
+
+    ZWrite On
+    Cull [_Cull]
+
+    HLSLPROGRAM
+
+    #pragma shader_feature _ALPHATEST_ON
+    #pragma multi_compile_instancing
+
+    #pragma prefer_hlslcc gles
+    #pragma exclude_renderers d3d11_9x
+    #pragma target 2.0
+
+    #pragma vertex Vert
+    #pragma fragment Frag
+    #include "Assets/uRaymarching/Runtime/Shaders/Include/UniversalRP/DepthNormals.hlsl"
+
+    ENDHLSL
+}
+
+Pass
+{
     Name "ShadowCaster"
     Tags { "LightMode" = "ShadowCaster" }
 
