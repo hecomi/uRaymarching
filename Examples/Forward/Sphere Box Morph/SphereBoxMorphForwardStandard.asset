@@ -19,7 +19,7 @@ MonoBehaviour:
   - key: Name
     value: SphereBoxMorphForwardStandard
   - key: RaymarchingShaderDirectory
-    value: Assets/uRaymarching/Shaders/Include/Legacy
+    value: Assets/uRaymarching/Runtime/Shaders/Include/Legacy
   - key: Culling
     value: Off
   - key: LOD
@@ -74,13 +74,13 @@ MonoBehaviour:
   blocks:
   - key: Properties
     value: // _Color("Color", Color) = (1.0, 1.0, 1.0, 1.0)
-    folded: 0
+    folded: 1
   - key: DistanceFunction
     value: "inline float DistanceFunction(float3 pos)\n{\n    float t = _Time.x;\n  
       float a = 6 * PI * t;\n    float s = pow(sin(a), 2.0);\n    float d1 = Sphere(pos,
       0.75);\n    float d2 = RoundBox(\n        Repeat(pos, 0.2),\n        0.1 -
       0.1 * s,\n        0.1 / length(pos * 2.0));\n    return lerp(d1, d2, s);\n}"
-    folded: 0
+    folded: 1
   - key: PostEffect
     value: "inline void PostEffect(RaymarchInfo ray, inout PostEffectOutput o)\n{\n  
       o.Occlusion *= pow(1.0 - 1.0 * ray.loop / ray.maxLoop, 2.0);\n}"
