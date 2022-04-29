@@ -77,3 +77,4 @@ Wiki
 shadertoolsconfig.json
 .vsconfig
 .vscode
+.DS_Store
