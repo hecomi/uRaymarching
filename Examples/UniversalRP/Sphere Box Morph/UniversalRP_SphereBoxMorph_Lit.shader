@@ -3,19 +3,26 @@ Shader "Raymarching/UniversalRP_SphereBoxMorph_Lit"
 
 Properties
 {
-    [Header(Base)]
+    [Header(Base)][Space]
     [MainColor] _BaseColor("Color", Color) = (0.5, 0.5, 0.5, 1)
     [HideInInspector][MainTexture] _BaseMap("Albedo", 2D) = "white" {}
     [Gamma] _Metallic("Metallic", Range(0.0, 1.0)) = 0.5
     _Smoothness("Smoothness", Range(0.0, 1.0)) = 0.5
+    [ToggleOff] _EnvironmentReflections("Environment Reflections", Float) = 1.0
 
-    [Header(Pass)]
+    [Header(ClearCoat (Forward Only))][Space]
+    [Toggle] _ClearCoat("Clear Coat", Float) = 0.0
+    [HideInInspector] _ClearCoatMap("Clear Coat Map", 2D) = "white" {}
+    _ClearCoatMask("Clear Coat Mask", Range(0.0, 1.0)) = 0.0
+    _ClearCoatSmoothness("Clear Coat Smoothness", Range(0.0, 1.0)) = 1.0
+
+    [Header(Pass)][Space]
     [Enum(UnityEngine.Rendering.CullMode)] _Cull("Culling", Int) = 2
     [Enum(UnityEngine.Rendering.BlendMode)] _BlendSrc("Blend Src", Float) = 5 
     [Enum(UnityEngine.Rendering.BlendMode)] _BlendDst("Blend Dst", Float) = 10
     [Toggle][KeyEnum(Off, On)] _ZWrite("ZWrite", Float) = 1
 
-    [Header(Raymarching)]
+    [Header(Raymarching)][Space]
     _Loop("Loop", Range(1, 100)) = 30
     _MinDistance("Minimum Distance", Range(0.001, 0.1)) = 0.01
     _DistanceMultiplier("Distance Multiplier", Range(0.001, 2.0)) = 1.0
@@ -102,6 +109,10 @@ Pass
     #pragma shader_feature_local_fragment _EMISSION
     #pragma shader_feature_local_fragment _SPECULARHIGHLIGHTS_OFF
     #pragma shader_feature_local_fragment _ENVIRONMENTREFLECTIONS_OFF
+    #pragma shader_feature_local_fragment _CLEARCOAT_ON
+    #ifdef _CLEARCOAT_ON
+        #define _CLEARCOAT
+    #endif
 
     #pragma multi_compile _ _MAIN_LIGHT_SHADOWS _MAIN_LIGHT_SHADOWS_CASCADE _MAIN_LIGHT_SHADOWS_SCREEN
     #pragma multi_compile _ _ADDITIONAL_LIGHTS_VERTEX _ADDITIONAL_LIGHTS
@@ -131,6 +142,8 @@ Pass
     #pragma exclude_renderers d3d11_9x
     #pragma target 2.0
 
+    #define RAY_STARTS_FROM_DEPTH_TEXTURE
+
     #pragma vertex Vert
     #pragma fragment Frag
     #include "Assets/uRaymarching/Runtime/Shaders/Include/UniversalRP/ForwardLit.hlsl"
@@ -159,6 +172,11 @@ Pass
     #pragma shader_feature_local_fragment _ENVIRONMENTREFLECTIONS_OFF
     #pragma shader_feature_local_fragment _SPECULAR_SETUP
     #pragma shader_feature_local _RECEIVE_SHADOWS_OFF
+    #pragma shader_feature_local_fragment _ENVIRONMENTREFLECTIONS_OFF
+    #pragma shader_feature_local_fragment _CLEARCOAT_ON
+    #ifdef _CLEARCOAT_ON
+        #define _CLEARCOAT
+    #endif
 
     #pragma multi_compile _ _MAIN_LIGHT_SHADOWS _MAIN_LIGHT_SHADOWS_CASCADE _MAIN_LIGHT_SHADOWS_SCREEN
     #pragma multi_compile_fragment _ _REFLECTION_PROBE_BLENDING
@@ -221,6 +239,7 @@ Pass
     HLSLPROGRAM
 
     #pragma shader_feature _ALPHATEST_ON
+    #pragma multi_compile_fragment _ _GBUFFER_NORMALS_OCT
     #pragma multi_compile_instancing
 
     #pragma prefer_hlslcc gles
