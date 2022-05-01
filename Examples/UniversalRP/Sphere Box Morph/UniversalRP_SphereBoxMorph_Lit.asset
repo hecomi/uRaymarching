@@ -75,7 +75,7 @@ MonoBehaviour:
       {
 
       }'
-    folded: 0
+    folded: 1
   constants: {fileID: 11400000, guid: 3fc7bca6894034dec9dc046eade7d602, type: 2}
   basicFolded: 1
   conditionsFolded: 1

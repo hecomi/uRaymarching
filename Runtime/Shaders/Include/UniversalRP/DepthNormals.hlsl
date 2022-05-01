@@ -1,6 +1,8 @@
 ﻿#ifndef URAYMARCHING_DEPTH_NORMALS_HLSL
 #define URAYMARCHING_DEPTH_NORMALS_HLSL
 
+#include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Core.hlsl"
+#include "Packages/com.unity.render-pipelines.core/ShaderLibrary/SpaceTransforms.hlsl"
 #include "./Primitives.hlsl"
 #include "./Raymarching.hlsl"
 
@@ -63,7 +65,7 @@ FragOutput Frag(Varyings input)
     float3 normal = NormalizeNormalPerPixel(DecodeNormalWS(ray.normal));
     FragOutput o;
     o.normal = float4(normal, 0.0);
-    o.depth = ray.depth;
+    o.depth = ray.depth - 1e-8;
     return o;
 }
 
