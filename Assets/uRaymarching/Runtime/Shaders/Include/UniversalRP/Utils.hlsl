@@ -1,6 +1,7 @@
 ﻿#ifndef URAYMARCHING_UTILS_HLSL
 #define URAYMARCHING_UTILS_HLSL
 
+#include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Core.hlsl"
 #include "Packages/com.unity.render-pipelines.core/ShaderLibrary/SpaceTransforms.hlsl"
 
 inline float3 GetScale()

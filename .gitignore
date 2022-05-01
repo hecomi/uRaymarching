@@ -78,3 +78,4 @@ shadertoolsconfig.json
 .vsconfig
 .vscode
 .DS_Store
+mono_crash*

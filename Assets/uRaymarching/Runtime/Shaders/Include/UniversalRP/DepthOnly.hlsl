@@ -1,6 +1,8 @@
 ﻿#ifndef URAYMARCHING_DEPTH_ONLY_HLSL
 #define URAYMARCHING_DEPTH_ONLY_HLSL
 
+#include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Core.hlsl"
+#include "Packages/com.unity.render-pipelines.core/ShaderLibrary/SpaceTransforms.hlsl"
 #include "./Primitives.hlsl"
 #include "./Raymarching.hlsl"
 

@@ -1,7 +1,7 @@
-﻿#ifndef URAYMARCHING_FORWARD_UNLIT_HLSL
-#define URAYMARCHING_FORWARD_UNLIT_HLSL
+﻿#ifndef URAYMARCHING_FORWARD_LIT_HLSL
+#define URAYMARCHING_FORWARD_LIT_HLSL
 
-#include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/SurfaceInput.hlsl"
+#include "Packages/com.unity.render-pipelines.universal/Shaders/LitInput.hlsl"
 #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Lighting.hlsl"
 #include "./Primitives.hlsl"
 #include "./Raymarching.hlsl"

@@ -1,6 +1,8 @@
 ﻿#ifndef URAYMARCHING_FORWARD_UNLIT_HLSL
 #define URAYMARCHING_FORWARD_UNLIT_HLSL
 
+#include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Core.hlsl"
+#include "Packages/com.unity.render-pipelines.core/ShaderLibrary/SpaceTransforms.hlsl"
 #include "./Primitives.hlsl"
 #include "./Raymarching.hlsl"
 
