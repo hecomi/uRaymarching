@@ -24,6 +24,8 @@ jobs:
           git-tag: ${{ steps.tag.outputs.name }}
           pkg-root-dir-path: Assets/uRaymarching
           samples-dir: Examples
+          main-branch: master
+          root-files: README.md LICENSE.md CHANGELOG.md Third_Party_Notices.md
 
       - name: Setup node
         uses: actions/setup-node@v2
