@@ -1,5 +1,12 @@
 {
   "dependencies": {
+    "com.hecomi.hlsltoolsforvisualstudioconfiggenerator": {
+      "version": "1.0.0",
+      "depth": 0,
+      "source": "registry",
+      "dependencies": {},
+      "url": "https://registry.npmjs.com"
+    },
     "com.hecomi.ushadertemplate": {
       "version": "https://github.com/hecomi/uShaderTemplate.git#upm",
       "depth": 0,
