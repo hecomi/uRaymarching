@@ -123,7 +123,6 @@ FragOutput Frag(Varyings input)
     FragOutput o;
     o.color = color;
     o.depth = ray.depth;
-
     return o;
 }
 

@@ -208,7 +208,7 @@ CustomFragOutput Frag(Varyings input)
 #ifdef GBUFFER_OPTIONAL_SLOT_3
     output.GBuffer6 = baseOutput.GBuffer6;
 #endif
-    output.depth = ray.depth;
+    output.depth = ray.depth + 1e-8;
 
     return output;
 }
