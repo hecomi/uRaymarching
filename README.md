@@ -2,19 +2,19 @@ uRaymarching
 ============
 **uRaymarching** is a raymarching shader templates using [uShaderTemplate](https://github.com/hecomi/uShaderTemplate). The following functions are implemented:
 
-- Create a raymarching object **only by writing a distance function**
-- Legacy (**Forward** / **Deferred**) and **UniversalRP** are supported
-  - HDRP will be supported in the future
-- Mixed with polygon objects
-- VR ready
-- Standard / Unlit / Transparent
+- Create a ray-marching object **by simply writing a distance function**
+- Legacy pipelines (**Forward** / **Deferred**) and **URP** (**Forward / **Deferred**) are supported
+  - HDRP is not yet supported
+- Intersects polygonal objects because it writes depth
+- VR support
+- Lit / Unlit (+ Transparent)
 - Shadows for Directional / Spot / Point lights
-- Object-space and full-screen (full-screen is only in Legacy pipelines)
+- Object-space and full-screen (Full screen only for legacy pipelines)
 
 
 Screenshots
 -----------
-The following shapes are rendered in a 12-polygon cube.
+The following shapes are rendered inside a 12-polygon cube.
 
 <img src="https://raw.githubusercontent.com/wiki/hecomi/uRaymarching/hex_floor.gif" width="720" />
 <img src="https://raw.githubusercontent.com/wiki/hecomi/uRaymarching/morph.gif" width="720" />
@@ -26,7 +26,6 @@ Check more examples here:
 
 Install
 -------
-
 - Unity Package
   - Download the following .unitypackage-s.
     - [uShaderTemplate](https://github.com/hecomi/uShaderTemplate/releases).
@@ -39,7 +38,7 @@ Install
   - Add a scoped registry to your project.
     - URL: `https://registry.npmjs.com`
     - Scope: `com.hecomi`
-  - Install uRaymarching in Package Manager. 
+  - Install uRaymarching in Package Manager.
 
 How to use
 ----------
