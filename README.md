@@ -3,7 +3,7 @@ uRaymarching
 **uRaymarching** is a raymarching shader templates using [uShaderTemplate](https://github.com/hecomi/uShaderTemplate). The following functions are implemented:
 
 - Create a ray-marching object **by simply writing a distance function**
-- Legacy pipelines (**Forward** / **Deferred**) and **URP** (**Forward / **Deferred**) are supported
+- Legacy pipelines (**Forward** / **Deferred**) and **URP** (**Forward / Deferred**) are supported
   - HDRP is not yet supported
 - Intersects polygonal objects because it writes depth
 - VR support
