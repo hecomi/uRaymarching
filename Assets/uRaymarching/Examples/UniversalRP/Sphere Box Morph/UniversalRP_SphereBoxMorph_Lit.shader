@@ -142,8 +142,6 @@ Pass
     #pragma exclude_renderers d3d11_9x
     #pragma target 2.0
 
-    #define RAY_STARTS_FROM_DEPTH_TEXTURE
-
     #pragma vertex Vert
     #pragma fragment Frag
     #include "Assets/uRaymarching/Runtime/Shaders/Include/UniversalRP/ForwardLit.hlsl"
@@ -169,7 +167,6 @@ Pass
     #pragma shader_feature_local _ _DETAIL_MULX2 _DETAIL_SCALED
 
     #pragma shader_feature_local_fragment _SPECULARHIGHLIGHTS_OFF
-    #pragma shader_feature_local_fragment _ENVIRONMENTREFLECTIONS_OFF
     #pragma shader_feature_local_fragment _SPECULAR_SETUP
     #pragma shader_feature_local _RECEIVE_SHADOWS_OFF
     #pragma shader_feature_local_fragment _ENVIRONMENTREFLECTIONS_OFF
@@ -197,6 +194,7 @@ Pass
     #pragma instancing_options renderinglayer
     #pragma multi_compile _ DOTS_INSTANCING_ON
 
+    #define DEFERRED_RENDERING_PASS
     #pragma vertex Vert
     #pragma fragment Frag
     #include "Assets/uRaymarching/Runtime/Shaders/Include/UniversalRP/DeferredLit.hlsl"

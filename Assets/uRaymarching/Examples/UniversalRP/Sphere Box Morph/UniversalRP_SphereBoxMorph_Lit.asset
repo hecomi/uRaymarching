@@ -62,7 +62,7 @@ MonoBehaviour:
   blocks:
   - key: Properties
     value: // _Color2("Color2", Color) = (1.0, 1.0, 1.0, 1.0)
-    folded: 0
+    folded: 1
   - key: DistanceFunction
     value: "inline float DistanceFunction(float3 pos)\n{\n    float t = _Time.x;\n   
       float a = 6 * PI * t;\n    float s = pow(sin(a), 2.0);\n    float d1 = Sphere(pos,

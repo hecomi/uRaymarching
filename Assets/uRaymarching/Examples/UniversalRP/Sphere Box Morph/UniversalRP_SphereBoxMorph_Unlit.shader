@@ -97,6 +97,7 @@ Pass
     #pragma target 2.0
 
     #define RAY_STOPS_AT_DEPTH_TEXTURE
+    #define RAY_STARTS_FROM_DEPTH_TEXTURE
 
     #pragma vertex Vert
     #pragma fragment Frag

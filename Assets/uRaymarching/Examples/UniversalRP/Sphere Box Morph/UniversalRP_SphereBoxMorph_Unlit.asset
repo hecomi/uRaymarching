@@ -21,7 +21,7 @@ MonoBehaviour:
   - key: ObjectShape
     value: CUBE
   - key: RaymarchingShaderDirectory
-    value: Assets\uRaymarching\Shaders\Include\UniversalRP
+    value: Assets/uRaymarching/Runtime/Shaders/Include/UniversalRP
   - key: RenderType
     value: Transparent
   - key: RenderQueue
@@ -54,7 +54,7 @@ MonoBehaviour:
   - key: RayStopsAtDepthTexture
     value: 1
   - key: RayStartsFromDepthTexture
-    value: 0
+    value: 1
   - key: ObjectScale
     value: 0
   - key: CheckIfInsideObject
