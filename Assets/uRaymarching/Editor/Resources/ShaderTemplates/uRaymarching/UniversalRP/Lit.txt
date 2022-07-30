@@ -165,6 +165,9 @@ Pass
 @if RayStartsFromDepthTexture : false
     #define RAY_STARTS_FROM_DEPTH_TEXTURE
 @endif
+@if CheckDepthPrepass : false
+    #define CHECK_DEPTH_PREPASS
+@endif
 
     #pragma vertex Vert
     #pragma fragment Frag

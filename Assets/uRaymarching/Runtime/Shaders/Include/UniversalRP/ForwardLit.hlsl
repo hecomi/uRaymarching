@@ -122,7 +122,14 @@ FragOutput Frag(Varyings input)
 
     FragOutput o;
     o.color = color;
+#ifdef CHECK_DEPTH_PREPASS
+    float2 uv = input.positionSS.xy / input.positionSS.w;
+    float depth = SAMPLE_DEPTH_TEXTURE(_CameraDepthTexture, sampler_CameraDepthTexture, uv);
+    float delta = saturate(ray.depth * ray.depth);
+    o.depth = abs(ray.depth - depth) < delta ? depth : ray.depth;
+#else
     o.depth = ray.depth;
+#endif
     return o;
 }
 

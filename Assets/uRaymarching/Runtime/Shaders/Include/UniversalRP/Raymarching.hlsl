@@ -75,10 +75,14 @@ inline void InitRaymarchParams(inout RaymarchInfo ray, int maxLoop, float minDis
     ray.minDistance = minDistance;
 }
 
-#if defined(RAY_STOPS_AT_DEPTH_TEXTURE) || defined(RAY_STARTS_FROM_DEPTH_TEXTURE)
+#if defined(RAY_STOPS_AT_DEPTH_TEXTURE) || defined(RAY_STARTS_FROM_DEPTH_TEXTURE) || defined(CHECK_DEPTH_PREPASS)
 
 TEXTURE2D(_CameraDepthTexture);
 SAMPLER(sampler_CameraDepthTexture);
+
+#endif
+
+#if defined(RAY_STOPS_AT_DEPTH_TEXTURE) || defined(RAY_STARTS_FROM_DEPTH_TEXTURE)
 
 inline void InitRaymarchWithCameraDepthTexture(inout RaymarchInfo ray, float3 positionWS, float4 positionSS)
 {
@@ -86,11 +90,11 @@ inline void InitRaymarchWithCameraDepthTexture(inout RaymarchInfo ray, float3 po
     float depth = SAMPLE_DEPTH_TEXTURE(_CameraDepthTexture, sampler_CameraDepthTexture, uv);
     depth = LinearEyeDepth(depth, _ZBufferParams);
     float dist = depth / dot(ray.rayDir, GetCameraForward());
-#ifdef RAY_STOPS_AT_DEPTH_TEXTURE
+    #ifdef RAY_STOPS_AT_DEPTH_TEXTURE
     ray.maxDistance = dist;
-#else
+    #else
     ray.startPos = GetCameraPosition() + ray.rayDir * dist;
-#endif
+    #endif
 }
 
 #endif
